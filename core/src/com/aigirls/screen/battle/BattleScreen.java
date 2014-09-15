@@ -2,53 +2,59 @@ package com.aigirls.screen.battle;
 
 import java.awt.Point;
 
-import com.aigirls.entity.CharacterEntity;
-import com.aigirls.entity.GirlEntity;
-import com.aigirls.entity.MonsterEntity;
 import com.aigirls.manager.ScreenManager;
+import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.battle.BallModel;
+import com.aigirls.model.battle.BoardModel;
 import com.aigirls.model.battle.CharacterModel;
 import com.aigirls.model.battle.ObstacleBallModel;
 import com.aigirls.param.ScreenEnum;
-import com.aigirls.param.battle.EnemyType;
+import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.GameScreen;
-import com.aigirls.view.GameView;
+import com.aigirls.service.battle.DamageCalculateService;
 import com.aigirls.view.battle.BattleScreenView;
 import com.badlogic.gdx.Gdx;
 
 public class BattleScreen extends GameScreen
 {
     private CharacterModel[] players;
-    private BattleScreenView viewer;
     private int turnNum = 0;
     private int currentAttackerIndex = 0;
 
-    public BattleScreen(CharacterEntity allyEntity, CharacterEntity enemyEntity)
+    public BattleScreen(CharacterModel ally, CharacterModel enemy)
     {
-        super(new BattleScreenView(allyEntity.imageName, enemyEntity.imageName));
+        super(new BattleScreenView(ally.getCharacterViewModel(), enemy.getCharacterViewModel()));
         players = new CharacterModel[2];
-        players[0] = new CharacterModel(allyEntity);
-        players[1] = new CharacterModel(enemyEntity);
-        ActionSelectScreen.setActionSelectScreen(getBattleScreenView());
+        players[0] = ally;
+        players[1] = enemy;
+        ActionSelectScreen.setActionSelectScreen(getGameView());
     }
 
-    private CharacterEntity getEnemyEntity(int enemyId, EnemyType type)
-    {
-        switch(type){
-            case PLAYER:
-                return new GirlEntity(enemyId);
-            case MONSTER:
-                return new MonsterEntity(enemyId);
-            default:
-                return null;
+    @Override
+    public void show() {
+        if (currentAttackerIndex == 0) {
+            players[0].removeBall(turnNum);
+            getGameView().removeBall(turnNum, getPlayerEnum(0));
+            boolean existBall = players[1].removeBall(turnNum);
+            if(existBall) {
+                getGameView().removeBall(turnNum, getPlayerEnum(1));
+            } else {
+                int damage = DamageCalculateService.getDamageValue(
+                        players[0].getAttack(),
+                        players[1].getDefense());
+                players[1].beHurt(-1*damage);
+                double recoverRate = -1.0*damage/players[1].getMaxHp();
+                getGameView().moveHpBar(recoverRate, getPlayerEnum(1));
+            }
         }
     }
 
     @Override
-    public void show() {}
-
-    @Override
-    public void hide() {}
+    public void hide() {
+        if (currentAttackerIndex == 0) {
+            MagicSelectScreen.setMagicSelectScreen(players[0].getActiveMagicModels());
+        }
+    }
 
     @Override
     public void pause() {}
@@ -65,18 +71,58 @@ public class BattleScreen extends GameScreen
     protected void update(float delta) {
         if (Gdx.input.isTouched()) {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
-            int xPlace = viewer.getChoicedPlace(touchedPlace.x, touchedPlace.y);
-            if (players[0].canPutBall(xPlace)) {
-                players[0].setBall(xPlace, new BallModel(turnNum));
-                players[1].setBall(xPlace, new ObstacleBallModel(turnNum, players[0].getMagicDefense()));
-                ScreenManager.changeScreen(ScreenEnum.GameAtActionSelect);
+            int xPlace = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
+            if (xPlace == ChoiceListModel.NOT_CHOICED) {
+                return;
             }
+            int yPlace = players[currentAttackerIndex].getDropPlace(xPlace);
+            if (yPlace == BoardModel.CAN_NOT_SET_BALL) {
+                return;
+            }
+            dropBallEvent(xPlace, yPlace);
+            ScreenManager.changeScreen(ScreenEnum.GameAtActionSelect);
         }
     }
 
-    private BattleScreenView getBattleScreenView()
+    protected BattleScreenView getGameView()
     {
         return (BattleScreenView) view;
+    }
+
+    public void nextTurn()
+    {
+        turnNum++;
+        currentAttackerIndex = (currentAttackerIndex+1)%2;
+    }
+
+    private void dropBallEvent(int xPlace, int yPlace)
+    {
+        players[currentAttackerIndex].setBall(xPlace, new BallModel(turnNum));
+        getGameView().dropBall(xPlace, yPlace, getPlayerEnum(currentAttackerIndex));
+        int defenserIndex = (currentAttackerIndex+1)%2;
+        int defenserYPlace = players[currentAttackerIndex].getDropPlace(xPlace);
+        if (defenserYPlace == BoardModel.CAN_NOT_SET_BALL) {
+            int damage = DamageCalculateService.getDamageValue(
+                    players[currentAttackerIndex].getAttack(),
+                    players[defenserIndex].getDefense());
+            players[defenserIndex].beHurt(damage);
+            double damageRate = 1.0*damage/players[defenserIndex].getMaxHp();
+            getGameView().moveHpBar(damageRate, getPlayerEnum(defenserIndex));
+        } else {
+            players[defenserIndex].setBall(
+                xPlace,
+                new ObstacleBallModel(turnNum, players[currentAttackerIndex].getMagicDefense()));
+            getGameView().dropObstacle(xPlace, defenserYPlace, getPlayerEnum(defenserIndex));
+        }
+    }
+
+    private PlayerEnum getPlayerEnum(int index)
+    {
+        if (index%2 == 0) {
+            return PlayerEnum.Player1;
+        } else {
+            return PlayerEnum.Player2;
+        }
     }
 
 }

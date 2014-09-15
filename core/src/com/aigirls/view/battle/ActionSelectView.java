@@ -1,43 +1,36 @@
 package com.aigirls.view.battle;
 
 import com.aigirls.config.GameConfig;
-import com.aigirls.model.ChoiceListModel;
-import com.aigirls.view.GameView;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.aigirls.view.VerticallyLongMenuView;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class ActionSelectView extends GameView{
-    public static final int MAGIC_ATTACK = 0;
+public class ActionSelectView extends VerticallyLongMenuView{
+    public static final int MAGIC_ATTACK = 2;
     public static final int TURN_END = 1;
-    private static final int ACTION_NUMS = 2;
-    private ChoiceListModel choiceList;
-    private final int leftX;
-    private final int lowY;
-    private final int width;
-    private final int height;
-    private final int interval;
+    public static final int RESET = 0;
+    private static final int ACTION_NUMS = 3;
+    private static String[] choiceItems = new String[ACTION_NUMS];
     private BattleScreenView battleScreenView;
-    private BitmapFont font;
+
+    static{
+        choiceItems[0] = "戻る";
+        choiceItems[1] = "ターン終了";
+        choiceItems[2] = "使用魔法選択";
+    }
 
     public ActionSelectView(BattleScreenView battleScreenView)
     {
-        leftX = (int)Math.round(0.3*GameConfig.GAME_WIDTH);
-        lowY = (int)Math.round(0.3*GameConfig.GAME_HEIGHT);
-        width = (int)Math.round(0.4*GameConfig.GAME_WIDTH);
-        height = (int)Math.round(0.4*GameConfig.GAME_HEIGHT);
-        interval = (int)Math.round(1.0*width/ACTION_NUMS);
-
-        choiceList = new ChoiceListModel(
-                leftX,
-                lowY,
-                width,
-                height,
-                ACTION_NUMS,
-                0,
-                interval);
+        super(
+                (int)Math.round(0.3*GameConfig.GAME_WIDTH),
+                (int)Math.round(0.3*GameConfig.GAME_HEIGHT),
+                (int)Math.round(0.4*GameConfig.GAME_WIDTH),
+                (int)Math.round(0.4*GameConfig.GAME_HEIGHT),
+                choiceItems
+                );
         this.battleScreenView = battleScreenView;
-        font = new BitmapFont();
     }
 
     @Override
@@ -47,28 +40,16 @@ public class ActionSelectView extends GameView{
         battleScreenView.draw(batch, shapeRenderer);
 
         //全体塗りつぶし
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.2f, 0.4f, 0.8f, 0.8f);
-        shapeRenderer.rect(leftX, lowY, width, height);
+        shapeRenderer.setColor(0, 0, 0, 0.8f);
+        shapeRenderer.rect(leftX, lowerY, width, height);
         shapeRenderer.end();
-        //枠の描画
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0, 0, 0, 1);
-        shapeRenderer.rect(leftX, lowY, width, height);
-        shapeRenderer.line(leftX, lowY+interval, leftX+width, lowY+interval);
-        shapeRenderer.end();
-        //選択肢の描画
-        batch.begin();
-        font.setScale(20f);
-        font.setColor(1, 1, 1, 1);
-        font.draw(batch, "魔法カード使用", leftX, lowY+interval);
-        font.draw(batch, "ターン終了", leftX, lowY);
-        batch.end();
-    }
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
-    public int getChoicedPlace(int x, int y)
-    {
-        return choiceList.getChoicedPlace(x, y);
+        //選択肢メニューの描画
+        super.draw(batch, shapeRenderer);
     }
 
 }

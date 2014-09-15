@@ -3,7 +3,7 @@ package com.aigirls.model.battle;
 import com.aigirls.config.GameConfig;
 
 public class BoardModel {
-    private static final int CAN_NOT_SET_BALL = -1;
+    public static final int CAN_NOT_SET_BALL = -1;
     private BallModel[][] balls = new BallModel[GameConfig.BOARD_HEIGHT][GameConfig.BOARD_WIDTH];
 
     public BoardModel()
@@ -42,12 +42,30 @@ public class BoardModel {
         return balls[GameConfig.BOARD_HEIGHT-1][x]==null;
     }
 
-    private int getDropPlace(int x)
+    public int getDropPlace(int x)
     {
         for(int y = 0; y < balls.length; y++){
             if (balls[y][x] == null) return y;
         }
         return CAN_NOT_SET_BALL;
+    }
+
+    public boolean removeBall(int id)
+    {
+        for (int y = 0; y < balls.length; y++) {
+            for (int x = 0; x < balls[y].length; x++) {
+                if (balls[y][x] != null && balls[y][x].id == id) {
+                    balls[y][x] = null;
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public BallModel[][] getBalls()
+    {
+        return balls;
     }
 
 }

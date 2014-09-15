@@ -46,11 +46,14 @@ public class ActionSelectScreen extends GameScreen{
     protected void update(float delta) {
         if (Gdx.input.isTouched()) {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
-            switch (getActionSelectView().getChoicedPlace(touchedPlace.x, touchedPlace.y)) {
+            switch (getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y)) {
                 case ActionSelectView.MAGIC_ATTACK:
 
                     break;
                 case ActionSelectView.TURN_END:
+
+                    break;
+                case ActionSelectView.RESET:
 
                     break;
                 default:
@@ -59,7 +62,7 @@ public class ActionSelectScreen extends GameScreen{
         }
     }
 
-    private ActionSelectView getActionSelectView()
+    protected ActionSelectView getGameView()
     {
         return (ActionSelectView) view;
     }

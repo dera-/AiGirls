@@ -21,7 +21,7 @@ public class BoardView extends SelectView{
 
     public BoardView(int x, int y, int w, int h, int sideWallWidth, int bottomWallHeight)
     {
-        super(x+sideWallWidth, y+bottomWallHeight, w-2*sideWallWidth, h-bottomWallHeight);
+        super(x+sideWallWidth, y+bottomWallHeight, w-2*sideWallWidth, h-bottomWallHeight, GameConfig.BOARD_WIDTH);
         this.sideWallWidth = sideWallWidth;
         this.bottomWallHeight = bottomWallHeight;
         initializeTextures();
@@ -35,8 +35,10 @@ public class BoardView extends SelectView{
         bottomWallSprite = new Sprite(TextureManager.getTexture("bottom_wall"), leftX-sideWallWidth, lowerY-bottomWallHeight, width+2*sideWallWidth, bottomWallHeight);
     }
 
-    public void addBall(BallView ball)
+    public void addBall(int x, int y, String ballName)
     {
+        BallView ball = new BallView(getX(x), getY(GameConfig.BOARD_HEIGHT), interval, interval, ballName);
+        ball.dropBall(getY(y));
         balls.add(ball);
     }
 
@@ -67,7 +69,7 @@ public class BoardView extends SelectView{
         //区切り線の描画
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(0.05f, 0.3f, 0.7f, 1);
-        for (int i=0; i<GameConfig.BOARD_WIDTH; i++) {
+        for (int i=0; i<choiceItemNums; i++) {
             int dx = i*interval;
             shapeRenderer.line(leftX+dx, lowerY, leftX+dx, lowerY+height);
         }
@@ -81,10 +83,20 @@ public class BoardView extends SelectView{
                 lowerY,
                 width,
                 height,
-                GameConfig.BOARD_WIDTH,
+                choiceItemNums,
                 interval,
                 0
             );
+    }
+
+    private int getX(int x)
+    {
+        return leftX + x*interval;
+    }
+
+    private int getY(int y)
+    {
+        return lowerY + y*interval;
     }
 
 }

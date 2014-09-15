@@ -29,9 +29,9 @@ public class HpBarView extends GameView{
         shapeRenderer.end();
     }
 
-    public void setRestHp(int nowHp, int maxHp) {
-        int restWidth = (int)Math.round(1.0*width*nowHp/maxHp);
-        targetPosition.set(leftX+restWidth, lowerY);
+    public void setRestHp(double changeRate) {
+        int changeValue = (int)Math.round(changeRate*width);
+        targetPosition.set(targetPosition.x+changeValue, lowerY);
     }
 
 }

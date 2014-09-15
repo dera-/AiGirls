@@ -2,6 +2,7 @@ package com.aigirls.view;
 
 import com.aigirls.config.FileConfig;
 import com.aigirls.manager.TextureManager;
+import com.aigirls.model.battle.CharacterViewModel;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -15,12 +16,14 @@ public class CharacterView extends GameView
 
     private Sprite[] charaSprites;
     private int currentIndex;
+    private CharacterViewModel characterViewModel;
 
-    public CharacterView(int x, int y, int w, int h, String name)
+    public CharacterView(int x, int y, int w, int h, CharacterViewModel viewModel)
     {
         super(x, y, w, h);
         currentIndex = EXPRESSION_NORMAL;
-        String keyPrefix = name + "_";
+        characterViewModel = viewModel;
+        String keyPrefix = characterViewModel.getImageName() + "_";
         String pathPrefix = FileConfig.FILE_DIR_PATH + keyPrefix;
         charaSprites = new Sprite[EXPRESSION_NUMS];
         charaSprites[EXPRESSION_NORMAL] = new Sprite(

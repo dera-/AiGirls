@@ -6,8 +6,4 @@ public class GirlEntity extends CharacterEntity {
     public int charaType;
     public int magicLimit;
     public int reinforcementLimit;
-
-    public GirlEntity(int id) {
-        super(id);
-    }
 }

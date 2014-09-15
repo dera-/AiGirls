@@ -75,4 +75,9 @@ public abstract class GameScreen implements Screen {
 
     protected abstract void update(float delta);
 
+    protected GameView getGameView()
+    {
+        return view;
+    }
+
 }
