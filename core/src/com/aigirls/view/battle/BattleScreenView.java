@@ -2,6 +2,7 @@ package com.aigirls.view.battle;
 
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
+import com.aigirls.model.battle.BallInfoModel;
 import com.aigirls.model.battle.CharacterViewModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.view.BoardView;
@@ -60,20 +61,20 @@ public class BattleScreenView extends GameView
         return viewer.getChoicedPlace(x, y);
     }
 
-    public void dropBall(int x, int y, PlayerEnum player)
+    public void dropBall(int id, int x, int y, PlayerEnum player)
     {
-        dropBall(x, y, getBoardView(player), getBallName(player));
+        dropBall(id, x, y, getBoardView(player), getBallName(player));
     }
 
-    public void dropObstacle(int x, int y, PlayerEnum player)
+    public void dropObstacle(int id, int x, int y, PlayerEnum player)
     {
-        dropBall(x, y, getBoardView(player), FileConfig.OBSTACLE_KEY);
+        dropBall(id, x, y, getBoardView(player), FileConfig.OBSTACLE_KEY);
     }
 
-    private void dropBall(int x, int y, BoardView board, String name)
+    private void dropBall(int id, int x, int y, BoardView board, String name)
     {
         if(board == null || name == null) return;
-        board.addBall(x, y, name);
+        board.addBall(id, x, y, name);
     }
 
     public void removeBall(int id, PlayerEnum player)
@@ -87,6 +88,11 @@ public class BattleScreenView extends GameView
     {
         HpBarView hpBar = getHpBarView(player);
         hpBar.setRestHp(changeRate);
+    }
+
+    public void setTargetBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
+    {
+        getBoardView(player).setTargetFlags(ballsInfo);
     }
 
     private BoardView getBoardView(PlayerEnum player)

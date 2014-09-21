@@ -2,11 +2,12 @@ package com.aigirls.view;
 
 import java.awt.Point;
 
+import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
+import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.model.ChoiceModel;
 import com.aigirls.model.battle.ActiveMagicModel;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -18,12 +19,13 @@ public class MagicCardView extends GameView {
     private int ballSize;
     private String magicName;
     private BitmapFont font;
+    private FilledView filledView;
 
     public MagicCardView(int x, int y, int cardWidth, ActiveMagicModel magic)
     {
         super(x, y, cardWidth, (int)Math.round(cardWidth/CARD_SPACE_RATE));
         ballSize = cardWidth / GameConfig.BOARD_WIDTH;
-        font = new BitmapFont();
+        font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
         if (magic != null) {
             ballPlaces = magic.getConditionBallPlaces();
             canUse = magic.canOutbreak();
@@ -33,6 +35,7 @@ public class MagicCardView extends GameView {
             canUse = true;
             magicName = "戻る";
         }
+        filledView = new FilledView(leftX, lowerY, width, height, new Color(0, 0, 0, 0.8f));
     }
 
     @Override
@@ -44,8 +47,8 @@ public class MagicCardView extends GameView {
         //ボールの描画
         int radius = ballSize/2;
         shapeRenderer.setColor(0.1f, 0.75f, 0.4f, 1);
-        for (int i=0; i<ballPlaces.length;i++) {
-            shapeRenderer.circle(leftX+radius, lowerY+radius, radius);
+        for (int i=0; i<ballPlaces.length; i++) {
+            shapeRenderer.circle(leftX+radius+ballSize*ballPlaces[i].x, lowerY+radius+ballSize*ballPlaces[i].y, radius);
         }
         shapeRenderer.end();
 
@@ -53,24 +56,22 @@ public class MagicCardView extends GameView {
         shapeRenderer.setColor(0, 0, 0, 1);
         shapeRenderer.rect(leftX, lowerY, width, height);
         shapeRenderer.line(leftX, (int)(lowerY+CARD_SPACE_RATE*height), leftX+width, (int)(lowerY+CARD_SPACE_RATE*height));
+        for (int i=0; i<GameConfig.BOARD_WIDTH; i++) {
+            shapeRenderer.line(leftX+ballSize*i, lowerY, leftX+ballSize*i, (int)(lowerY+CARD_SPACE_RATE*height));
+        }
         shapeRenderer.end();
 
         batch.begin();
         font.setColor(0, 0, 0, 1);
-        double spaceRate = 0.1;
-        font.draw(batch, magicName, (int)(leftX+spaceRate*width), (int)(lowerY+(CARD_SPACE_RATE+spaceRate)*height));
+        double spaceRateX = 0.1;
+        double spaceRateY = 0.18;
+        font.draw(batch, magicName, (int)(leftX+spaceRateX*width), (int)(lowerY+(CARD_SPACE_RATE+spaceRateY)*height));
         batch.end();
 
-        if (canUse) return;
+        if (!canUse) {
+            filledView.draw(batch, shapeRenderer);
+        }
 
-        //カード塗りつぶし
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.8f);
-        shapeRenderer.rect(leftX, lowerY, width, height);
-        shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
     }
 
     public ChoiceModel getChoiceModel()

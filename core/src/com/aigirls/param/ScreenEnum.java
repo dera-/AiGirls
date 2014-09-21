@@ -5,6 +5,7 @@ public enum ScreenEnum {
     GameAtMyTurn,
     GameAtActionSelect,
     GameAtMagicSelect,
+    GameAtActionReset,
     StartBattle,
-    EndBattle
+    GameAtFinishTurn,
 }

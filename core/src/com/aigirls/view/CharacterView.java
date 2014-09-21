@@ -24,20 +24,23 @@ public class CharacterView extends GameView
         currentIndex = EXPRESSION_NORMAL;
         characterViewModel = viewModel;
         String keyPrefix = characterViewModel.getImageName() + "_";
-        String pathPrefix = FileConfig.FILE_DIR_PATH + keyPrefix;
+        String pathPrefix = FileConfig.IMAGE_DIR_PATH + keyPrefix;
         charaSprites = new Sprite[EXPRESSION_NUMS];
         charaSprites[EXPRESSION_NORMAL] = new Sprite(
-            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL), x, y, w, h);
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL));
         charaSprites[EXPRESSION_WIN] = new Sprite(
-            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN), x, y, w, h);
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN));
         charaSprites[EXPRESSION_LOSE] = new Sprite(
-            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE), x, y, w, h);
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE));
     }
 
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer)
     {
         batch.begin();
+        charaSprites[currentIndex].setSize(width, height);
+        charaSprites[currentIndex].setPosition(leftX, lowerY);
+
         charaSprites[currentIndex].draw(batch);
         batch.end();
     }

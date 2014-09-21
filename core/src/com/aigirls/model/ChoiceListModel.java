@@ -21,8 +21,14 @@ public class ChoiceListModel {
     private void createEvenSizeChoices(int x, int y, int width, int height, int nums, int dx, int dy)
     {
         choicedArea = new ChoiceModel(x, y, width, height);
-        int splitWidth  = (int)Math.round(1.0*width/nums);
-        int splitHeight = (int)Math.round(1.0*height/nums);
+        int splitWidth = width;
+        if (dx > 0) {
+            splitWidth = (int)Math.round(1.0*width/nums);
+        }
+        int splitHeight = height;
+        if (dy > 0) {
+            splitHeight = (int)Math.round(1.0*height/nums);
+        }
         choices = new ChoiceModel[nums];
         for (int i=0; i<nums; i++) {
             choices[i] = new ChoiceModel(x+i*dx, y+i*dy, splitWidth, splitHeight);

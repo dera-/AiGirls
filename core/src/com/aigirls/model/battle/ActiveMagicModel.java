@@ -53,6 +53,10 @@ public class ActiveMagicModel {
         return ballPlaces;
     }
 
+    public int getNumTargetBalls() {
+        return targetBalls.size();
+    }
+
     public BallInfoModel[] getBallInfoModels(int index) {
         return targetBalls.get(index);
     }

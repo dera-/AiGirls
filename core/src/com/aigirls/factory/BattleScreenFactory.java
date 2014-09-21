@@ -10,7 +10,7 @@ import com.aigirls.screen.battle.BattleScreen;
 
 public class BattleScreenFactory {
 
-    public BattleScreen generateBattleScreen(int enemyId, EnemyType type)
+    public static BattleScreen generateBattleScreen(int enemyId, EnemyType type)
     {
         CharacterModel ally = CharacterModelFactory.generateCharacterModel(PlayerIdManager.getPlayerId());
         EnemyCharacterModel enemy = CharacterModelFactory.generateEnemyCharacterModel(enemyId, type);

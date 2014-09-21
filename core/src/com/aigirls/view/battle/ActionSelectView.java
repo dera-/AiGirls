@@ -1,9 +1,9 @@
 package com.aigirls.view.battle;
 
 import com.aigirls.config.GameConfig;
+import com.aigirls.view.FilledView;
 import com.aigirls.view.VerticallyLongMenuView;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -14,6 +14,7 @@ public class ActionSelectView extends VerticallyLongMenuView{
     private static final int ACTION_NUMS = 3;
     private static String[] choiceItems = new String[ACTION_NUMS];
     private BattleScreenView battleScreenView;
+    private FilledView filledView;
 
     static{
         choiceItems[0] = "戻る";
@@ -31,6 +32,7 @@ public class ActionSelectView extends VerticallyLongMenuView{
                 choiceItems
                 );
         this.battleScreenView = battleScreenView;
+        filledView = new FilledView(0, 0, GameConfig.GAME_WIDTH, GameConfig.GAME_HEIGHT, new Color(0, 0, 0, 0.8f));
     }
 
     @Override
@@ -38,16 +40,8 @@ public class ActionSelectView extends VerticallyLongMenuView{
     {
         //バトル画面の描画
         battleScreenView.draw(batch, shapeRenderer);
-
         //全体塗りつぶし
-        Gdx.gl.glEnable(GL20.GL_BLEND);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0, 0, 0, 0.8f);
-        shapeRenderer.rect(leftX, lowerY, width, height);
-        shapeRenderer.end();
-        Gdx.gl.glDisable(GL20.GL_BLEND);
-
+        filledView.draw(batch, shapeRenderer);
         //選択肢メニューの描画
         super.draw(batch, shapeRenderer);
     }

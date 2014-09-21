@@ -21,6 +21,7 @@ public class FileManager {
 
     public static void closeReader(Reader reader)
     {
+        if (reader == null) return;
         try {
             reader.close();
         } catch (IOException e) {

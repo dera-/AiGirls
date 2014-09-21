@@ -1,5 +1,7 @@
 package com.aigirls.view;
 
+import com.aigirls.config.FileConfig;
+import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.model.ChoiceListModel;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,8 +16,8 @@ public class VerticallyLongMenuView extends SelectView {
     public VerticallyLongMenuView(int x, int y, int w, int h, String[] items) {
         super(x, y, w, h, items.length);
         menuItems = items;
-        interval = (int)Math.round(1.0*width/choiceItemNums);
-        font = new BitmapFont();
+        interval = (int)Math.round(1.0*height/choiceItemNums);
+        font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
     }
 
     @Override
@@ -27,13 +29,13 @@ public class VerticallyLongMenuView extends SelectView {
                 height,
                 choiceItemNums,
                 0,
-                (int)Math.round(1.0*width/choiceItemNums)
+                (int)Math.round(1.0*height/choiceItemNums)
         );
     }
 
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer, Color backgroundColor, Color stringColor) {
         //塗りつぶし
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(backgroundColor);
         shapeRenderer.rect(leftX, lowerY, width, height);
         shapeRenderer.end();

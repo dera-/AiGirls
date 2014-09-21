@@ -20,6 +20,7 @@ public class BattleScreen extends GameScreen
     private CharacterModel[] players;
     private int turnNum = 0;
     private int currentAttackerIndex = 0;
+    private boolean putBall = false; //プレイヤーがボールを置いたかどうかの状態を一時的に保存するフラグ
 
     public BattleScreen(CharacterModel ally, CharacterModel enemy)
     {
@@ -28,11 +29,12 @@ public class BattleScreen extends GameScreen
         players[0] = ally;
         players[1] = enemy;
         ActionSelectScreen.setActionSelectScreen(getGameView());
+        OutbreakPlaceSelectScreen.setOutbreakPlaceSelectScreen(getGameView());
     }
 
     @Override
     public void show() {
-        if (currentAttackerIndex == 0) {
+        if (currentAttackerIndex == 0 && putBall) {
             players[0].removeBall(turnNum);
             getGameView().removeBall(turnNum, getPlayerEnum(0));
             boolean existBall = players[1].removeBall(turnNum);
@@ -40,19 +42,20 @@ public class BattleScreen extends GameScreen
                 getGameView().removeBall(turnNum, getPlayerEnum(1));
             } else {
                 int damage = DamageCalculateService.getDamageValue(
-                        players[0].getAttack(),
-                        players[1].getDefense());
+                    players[0].getAttack(),
+                    players[1].getDefense());
                 players[1].beHurt(-1*damage);
                 double recoverRate = -1.0*damage/players[1].getMaxHp();
                 getGameView().moveHpBar(recoverRate, getPlayerEnum(1));
             }
         }
+        putBall = false;
     }
 
     @Override
     public void hide() {
         if (currentAttackerIndex == 0) {
-            MagicSelectScreen.setMagicSelectScreen(players[0].getActiveMagicModels());
+            MagicSelectScreen.setMagicSelectScreen(getGameView(), players[0].getActiveMagicModels());
         }
     }
 
@@ -69,7 +72,7 @@ public class BattleScreen extends GameScreen
 
     @Override
     protected void update(float delta) {
-        if (Gdx.input.isTouched()) {
+        if (currentAttackerIndex == 0 && Gdx.input.justTouched()) {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             int xPlace = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
             if (xPlace == ChoiceListModel.NOT_CHOICED) {
@@ -80,6 +83,7 @@ public class BattleScreen extends GameScreen
                 return;
             }
             dropBallEvent(xPlace, yPlace);
+            putBall = true;
             ScreenManager.changeScreen(ScreenEnum.GameAtActionSelect);
         }
     }
@@ -98,9 +102,9 @@ public class BattleScreen extends GameScreen
     private void dropBallEvent(int xPlace, int yPlace)
     {
         players[currentAttackerIndex].setBall(xPlace, new BallModel(turnNum));
-        getGameView().dropBall(xPlace, yPlace, getPlayerEnum(currentAttackerIndex));
+        getGameView().dropBall(turnNum, xPlace, yPlace, getPlayerEnum(currentAttackerIndex));
         int defenserIndex = (currentAttackerIndex+1)%2;
-        int defenserYPlace = players[currentAttackerIndex].getDropPlace(xPlace);
+        int defenserYPlace = players[defenserIndex].getDropPlace(xPlace);
         if (defenserYPlace == BoardModel.CAN_NOT_SET_BALL) {
             int damage = DamageCalculateService.getDamageValue(
                     players[currentAttackerIndex].getAttack(),
@@ -112,7 +116,7 @@ public class BattleScreen extends GameScreen
             players[defenserIndex].setBall(
                 xPlace,
                 new ObstacleBallModel(turnNum, players[currentAttackerIndex].getMagicDefense()));
-            getGameView().dropObstacle(xPlace, defenserYPlace, getPlayerEnum(defenserIndex));
+            getGameView().dropObstacle(turnNum, xPlace, defenserYPlace, getPlayerEnum(defenserIndex));
         }
     }
 

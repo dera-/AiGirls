@@ -2,8 +2,12 @@ package com.aigirls.manager;
 
 import java.util.Stack;
 
+import com.aigirls.factory.BattleScreenFactory;
 import com.aigirls.param.ScreenEnum;
+import com.aigirls.param.battle.EnemyType;
 import com.aigirls.screen.battle.ActionSelectScreen;
+import com.aigirls.screen.battle.BattleScreen;
+import com.aigirls.screen.battle.MagicSelectScreen;
 import com.badlogic.gdx.Screen;
 
 public class ScreenManager {
@@ -13,20 +17,41 @@ public class ScreenManager {
     {
         switch (screenEnum) {
             case StartBattle:
-
+                screenStack.push(BattleScreenFactory.generateBattleScreen(1, EnemyType.MONSTER));
                 break;
             case GameAtActionSelect:
                 screenStack.push(ActionSelectScreen.getActionSelectScreen());
+                break;
+            case GameAtMagicSelect:
+                screenStack.push(MagicSelectScreen.getMagicSelectScreen());
+                break;
+            case GameAtActionReset:
+                screenStack.pop();
+                break;
+            case GameAtFinishTurn:
+                deleteScreensUntilBattleScreen();
+                Screen screen = getNowScreen();
+                if (screen instanceof BattleScreen) {
+                    BattleScreen battleScreen = (BattleScreen) screen;
+                    battleScreen.nextTurn();
+                }
                 break;
             default:
                 break;
         }
     }
 
+    private static void deleteScreensUntilBattleScreen()
+    {
+        while (!(screenStack.peek() instanceof BattleScreen)) {
+            screenStack.pop();
+        }
+    }
+
 
     public static Screen getNowScreen()
     {
-        return screenStack.get(0);
+        return screenStack.peek();
     }
 
 

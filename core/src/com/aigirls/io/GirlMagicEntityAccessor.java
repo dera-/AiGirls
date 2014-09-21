@@ -16,7 +16,8 @@ public class GirlMagicEntityAccessor extends EntityAccessor {
         return (GirlMagicEntity)super.get(id);
     }
 
-    public GirlMagicEntity[] getByCharacterId(int characterId){
+    public GirlMagicEntity[] getByCharacterId(int characterId)
+    {
         if (GameConfig.USE_DATABASE) {
             return null;
         } else {

@@ -1,7 +1,7 @@
 package com.aigirls.manager;
 
 public class PlayerIdManager {
-    private static int playerId = 0;
+    private static int playerId = 1;
 
     public static void setPlayerId(int id)
     {

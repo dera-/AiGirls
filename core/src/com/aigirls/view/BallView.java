@@ -12,21 +12,21 @@ public class BallView extends GameView {
     private Sprite ballSprite;
     private Vector2 position;
     private Vector2 targetPosition;
+    private boolean targetFlag = false;  //TODO このフラグ使ってボール選択時の描画
 
     static {
-        TextureManager.generateTexture(FileConfig.BALL1_FILE_PATH, FileConfig.BALL1_KEY);
-        TextureManager.generateTexture(FileConfig.BALL2_FILE_PATH, FileConfig.BALL2_KEY);
-        TextureManager.generateTexture(FileConfig.OBSTACLE_FILE_PATH, FileConfig.OBSTACLE_KEY);
+        TextureManager.generateTexture(FileConfig.BALL1_IMAGE_PATH, FileConfig.BALL1_KEY);
+        TextureManager.generateTexture(FileConfig.BALL2_IMAGE_PATH, FileConfig.BALL2_KEY);
+        TextureManager.generateTexture(FileConfig.OBSTACLE_IMAGE_PATH, FileConfig.OBSTACLE_KEY);
     }
 
     public BallView(int id, int x,int y, int size, String name)
     {
         super(x, y, size, size);
         this.id = id;
-        this.ballSprite = new Sprite(TextureManager.getTexture(name), width, height);
+        this.ballSprite = new Sprite(TextureManager.getTexture(name));
         this.position= new Vector2(x, y);
         this.targetPosition = new Vector2(x, y);
-        this.ballSprite.setPosition(this.position.x, this.position.y);
     }
 
     @Override
@@ -34,8 +34,9 @@ public class BallView extends GameView {
         batch.begin();
         position.lerp(targetPosition, 0.2f);
         ballSprite.setPosition(position.x, position.y);
+        ballSprite.setSize(width, height);
         ballSprite.draw(batch);
-        batch.begin();
+        batch.end();
     }
 
     public void dropBall(int y){
@@ -44,6 +45,11 @@ public class BallView extends GameView {
 
     public int getBallId(){
         return id;
+    }
+
+    public void setTargetFlag(boolean targetFlag)
+    {
+        this.targetFlag = targetFlag;
     }
 
 }

@@ -2,6 +2,7 @@ package com.aigirls.io.file;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public abstract class CsvFileAccessor {
         List<BaseEntity> list = new ArrayList<BaseEntity>();
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(csvFileHandle.reader());
+            reader = new BufferedReader(new InputStreamReader(csvFileHandle.read(), "SJIS"));
             int index = getColumnIndex(reader.readLine().split(DELIMITER), columnName);
             if(index == NOT_FOUND_COLUMN){
                 return new BaseEntity[0];
@@ -54,7 +55,7 @@ public abstract class CsvFileAccessor {
         List<BaseEntity> list = new ArrayList<BaseEntity>();
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(csvFileHandle.reader());
+            reader = new BufferedReader(new InputStreamReader(csvFileHandle.read(), "SJIS"));
             String line;
             while ((line=reader.readLine()) != null) {
                 list.add(getBaseEntity(line.split(DELIMITER)));
