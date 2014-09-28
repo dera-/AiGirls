@@ -4,7 +4,7 @@ public class DamageCalculateService
 {
     public static int getDamageValue(int attack, int defense)
     {
-        return attack - defense;
+        return (int) Math.round(Math.pow(attack, 2)/(attack+defense));
     }
 
 }

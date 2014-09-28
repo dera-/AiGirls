@@ -31,10 +31,7 @@ public class MagicSelectScreen extends GameScreen {
     }
 
     @Override
-    public void show() {
-        System.out.println("magic card scene");
-
-    }
+    public void show() {}
 
     @Override
     public void hide() {
@@ -63,8 +60,9 @@ public class MagicSelectScreen extends GameScreen {
                 return;
             } else if (selected >= activeMagicModels.length) {
                 ScreenManager.changeScreen(ScreenEnum.GameAtActionReset);
-            } else {
+            } else if(activeMagicModels[selected].canOutbreak()) {
                 OutbreakPlaceSelectScreen.getOutbreakPlaceSelectScreen().setActiveMagicModel(activeMagicModels[selected]);
+                ScreenManager.changeScreen(ScreenEnum.GameAtOutbreakSelect);
             }
         }
     }

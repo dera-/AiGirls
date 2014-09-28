@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 public class HpBarView extends GameView{
     private Vector2 currentPosition;
     private Vector2 targetPosition;
+    private int maxHp;
 
     public HpBarView(int x, int y, int w, int h)
     {
@@ -24,14 +25,28 @@ public class HpBarView extends GameView{
         shapeRenderer.end();
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0, 0, 0, 1);
+        shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.rect(leftX, lowerY, width, height);
         shapeRenderer.end();
     }
 
     public void setRestHp(double changeRate) {
         int changeValue = (int)Math.round(changeRate*width);
-        targetPosition.set(targetPosition.x+changeValue, lowerY);
+        int currentBarXPlace = (int)(targetPosition.x-changeValue);
+        if (currentBarXPlace < leftX) {
+            currentBarXPlace = leftX;
+        }
+        targetPosition.set(currentBarXPlace, lowerY);
+    }
+
+    //TODO こっちに移行予定
+    public void setRestHp(int damage) {
+        int changeValue = (int) Math.round(1.0*damage*width/maxHp);
+        int currentBarXPlace = (int)(targetPosition.x-changeValue);
+        if (currentBarXPlace < leftX) {
+            currentBarXPlace = leftX;
+        }
+        targetPosition.set(currentBarXPlace, lowerY);
     }
 
 }

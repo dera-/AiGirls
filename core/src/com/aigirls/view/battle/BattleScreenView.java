@@ -7,14 +7,15 @@ import com.aigirls.model.battle.CharacterViewModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.view.BoardView;
 import com.aigirls.view.CharacterView;
+import com.aigirls.view.FilledView;
 import com.aigirls.view.GameView;
 import com.aigirls.view.HpBarView;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class BattleScreenView extends GameView
 {
-    private GameView[] views;
     private static final int ALLY_IMAGE   = 0;
     private static final int ENEMY_IMAGE  = 1;
     private static final int ALLY_BOARD   = 2;
@@ -35,6 +36,9 @@ public class BattleScreenView extends GameView
     private static final int CHARACTER_WIDTH = BOARD_WIDTH - 2*BOARD_SIDE_WALL_WIDTH;
     private static final int CHARACTER_HEIGHT = BOARD_HEIGHT - BOARD_BOTTOM_WALL_WIDTH;
 
+    private GameView[] views;
+    private FilledView[] filledViews;
+    private int defenserIndex;
 
     public BattleScreenView(CharacterViewModel ally, CharacterViewModel enemy)
     {
@@ -46,6 +50,11 @@ public class BattleScreenView extends GameView
         views[ENEMY_BOARD]  = new BoardView(ENEMY_X, BOARD_Y, BOARD_WIDTH, BOARD_HEIGHT, BOARD_SIDE_WALL_WIDTH, BOARD_BOTTOM_WALL_WIDTH);
         views[ALLY_HP_BAR]  = new HpBarView(ALLY_X, HP_BAR_Y, HP_BAR_WIDTH, HP_BAR_HEIGHT);
         views[ENEMY_HP_BAR] = new HpBarView(ENEMY_X, HP_BAR_Y, HP_BAR_WIDTH, HP_BAR_HEIGHT);
+
+        filledViews = new FilledView[2];
+
+        filledViews[0] = new FilledView(0, 0, (int) Math.round(0.5 * GameConfig.GAME_WIDTH), GameConfig.GAME_HEIGHT, new Color(0,0,0,0.8f));
+        filledViews[1] = new FilledView((int) Math.round(0.5 * GameConfig.GAME_WIDTH), 0, (int) Math.round(0.5 * GameConfig.GAME_WIDTH), GameConfig.GAME_HEIGHT, new Color(0,0,0,0.8f));
     }
 
     @Override
@@ -53,6 +62,7 @@ public class BattleScreenView extends GameView
         for(GameView view : views){
             view.draw(batch, shapeRenderer);
         }
+        filledViews[defenserIndex].draw(batch, shapeRenderer);
     }
 
     public int getChoicedPlace(int x, int y)
@@ -61,17 +71,17 @@ public class BattleScreenView extends GameView
         return viewer.getChoicedPlace(x, y);
     }
 
-    public void dropBall(int id, int x, int y, PlayerEnum player)
+    public void addBall(int id, int x, int y, PlayerEnum player)
     {
-        dropBall(id, x, y, getBoardView(player), getBallName(player));
+        addBall(id, x, y, getBoardView(player), getBallName(player));
     }
 
-    public void dropObstacle(int id, int x, int y, PlayerEnum player)
+    public void addObstacle(int id, int x, int y, PlayerEnum player)
     {
-        dropBall(id, x, y, getBoardView(player), FileConfig.OBSTACLE_KEY);
+        addBall(id, x, y, getBoardView(player), FileConfig.OBSTACLE_KEY);
     }
 
-    private void dropBall(int id, int x, int y, BoardView board, String name)
+    private void addBall(int id, int x, int y, BoardView board, String name)
     {
         if(board == null || name == null) return;
         board.addBall(id, x, y, name);
@@ -92,7 +102,29 @@ public class BattleScreenView extends GameView
 
     public void setTargetBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
     {
-        getBoardView(player).setTargetFlags(ballsInfo);
+        BoardView board = getBoardView(player);
+        board.initializeTargetFlags();
+        for (BallInfoModel ball : ballsInfo) {
+            board.setTargetFlag(ball.id);
+        }
+    }
+
+    public void removeBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        if (board == null) return;
+        for (BallInfoModel ball : ballsInfo) {
+            board.removeBall(ball.id);
+        }
+    }
+
+    public void dropBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        if (board == null) return;
+        for (BallInfoModel ball : ballsInfo) {
+            board.dropBall(ball.id, ball.y);
+        }
     }
 
     private BoardView getBoardView(PlayerEnum player)
@@ -129,6 +161,10 @@ public class BattleScreenView extends GameView
             default:
                 return null;
         }
+    }
+
+    public void setDefenserIndex(int index) {
+        this.defenserIndex = index;
     }
 
 }

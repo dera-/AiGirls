@@ -7,7 +7,9 @@ import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.EnemyType;
 import com.aigirls.screen.battle.ActionSelectScreen;
 import com.aigirls.screen.battle.BattleScreen;
+import com.aigirls.screen.battle.MagicOutbreakScreen;
 import com.aigirls.screen.battle.MagicSelectScreen;
+import com.aigirls.screen.battle.OutbreakPlaceSelectScreen;
 import com.badlogic.gdx.Screen;
 
 public class ScreenManager {
@@ -24,6 +26,12 @@ public class ScreenManager {
                 break;
             case GameAtMagicSelect:
                 screenStack.push(MagicSelectScreen.getMagicSelectScreen());
+                break;
+            case GameAtOutbreakSelect:
+                screenStack.push(OutbreakPlaceSelectScreen.getOutbreakPlaceSelectScreen());
+                break;
+            case GameAtMagicOutbreak:
+                screenStack.push(MagicOutbreakScreen.getMagicOutbreakScreen());
                 break;
             case GameAtActionReset:
                 screenStack.pop();

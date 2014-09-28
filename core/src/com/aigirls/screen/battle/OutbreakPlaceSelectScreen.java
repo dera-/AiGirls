@@ -1,9 +1,14 @@
 package com.aigirls.screen.battle;
 
+import java.awt.Point;
+
+import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.battle.ActiveMagicModel;
+import com.aigirls.param.ScreenEnum;
 import com.aigirls.screen.GameScreen;
 import com.aigirls.view.battle.BattleScreenView;
 import com.aigirls.view.battle.OutbreakPlaceSelectView;
+import com.badlogic.gdx.Gdx;
 
 public class OutbreakPlaceSelectScreen extends GameScreen {
     private static OutbreakPlaceSelectScreen screen;
@@ -49,7 +54,19 @@ public class OutbreakPlaceSelectScreen extends GameScreen {
 
     @Override
     protected void update(float delta) {
-        //TODO ボタンを押したときの処理
+        if (Gdx.input.justTouched()) {
+            Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
+            int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
+            if (selected == OutbreakPlaceSelectView.DECIDE_BUTTOM_INDEX) {
+                MagicOutbreakScreen.getMagicOutbreakScreen().setOutbrokenMagic(
+                    BattleScreen.ALLY_INDEX,
+                    getGameView().getActiveMagicModel(),
+                    getGameView().getBallInfoModels());
+                ScreenManager.changeScreen(ScreenEnum.GameAtMagicOutbreak);
+            } else if (selected == OutbreakPlaceSelectView.CANCEL_BUTTOM_INDEX) {
+                ScreenManager.changeScreen(ScreenEnum.GameAtActionReset);
+            }
+        }
     }
 
     protected OutbreakPlaceSelectView getGameView()

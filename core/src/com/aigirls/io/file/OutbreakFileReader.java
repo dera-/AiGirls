@@ -18,7 +18,6 @@ public class OutbreakFileReader {
         MagicOutbreakModel model = null;
         BufferedReader reader = null;
         String filePath = FileConfig.OUTBREAK_FILE_DIR_PATH + fileName;
-        System.out.println(filePath);
         try {
             reader = new BufferedReader(new InputStreamReader(FileManager.getFileHandle(filePath).read()));
             int width = Integer.parseInt(reader.readLine());

@@ -35,8 +35,8 @@ public class MagicModel {
     private List<BallInfoModel[]> getTargetBallsInfo(BallModel[][] balls)
     {
         List<BallInfoModel[]> targets = new ArrayList<BallInfoModel[]>();
-        for (int y=0; y<GameConfig.BOARD_HEIGHT-outbreakModel.getConditionHeight(); y++) {
-            for(int x=0; x<GameConfig.BOARD_WIDTH-outbreakModel.getConditionWidth(); x++){
+        for (int y=0; y<=GameConfig.BOARD_HEIGHT-outbreakModel.getConditionHeight(); y++) {
+            for(int x=0; x<=GameConfig.BOARD_WIDTH-outbreakModel.getConditionWidth(); x++){
                 BallInfoModel[] target = getTargetBallInfo(balls, x, y);
                 if (target != null) {
                     targets.add(target);

@@ -6,6 +6,8 @@ public enum ScreenEnum {
     GameAtActionSelect,
     GameAtMagicSelect,
     GameAtActionReset,
+    GameAtOutbreakSelect,
+    GameAtMagicOutbreak,
     StartBattle,
     GameAtFinishTurn,
 }

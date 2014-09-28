@@ -7,7 +7,6 @@ import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.TextureManager;
 import com.aigirls.model.ChoiceListModel;
-import com.aigirls.model.battle.BallInfoModel;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -45,29 +44,36 @@ public class BoardView extends SelectView{
     public void addBall(int id, int x, int y, String ballName)
     {
         BallView ball = new BallView(id, getX(x), getY(GameConfig.BOARD_HEIGHT), interval, ballName);
-        ball.dropBall(getY(y));
+        ball.drop(getY(y));
         balls.add(ball);
     }
 
     public void removeBall(int id)
     {
         for (BallView ball: balls) {
-            if (id==ball.getBallId()) {
+            if (id == ball.getBallId()) {
                 balls.remove(ball);
                 return;
             }
         }
     }
 
-    public void setTargetFlags(BallInfoModel[] ballsInfo)
+    public void dropBall(int id, int y)
     {
-        initializeTargetFlags();
-        for (BallInfoModel info : ballsInfo) {
-            for (BallView ball: balls) {
-                if (info.id == ball.getBallId()) {
-                    ball.setTargetFlag(true);
-                    break;
-                }
+        for (BallView ball: balls) {
+            if (id == ball.getBallId()) {
+                ball.drop(getY(y));
+                return;
+            }
+        }
+    }
+
+    public void setTargetFlag(int id)
+    {
+        for (BallView ball: balls) {
+            if (id == ball.getBallId()) {
+                ball.setTargetFlag(true);
+                return;
             }
         }
     }

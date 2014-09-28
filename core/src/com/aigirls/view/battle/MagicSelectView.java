@@ -48,7 +48,6 @@ public class MagicSelectView extends SelectView {
         int x = START_X;
         int y = START_Y;
         for (int i=0; i<magics.length; i++) {
-            System.out.println(magics[i].getName());
             cardViews[i] = new MagicCardView(x, y, CARD_WIDTH, magics[i]);
             if ((i%CARD_HALF_NUMS) == (CARD_HALF_NUMS-1)) {
                 x = START_X;

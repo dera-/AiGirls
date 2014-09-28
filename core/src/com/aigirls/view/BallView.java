@@ -12,7 +12,8 @@ public class BallView extends GameView {
     private Sprite ballSprite;
     private Vector2 position;
     private Vector2 targetPosition;
-    private boolean targetFlag = false;  //TODO このフラグ使ってボール選択時の描画
+    private boolean targetFlag = false;
+    private Sprite starSprite;
 
     static {
         TextureManager.generateTexture(FileConfig.BALL1_IMAGE_PATH, FileConfig.BALL1_KEY);
@@ -27,6 +28,7 @@ public class BallView extends GameView {
         this.ballSprite = new Sprite(TextureManager.getTexture(name));
         this.position= new Vector2(x, y);
         this.targetPosition = new Vector2(x, y);
+        starSprite = new Sprite(TextureManager.getTexture(FileConfig.STAR_KEY));
     }
 
     @Override
@@ -36,10 +38,15 @@ public class BallView extends GameView {
         ballSprite.setPosition(position.x, position.y);
         ballSprite.setSize(width, height);
         ballSprite.draw(batch);
+        if(targetFlag){
+            starSprite.setPosition(position.x, position.y);
+            starSprite.setSize(width, height);
+            starSprite.draw(batch);
+        }
         batch.end();
     }
 
-    public void dropBall(int y){
+    public void drop(int y){
         targetPosition.set(targetPosition.x, y);
     }
 

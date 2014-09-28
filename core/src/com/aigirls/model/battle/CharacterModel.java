@@ -11,8 +11,8 @@ public class CharacterModel
     private int magicAttack;
     private int magicDefense;
     private CharacterViewModel viewModel;
-    private MagicModel[] magics;
-    private BoardModel board;
+    protected MagicModel[] magics;
+    protected BoardModel board;
 
     public CharacterModel(CharacterEntity entity, MagicModel[] magics){
         this.maxHp        = entity.hp;
@@ -39,6 +39,11 @@ public class CharacterModel
     public int getDefense()
     {
         return defense;
+    }
+
+    public int getMagicAttack()
+    {
+        return magicAttack;
     }
 
     public int getMagicDefense()
@@ -73,6 +78,25 @@ public class CharacterModel
 
     public void beHurt(int damage) {
         this.currentHp -= damage;
+    }
+
+    public boolean isAlive ()
+    {
+        return currentHp > 0 && board.isExistPlaceToPut();
+    }
+
+    public void outbreakMagic(int damage, BallInfoModel[] targets) {
+        board.outbreakMagic(damage, targets);
+    }
+
+    public BallInfoModel[] getRemovedBallInfoModels()
+    {
+        return board.getRemovedBallInfoModels();
+    }
+
+    public BallInfoModel[] dropBalls()
+    {
+        return board.dropBalls();
     }
 
     public ActiveMagicModel[] getActiveMagicModels()

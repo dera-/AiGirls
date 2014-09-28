@@ -13,6 +13,7 @@ public class TextureManager
         generateTexture(FileConfig.BUTTOM_IMAGE_PATH, FileConfig.BUTTOM_KEY);
         generateTexture(FileConfig.RIGHT_ARROW_IMAGE_PATH, FileConfig.RIGHT_ARROW_KEY);
         generateTexture(FileConfig.LEFT_ARROW_IMAGE_PATH, FileConfig.LEFT_ARROW_KEY);
+        generateTexture(FileConfig.STAR_IMAGE_PATH, FileConfig.STAR_KEY);
     }
 
     public static void setTexture(String name, Texture texture)
