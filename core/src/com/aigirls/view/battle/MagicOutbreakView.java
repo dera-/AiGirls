@@ -3,6 +3,7 @@ package com.aigirls.view.battle;
 import com.aigirls.config.GameConfig;
 import com.aigirls.model.battle.BallInfoModel;
 import com.aigirls.param.battle.PlayerEnum;
+import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.view.GameView;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -32,9 +33,14 @@ public class MagicOutbreakView extends GameView {
         battleScreenView.dropBalls(ballsInfo, player);
     }
 
-    public void damageToChara(double changeRate, PlayerEnum player)
+    public void damageToChara(int damage, PlayerEnum player)
     {
-        battleScreenView.moveHpBar(changeRate, player);
+        battleScreenView.moveHpBar(damage, player);
+    }
+
+    public void filledNothing () {
+        this.battleScreenView.setFilledAllowFlag(BattleScreen.ALLY_INDEX, false);
+        this.battleScreenView.setFilledAllowFlag(BattleScreen.ENEMY_INDEX, false);
     }
 
 }

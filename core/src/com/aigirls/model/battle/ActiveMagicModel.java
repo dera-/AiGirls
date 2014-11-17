@@ -45,6 +45,9 @@ public class ActiveMagicModel {
     }
 
     public Point[] getConditionBallPlaces() {
+        if (outbreak == null) {
+            return new Point[0];
+        }
         Point[] ballPlaces = outbreak.getConditionBallPlaces();
         Point[] normalizedBallPlaces = new Point[ballPlaces.length];
         int width = outbreak.getConditionWidth();
@@ -67,6 +70,9 @@ public class ActiveMagicModel {
     }
 
     public double getStrength(double attackWeight, double ballAttackWeight) {
+        if (outbreak == null) {
+            return 0;
+        }
         int ballNums = outbreak.getConditionBallPlaces().length;
         return (attackWeight*attackRate + ballAttackWeight*ballAttackRate) / ballNums;
     }

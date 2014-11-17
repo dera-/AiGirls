@@ -31,7 +31,9 @@ public class MagicSelectScreen extends GameScreen {
     }
 
     @Override
-    public void show() {}
+    public void show() {
+        getGameView().filledEnemyView();
+    }
 
     @Override
     public void hide() {

@@ -7,6 +7,7 @@ import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.TextureManager;
 import com.aigirls.model.ChoiceListModel;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -19,6 +20,7 @@ public class BoardView extends SelectView{
     private Sprite rightWallSprite;
     private Sprite bottomWallSprite;
     private List<BallView> balls;
+    private FilledView filledView;
 
     static {
         TextureManager.generateTexture(FileConfig.SIDE_WALL_IMAGE_PATH, FileConfig.SIDE_WALL_KEY);
@@ -33,9 +35,11 @@ public class BoardView extends SelectView{
         initializeTextures();
         interval = (int)Math.round(1.0*width/GameConfig.BOARD_WIDTH);
         balls = new ArrayList<BallView>();
+        filledView = new FilledView(x, y, w, h, new Color(0,0,0,0.8f));
     }
 
-    private void initializeTextures(){
+    private void initializeTextures()
+    {
         leftWallSprite   = new Sprite(TextureManager.getTexture(FileConfig.SIDE_WALL_KEY));
         rightWallSprite  = new Sprite(TextureManager.getTexture(FileConfig.SIDE_WALL_KEY));
         bottomWallSprite = new Sprite(TextureManager.getTexture(FileConfig.BOTTOM_WALL_KEY));
@@ -113,6 +117,8 @@ public class BoardView extends SelectView{
             shapeRenderer.line(leftX+dx, lowerY, leftX+dx, lowerY+height);
         }
         shapeRenderer.end();
+
+
     }
 
     @Override

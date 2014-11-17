@@ -28,7 +28,9 @@ public class ActionSelectScreen extends GameScreen{
     }
 
     @Override
-    public void show() {}
+    public void show() {
+        getGameView().filledAll();
+    }
 
     @Override
     public void hide() {}

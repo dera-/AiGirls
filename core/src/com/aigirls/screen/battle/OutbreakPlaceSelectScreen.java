@@ -34,6 +34,7 @@ public class OutbreakPlaceSelectScreen extends GameScreen {
 
     @Override
     public void show() {
+        getGameView().filledNothing();
         getGameView().setTargetBalls();
     }
 

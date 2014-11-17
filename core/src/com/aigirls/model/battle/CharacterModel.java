@@ -21,7 +21,7 @@ public class CharacterModel
         this.defense      = entity.defense;
         this.magicAttack  = entity.magicAttack;
         this.magicDefense = entity.magicDefense;
-        this.viewModel = new CharacterViewModel(entity.name, entity.imageName);
+        this.viewModel = new CharacterViewModel(entity.name, entity.imageName, entity.hp);
         this.magics = magics;
         this.board = new BoardModel();
     }

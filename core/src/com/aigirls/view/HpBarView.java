@@ -1,5 +1,8 @@
 package com.aigirls.view;
 
+import com.aigirls.config.FileConfig;
+import com.aigirls.manager.BitmapFontManager;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -7,13 +10,16 @@ import com.badlogic.gdx.math.Vector2;
 public class HpBarView extends GameView{
     private Vector2 currentPosition;
     private Vector2 targetPosition;
-    private int maxHp;
+    private BitmapFont font;
+    private final int maxHp;
 
-    public HpBarView(int x, int y, int w, int h)
+    public HpBarView(int x, int y, int w, int h, int hp)
     {
         super(x, y, w, h);
         currentPosition = new Vector2(x+width, y);
         targetPosition = new Vector2(x+width, y);
+        font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
+        maxHp = hp;
     }
 
     @Override
@@ -28,18 +34,17 @@ public class HpBarView extends GameView{
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.rect(leftX, lowerY, width, height);
         shapeRenderer.end();
+
+        batch.begin();
+        font.setColor(1, 1, 1, 1);
+        double spaceRateX = 0.1;
+        double spaceRateY = 0.18;
+        //HPの値の描画
+        int currentHp = (int) Math.round(1.0 * maxHp * (targetPosition.x - leftX) / width);
+        font.draw(batch, currentHp + "/" + maxHp, (int)(leftX+spaceRateX*width), (int)(lowerY + (1-spaceRateY) * height));
+        batch.end();
     }
 
-    public void setRestHp(double changeRate) {
-        int changeValue = (int)Math.round(changeRate*width);
-        int currentBarXPlace = (int)(targetPosition.x-changeValue);
-        if (currentBarXPlace < leftX) {
-            currentBarXPlace = leftX;
-        }
-        targetPosition.set(currentBarXPlace, lowerY);
-    }
-
-    //TODO こっちに移行予定
     public void setRestHp(int damage) {
         int changeValue = (int) Math.round(1.0*damage*width/maxHp);
         int currentBarXPlace = (int)(targetPosition.x-changeValue);

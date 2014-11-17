@@ -26,6 +26,7 @@ public class BattleScreen extends GameScreen
     private int turnNum = 0;
     private int currentAttackerIndex = 0;
     private boolean putBall = false; //プレイヤーがボールを置いたかどうかの状態を一時的に保存するフラグ
+    private float time = 0;
 
     public BattleScreen(CharacterModel ally, CharacterModel enemy)
     {
@@ -51,14 +52,13 @@ public class BattleScreen extends GameScreen
                     players[ALLY_INDEX].getAttack(),
                     players[ENEMY_INDEX].getDefense());
                 players[ENEMY_INDEX].beHurt(-1*damage);
-                double recoverRate = -1.0*damage/players[ENEMY_INDEX].getMaxHp();
-                getGameView().moveHpBar(recoverRate, getPlayerEnum(ENEMY_INDEX));
+                getGameView().moveHpBar(-1*damage, getPlayerEnum(ENEMY_INDEX));
             }
         } else if (currentAttackerIndex == ENEMY_INDEX) {
             ((EnemyCharacterModel) players[ENEMY_INDEX]).formatTemporaryParameters();
         }
         putBall = false;
-        getGameView().setDefenserIndex((currentAttackerIndex+1)%2);
+        getGameView().filledDefenderView((currentAttackerIndex+1)%2);
     }
 
     @Override
@@ -95,6 +95,9 @@ public class BattleScreen extends GameScreen
             putBall = true;
             ScreenManager.changeScreen(ScreenEnum.GameAtActionSelect);
         } else if (currentAttackerIndex == ENEMY_INDEX) {
+            time += delta;
+            if(time < 2f) return;
+            time = 0;
             EnemyCharacterModel enemy = (EnemyCharacterModel) players[ENEMY_INDEX];
             int xPlace = enemy.decidePutPlace(players[ALLY_INDEX]);
             dropBallEvent(xPlace, players[currentAttackerIndex].getDropPlace(xPlace));
@@ -103,6 +106,7 @@ public class BattleScreen extends GameScreen
             BallInfoModel[] balls = enemy.getBallsToUse();
             if (magic == null) {
                 ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
+                getGameView().filledDefenderView((currentAttackerIndex+1)%2);
             } else {
                 MagicOutbreakScreen.getMagicOutbreakScreen().setOutbrokenMagic(BattleScreen.ENEMY_INDEX, magic, balls);
                 ScreenManager.changeScreen(ScreenEnum.GameAtMagicOutbreak);
@@ -132,8 +136,7 @@ public class BattleScreen extends GameScreen
                 players[currentAttackerIndex].getAttack(),
                 players[defenserIndex].getDefense());
             players[defenserIndex].beHurt(damage);
-            double damageRate = 1.0*damage/players[defenserIndex].getMaxHp();
-            getGameView().moveHpBar(damageRate, getPlayerEnum(defenserIndex));
+            getGameView().moveHpBar(damage, getPlayerEnum(defenserIndex));
         } else {
             players[defenserIndex].setBall(
                 xPlace,

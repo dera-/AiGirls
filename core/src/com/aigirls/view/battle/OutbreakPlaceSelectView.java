@@ -9,6 +9,8 @@ import com.aigirls.model.ChoiceModel;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.model.battle.BallInfoModel;
 import com.aigirls.param.battle.PlayerEnum;
+import com.aigirls.screen.battle.BattleScreen;
+import com.aigirls.view.ButtomView;
 import com.aigirls.view.SelectView;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -34,9 +36,9 @@ public class OutbreakPlaceSelectView extends SelectView {
     private BattleScreenView battleScreenView;
     private Sprite rightAllowSprite;
     private Sprite leftAllowSprite;
-    private Sprite decideButtomSprite;
-    private Sprite cancelButtomSprite;
     private BitmapFont font;
+    private ButtomView decideButtomView;
+    private ButtomView cancelButtomView;
 
     private ActiveMagicModel activeMagicModel = null;
     private int currentSelected = 0;
@@ -46,8 +48,8 @@ public class OutbreakPlaceSelectView extends SelectView {
         this.battleScreenView = battleScreenView;
         rightAllowSprite = new Sprite(TextureManager.getTexture(FileConfig.RIGHT_ARROW_KEY));
         leftAllowSprite = new Sprite(TextureManager.getTexture(FileConfig.LEFT_ARROW_KEY));
-        decideButtomSprite = new Sprite(TextureManager.getTexture(FileConfig.BUTTOM_KEY));
-        cancelButtomSprite = new Sprite(TextureManager.getTexture(FileConfig.BUTTOM_KEY));
+        decideButtomView = new ButtomView(DECIDE_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "決定");
+        cancelButtomView = new ButtomView(CANCEL_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "戻る");
         font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
     }
 
@@ -61,18 +63,9 @@ public class OutbreakPlaceSelectView extends SelectView {
         leftAllowSprite.setPosition(LEFT_ARROW_X, ARROW_Y);
         leftAllowSprite.setSize(ARROW_WIDTH, ARROW_HEIGHT);
         leftAllowSprite.draw(batch);
-        decideButtomSprite.setPosition(DECIDE_BUTTOM_X, BUTTOM_Y);
-        decideButtomSprite.setSize(BUTTOM_WIDTH, BUTTOM_HEIGHT);
-        decideButtomSprite.draw(batch);
-        cancelButtomSprite.setPosition(CANCEL_BUTTOM_X, BUTTOM_Y);
-        cancelButtomSprite.setSize(BUTTOM_WIDTH, BUTTOM_HEIGHT);
-        cancelButtomSprite.draw(batch);
-        font.setColor(1, 1, 1, 1);
-        double spaceRateX = 0.1;
-        double spaceRateY = 0.2;
-        font.draw(batch, "決定", (int)(DECIDE_BUTTOM_X+spaceRateX*BUTTOM_WIDTH), (int)(BUTTOM_Y+BUTTOM_HEIGHT-spaceRateY*BUTTOM_HEIGHT));
-        font.draw(batch, "キャンセル", (int)(CANCEL_BUTTOM_X+spaceRateX*BUTTOM_WIDTH), (int)(BUTTOM_Y+BUTTOM_HEIGHT-spaceRateY*BUTTOM_HEIGHT));
         batch.end();
+        decideButtomView.draw(batch, shapeRenderer);
+        cancelButtomView.draw(batch, shapeRenderer);
     }
 
     public void setActiveMagicModel(ActiveMagicModel magic)
@@ -136,6 +129,9 @@ public class OutbreakPlaceSelectView extends SelectView {
         currentSelected = 0;
     }
 
-
+    public void filledNothing () {
+        this.battleScreenView.setFilledAllowFlag(BattleScreen.ALLY_INDEX, false);
+        this.battleScreenView.setFilledAllowFlag(BattleScreen.ENEMY_INDEX, false);
+    }
 
 }

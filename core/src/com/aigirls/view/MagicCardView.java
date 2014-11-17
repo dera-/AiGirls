@@ -14,10 +14,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class MagicCardView extends GameView {
     private static final double CARD_SPACE_RATE = 0.8;
-    private Point[] ballPlaces;
-    private boolean canUse;
     private int ballSize;
-    private String magicName;
+    private ActiveMagicModel magicInfo;
     private BitmapFont font;
     private FilledView filledView;
 
@@ -26,15 +24,7 @@ public class MagicCardView extends GameView {
         super(x, y, cardWidth, (int)Math.round(cardWidth/CARD_SPACE_RATE));
         ballSize = cardWidth / GameConfig.BOARD_WIDTH;
         font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
-        if (magic != null) {
-            ballPlaces = magic.getConditionBallPlaces();
-            canUse = magic.canOutbreak();
-            magicName = magic.getName();
-        } else {
-            ballPlaces = new Point[0];
-            canUse = true;
-            magicName = "戻る";
-        }
+        magicInfo = magic;
         filledView = new FilledView(leftX, lowerY, width, height, new Color(0, 0, 0, 0.8f));
     }
 
@@ -47,6 +37,7 @@ public class MagicCardView extends GameView {
         //ボールの描画
         int radius = ballSize/2;
         shapeRenderer.setColor(0.1f, 0.75f, 0.4f, 1);
+        Point[] ballPlaces = magicInfo.getConditionBallPlaces();
         for (int i=0; i<ballPlaces.length; i++) {
             shapeRenderer.circle(leftX+radius+ballSize*ballPlaces[i].x, lowerY+radius+ballSize*ballPlaces[i].y, radius);
         }
@@ -65,13 +56,22 @@ public class MagicCardView extends GameView {
         font.setColor(0, 0, 0, 1);
         double spaceRateX = 0.1;
         double spaceRateY = 0.18;
-        font.draw(batch, magicName, (int)(leftX+spaceRateX*width), (int)(lowerY+(CARD_SPACE_RATE+spaceRateY)*height));
+        font.draw(batch, magicInfo.getName(), (int)(leftX+spaceRateX*width), (int)(lowerY+(CARD_SPACE_RATE+spaceRateY)*height));
         batch.end();
 
-        if (!canUse) {
+        if (!magicInfo.canOutbreak()) {
             filledView.draw(batch, shapeRenderer);
         }
+    }
 
+    public int getAttackPercent()
+    {
+        return (int) Math.round(100*magicInfo.getAttackRate());
+    }
+
+    public int getBallAttackPercent()
+    {
+        return (int) Math.round(100*magicInfo.getBallAttackRate());
     }
 
     public ChoiceModel getChoiceModel()

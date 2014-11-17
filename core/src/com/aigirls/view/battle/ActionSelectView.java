@@ -1,9 +1,11 @@
 package com.aigirls.view.battle;
 
+import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
-import com.aigirls.view.FilledView;
+import com.aigirls.manager.BitmapFontManager;
+import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.view.VerticallyLongMenuView;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -14,7 +16,7 @@ public class ActionSelectView extends VerticallyLongMenuView{
     private static final int ACTION_NUMS = 3;
     private static String[] choiceItems = new String[ACTION_NUMS];
     private BattleScreenView battleScreenView;
-    private FilledView filledView;
+    private BitmapFont font;
 
     static{
         choiceItems[0] = "戻る";
@@ -32,7 +34,7 @@ public class ActionSelectView extends VerticallyLongMenuView{
                 choiceItems
                 );
         this.battleScreenView = battleScreenView;
-        filledView = new FilledView(0, 0, GameConfig.GAME_WIDTH, GameConfig.GAME_HEIGHT, new Color(0, 0, 0, 0.8f));
+        font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
     }
 
     @Override
@@ -40,10 +42,17 @@ public class ActionSelectView extends VerticallyLongMenuView{
     {
         //バトル画面の描画
         battleScreenView.draw(batch, shapeRenderer);
-        //全体塗りつぶし
-        filledView.draw(batch, shapeRenderer);
         //選択肢メニューの描画
         super.draw(batch, shapeRenderer);
+
+        batch.begin();
+        font.draw(batch, "行動選択フェイズ", (int)Math.round(0.4*GameConfig.GAME_WIDTH), (int)Math.round(0.1*GameConfig.GAME_HEIGHT));
+        batch.end();
+    }
+
+    public void filledAll () {
+        this.battleScreenView.setFilledAllowFlag(BattleScreen.ALLY_INDEX, true);
+        this.battleScreenView.setFilledAllowFlag(BattleScreen.ENEMY_INDEX, true);
     }
 
 }

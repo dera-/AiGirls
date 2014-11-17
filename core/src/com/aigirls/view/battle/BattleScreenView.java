@@ -38,7 +38,7 @@ public class BattleScreenView extends GameView
 
     private GameView[] views;
     private FilledView[] filledViews;
-    private int defenserIndex;
+    private boolean[] filledAllows;
 
     public BattleScreenView(CharacterViewModel ally, CharacterViewModel enemy)
     {
@@ -48,13 +48,16 @@ public class BattleScreenView extends GameView
         views[ENEMY_IMAGE]  = new CharacterView(ENEMY_X, BOARD_Y, CHARACTER_WIDTH, CHARACTER_HEIGHT, enemy);
         views[ALLY_BOARD]   = new BoardView(ALLY_X, BOARD_Y, BOARD_WIDTH, BOARD_HEIGHT, BOARD_SIDE_WALL_WIDTH, BOARD_BOTTOM_WALL_WIDTH);
         views[ENEMY_BOARD]  = new BoardView(ENEMY_X, BOARD_Y, BOARD_WIDTH, BOARD_HEIGHT, BOARD_SIDE_WALL_WIDTH, BOARD_BOTTOM_WALL_WIDTH);
-        views[ALLY_HP_BAR]  = new HpBarView(ALLY_X, HP_BAR_Y, HP_BAR_WIDTH, HP_BAR_HEIGHT);
-        views[ENEMY_HP_BAR] = new HpBarView(ENEMY_X, HP_BAR_Y, HP_BAR_WIDTH, HP_BAR_HEIGHT);
+        views[ALLY_HP_BAR]  = new HpBarView(ALLY_X, HP_BAR_Y, HP_BAR_WIDTH, HP_BAR_HEIGHT, ally.getMaxHp());
+        views[ENEMY_HP_BAR] = new HpBarView(ENEMY_X, HP_BAR_Y, HP_BAR_WIDTH, HP_BAR_HEIGHT, enemy.getMaxHp());
 
         filledViews = new FilledView[2];
+        filledViews[0] = new FilledView(0, 0, (int) Math.round(0.5 * GameConfig.GAME_WIDTH), GameConfig.GAME_HEIGHT, new Color(0,0,0,0.5f));
+        filledViews[1] = new FilledView((int) Math.round(0.5 * GameConfig.GAME_WIDTH), 0, (int) Math.round(0.5 * GameConfig.GAME_WIDTH), GameConfig.GAME_HEIGHT, new Color(0,0,0,0.5f));
 
-        filledViews[0] = new FilledView(0, 0, (int) Math.round(0.5 * GameConfig.GAME_WIDTH), GameConfig.GAME_HEIGHT, new Color(0,0,0,0.8f));
-        filledViews[1] = new FilledView((int) Math.round(0.5 * GameConfig.GAME_WIDTH), 0, (int) Math.round(0.5 * GameConfig.GAME_WIDTH), GameConfig.GAME_HEIGHT, new Color(0,0,0,0.8f));
+        filledAllows = new boolean[2];
+        filledAllows[0] = false;
+        filledAllows[1] = false;
     }
 
     @Override
@@ -62,7 +65,11 @@ public class BattleScreenView extends GameView
         for(GameView view : views){
             view.draw(batch, shapeRenderer);
         }
-        filledViews[defenserIndex].draw(batch, shapeRenderer);
+        for (int i=0; i<filledAllows.length; i++) {
+            if (filledAllows[i]) {
+                filledViews[i].draw(batch, shapeRenderer);
+            }
+        }
     }
 
     public int getChoicedPlace(int x, int y)
@@ -94,10 +101,10 @@ public class BattleScreenView extends GameView
         board.removeBall(id);
     }
 
-    public void moveHpBar(double changeRate, PlayerEnum player)
+    public void moveHpBar(int damage, PlayerEnum player)
     {
         HpBarView hpBar = getHpBarView(player);
-        hpBar.setRestHp(changeRate);
+        hpBar.setRestHp(damage);
     }
 
     public void setTargetBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
@@ -163,8 +170,16 @@ public class BattleScreenView extends GameView
         }
     }
 
-    public void setDefenserIndex(int index) {
-        this.defenserIndex = index;
+    public void setFilledAllowFlag(int index, boolean allow) {
+        if (index<0 || filledAllows.length<=index) {
+            return;
+        }
+        filledAllows[index] = allow;
+    }
+
+    public void filledDefenderView(int defenderIndex) {
+        filledAllows[defenderIndex] = true;
+        filledAllows[(defenderIndex+1)%2] = false;
     }
 
 }

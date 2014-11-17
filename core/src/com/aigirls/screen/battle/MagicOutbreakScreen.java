@@ -59,6 +59,7 @@ public class MagicOutbreakScreen extends GameScreen {
 
     @Override
     public void show() {
+        getGameView().filledNothing();
         int defenderIndex = (attackerIndex+1)%2;
         damage =
             DamageCalculateService.getDamageValue(
@@ -87,9 +88,7 @@ public class MagicOutbreakScreen extends GameScreen {
         getGameView().removeBalls(targetBalls, getPlayerEnum(attackerIndex));
         getGameView().removeBalls(removedBalls, getPlayerEnum(attackerIndex));
         getGameView().dropBalls(droppedBalls, getPlayerEnum(attackerIndex));
-        getGameView().damageToChara(
-            1.0*damage/players[(attackerIndex+1)%2].getMaxHp(),
-            getPlayerEnum((attackerIndex+1)%2));
+        getGameView().damageToChara(damage, getPlayerEnum((attackerIndex+1)%2));
         ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
     }
 
