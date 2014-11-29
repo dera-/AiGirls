@@ -18,6 +18,7 @@ public class MagicCardView extends GameView {
     private ActiveMagicModel magicInfo;
     private BitmapFont font;
     private FilledView filledView;
+    private Point cardPlace;
 
     public MagicCardView(int x, int y, int cardWidth, ActiveMagicModel magic)
     {
@@ -26,11 +27,14 @@ public class MagicCardView extends GameView {
         font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
         magicInfo = magic;
         filledView = new FilledView(leftX, lowerY, width, height, new Color(0, 0, 0, 0.8f));
+        cardPlace = new Point(x, y);
     }
 
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer)
     {
+        int leftX = cardPlace.x;
+        int lowerY = cardPlace.y;
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.rect(leftX, lowerY, width, height);
@@ -77,6 +81,21 @@ public class MagicCardView extends GameView {
     public ChoiceModel getChoiceModel()
     {
         return new ChoiceModel(leftX, lowerY, width, height);
+    }
+
+    public void setCardPlace(int x, int y)
+    {
+        cardPlace.move(x, y);
+    }
+
+    public void resetCardPlace()
+    {
+        cardPlace.move(leftX, lowerY);
+    }
+
+    public Point getCardPlace()
+    {
+        return cardPlace;
     }
 
 }

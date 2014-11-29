@@ -13,6 +13,7 @@ public class CharacterModel
     private CharacterViewModel viewModel;
     protected MagicModel[] magics;
     protected BoardModel board;
+    protected BallStackModel ballStack;
 
     public CharacterModel(CharacterEntity entity, MagicModel[] magics){
         this.maxHp        = entity.hp;
@@ -24,6 +25,7 @@ public class CharacterModel
         this.viewModel = new CharacterViewModel(entity.name, entity.imageName, entity.hp);
         this.magics = magics;
         this.board = new BoardModel();
+        this.ballStack = new BallStackModel();
     }
 
     public int getMaxHp()
@@ -51,14 +53,25 @@ public class CharacterModel
         return magicDefense;
     }
 
+    public void addBallToStack(int num)
+    {
+        ballStack.addBall(num);
+    }
+
     public void setBall(int x, BallModel ball)
     {
+        ballStack.removeBall();
         board.setBall(x, ball);
+    }
+
+    public boolean canReleaseBallFromStack()
+    {
+        return ballStack.isExistBall();
     }
 
     public boolean canPutBall(int x)
     {
-        return board.canSetBall(x);
+        return ballStack.isExistBall() && board.canSetBall(x);
     }
 
     public int getDropPlace(int x)
@@ -66,9 +79,13 @@ public class CharacterModel
         return board.getDropPlace(x);
     }
 
-    public boolean removeBall(int id)
+    public boolean cancelAddingBall(int id)
     {
-        return board.removeBall(id);
+        boolean ballExist = board.removeBall(id);
+        if (ballExist) {
+            ballStack.addBall();
+        }
+        return ballExist;
     }
 
     public CharacterViewModel getCharacterViewModel()

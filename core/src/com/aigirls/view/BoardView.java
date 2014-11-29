@@ -20,7 +20,7 @@ public class BoardView extends SelectView{
     private Sprite rightWallSprite;
     private Sprite bottomWallSprite;
     private List<BallView> balls;
-    private FilledView filledView;
+    private FilledView filledLineView = null;
 
     static {
         TextureManager.generateTexture(FileConfig.SIDE_WALL_IMAGE_PATH, FileConfig.SIDE_WALL_KEY);
@@ -35,7 +35,6 @@ public class BoardView extends SelectView{
         initializeTextures();
         interval = (int)Math.round(1.0*width/GameConfig.BOARD_WIDTH);
         balls = new ArrayList<BallView>();
-        filledView = new FilledView(x, y, w, h, new Color(0,0,0,0.8f));
     }
 
     private void initializeTextures()
@@ -89,6 +88,21 @@ public class BoardView extends SelectView{
         }
     }
 
+    public void fillOneLine(int x, int y)
+    {
+        int index = getChoicedPlace(x, y);
+        if(index < 0 || index >= GameConfig.BOARD_WIDTH){
+            filledLineView = null;
+        } else {
+            filledLineView = new FilledView(getX(index), lowerY, interval, height, new Color(0.6f, 0.6f, 0, 0.6f));
+        }
+    }
+
+    public void noFillOneLine()
+    {
+        filledLineView = null;
+    }
+
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer)
     {
         //ボールの描画
@@ -118,7 +132,10 @@ public class BoardView extends SelectView{
         }
         shapeRenderer.end();
 
-
+        //1列塗りつぶし
+        if (filledLineView != null) {
+            filledLineView.draw(batch, shapeRenderer);
+        }
     }
 
     @Override

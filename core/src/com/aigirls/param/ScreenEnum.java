@@ -2,7 +2,7 @@ package com.aigirls.param;
 
 public enum ScreenEnum {
     StartGame,
-    GameAtMyTurn,
+    GameAtTurnStart,
     GameAtActionSelect,
     GameAtMagicSelect,
     GameAtActionReset,

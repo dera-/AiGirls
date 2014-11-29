@@ -7,6 +7,7 @@ import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.screen.GameScreen;
+import com.aigirls.view.MagicCardView;
 import com.aigirls.view.battle.BattleScreenView;
 import com.aigirls.view.battle.MagicSelectView;
 import com.badlogic.gdx.Gdx;
@@ -36,36 +37,42 @@ public class MagicSelectScreen extends GameScreen {
     }
 
     @Override
-    public void hide() {
-        // TODO Auto-generated method stub
-
-    }
+    public void hide() {}
 
     @Override
-    public void pause() {
-        // TODO Auto-generated method stub
-
-    }
+    public void pause() {}
 
     @Override
-    public void resume() {
-        // TODO Auto-generated method stub
-
-    }
+    public void resume() {}
 
     @Override
     protected void update(float delta) {
-        if (Gdx.input.justTouched()) {
+        if (Gdx.input.isTouched()) {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
-            int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
-            if (selected == ChoiceListModel.NOT_CHOICED) {
-                return;
-            } else if (selected >= activeMagicModels.length) {
-                ScreenManager.changeScreen(ScreenEnum.GameAtActionReset);
-            } else if(activeMagicModels[selected].canOutbreak()) {
+            if (getGameView().isSelectedMagicCard()) {
+                getGameView().moveMagicCard(touchedPlace.x, touchedPlace.y);
+            } else {
+                touchedEvent(touchedPlace.x, touchedPlace.y);
+            }
+        } else if (getGameView().isSelectedMagicCard()) {
+            int selected = getGameView().getMagicIndex();
+            getGameView().releaseMagicCard();
+            if (selected != ChoiceListModel.NOT_CHOICED) {
                 OutbreakPlaceSelectScreen.getOutbreakPlaceSelectScreen().setActiveMagicModel(activeMagicModels[selected]);
                 ScreenManager.changeScreen(ScreenEnum.GameAtOutbreakSelect);
             }
+        }
+    }
+
+    private void touchedEvent(int x, int y)
+    {
+        int selected = getGameView().getChoicedPlace(x, y);
+        if (selected == ChoiceListModel.NOT_CHOICED) {
+            return;
+        } else if (selected >= activeMagicModels.length) {
+            ScreenManager.changeScreen(ScreenEnum.GameAtActionReset);
+        } else if (activeMagicModels[selected].canOutbreak()) {
+            getGameView().selectMagicCard(selected, x, y);
         }
     }
 

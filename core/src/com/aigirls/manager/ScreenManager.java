@@ -5,7 +5,6 @@ import java.util.Stack;
 import com.aigirls.factory.BattleScreenFactory;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.EnemyType;
-import com.aigirls.screen.battle.ActionSelectScreen;
 import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.screen.battle.MagicOutbreakScreen;
 import com.aigirls.screen.battle.MagicSelectScreen;
@@ -19,10 +18,9 @@ public class ScreenManager {
     {
         switch (screenEnum) {
             case StartBattle:
-                screenStack.push(BattleScreenFactory.generateBattleScreen(1, EnemyType.MONSTER));
-                break;
-            case GameAtActionSelect:
-                screenStack.push(ActionSelectScreen.getActionSelectScreen());
+                BattleScreen battlescreen = BattleScreenFactory.generateBattleScreen(1, EnemyType.MONSTER);
+                screenStack.push(battlescreen);
+                screenStack.push(battlescreen.getTurnStartScreen());
                 break;
             case GameAtMagicSelect:
                 screenStack.push(MagicSelectScreen.getMagicSelectScreen());
@@ -42,6 +40,7 @@ public class ScreenManager {
                 if (screen instanceof BattleScreen) {
                     BattleScreen battleScreen = (BattleScreen) screen;
                     battleScreen.nextTurn();
+                    screenStack.push(battleScreen.getTurnStartScreen());
                 }
                 break;
             default:

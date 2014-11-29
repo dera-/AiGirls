@@ -17,6 +17,7 @@ public class AiGirls extends Game {
     public void render() {
         super.render();
         if (nowScreen != ScreenManager.getNowScreen()) {
+            System.out.println("change");
             nowScreen = ScreenManager.getNowScreen();
             super.setScreen(nowScreen);
         }

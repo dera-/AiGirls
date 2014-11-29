@@ -13,7 +13,9 @@ public class BallView extends GameView {
     private Vector2 position;
     private Vector2 targetPosition;
     private boolean targetFlag = false;
+    private boolean clearFlag = false;
     private Sprite starSprite;
+
 
     static {
         TextureManager.generateTexture(FileConfig.BALL1_IMAGE_PATH, FileConfig.BALL1_KEY);
@@ -33,6 +35,9 @@ public class BallView extends GameView {
 
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer) {
+        if (clearFlag) {
+            return;
+        }
         batch.begin();
         position.lerp(targetPosition, 0.2f);
         ballSprite.setPosition(position.x, position.y);
@@ -46,8 +51,14 @@ public class BallView extends GameView {
         batch.end();
     }
 
-    public void drop(int y){
+    public void drop(int y)
+    {
         targetPosition.set(targetPosition.x, y);
+    }
+
+    public void setPlace(int x, int y)
+    {
+        targetPosition.set(x, y);
     }
 
     public int getBallId(){
@@ -57,6 +68,11 @@ public class BallView extends GameView {
     public void setTargetFlag(boolean targetFlag)
     {
         this.targetFlag = targetFlag;
+    }
+
+    public void setClearFlag(boolean clearFlag)
+    {
+        this.clearFlag = clearFlag;
     }
 
 }
