@@ -30,17 +30,17 @@ public class BattleScreenView extends GameView
 
     private static final int ALLY_X  = (int) Math.round(0.05 * GameConfig.GAME_WIDTH);
     private static final int ENEMY_X = (int) Math.round(0.53 * GameConfig.GAME_WIDTH);
-    private static final int HP_BAR_Y  = (int) Math.round(0.1 * GameConfig.GAME_HEIGHT);
+    private static final int HP_BAR_Y  = (int) Math.round(0.15 * GameConfig.GAME_HEIGHT);
     private static final int BOARD_Y  = (int) Math.round(0.25 * GameConfig.GAME_HEIGHT);
     private static final int BOARD_WIDTH   = (int) Math.round(0.42 * GameConfig.GAME_WIDTH);
     private static final int BOARD_HEIGHT  = BOARD_WIDTH;
     private static final int HP_BAR_WIDTH   = BOARD_WIDTH;
-    private static final int HP_BAR_HEIGHT  = (int) Math.round(0.1 * GameConfig.GAME_HEIGHT);
-    private static final int BOARD_SIDE_WALL_WIDTH = (int) Math.round(0.03*BOARD_WIDTH);
+    private static final int HP_BAR_HEIGHT  = (int) Math.round(0.07 * GameConfig.GAME_HEIGHT);
+    private static final int BOARD_SIDE_WALL_WIDTH = (int) Math.round(0.02*BOARD_WIDTH);
     private static final int BOARD_BOTTOM_WALL_WIDTH = 2*BOARD_SIDE_WALL_WIDTH;
     private static final int CHARACTER_WIDTH = BOARD_WIDTH - 2*BOARD_SIDE_WALL_WIDTH;
     private static final int CHARACTER_HEIGHT = BOARD_HEIGHT - BOARD_BOTTOM_WALL_WIDTH;
-    private static final int BALL_STACK_Y  = (int) Math.round(0.75 * GameConfig.GAME_HEIGHT);
+    private static final int BALL_STACK_Y  = (int) Math.round(0.82 * GameConfig.GAME_HEIGHT);
     private static final int BALL_STACK_WIDTH  = BOARD_WIDTH;
     private static final int BALL_STACK_HEIGHT  = (int) Math.round(0.1 * GameConfig.GAME_HEIGHT);
     private static final int BALL_STACK_WALL_WIDTH = BOARD_SIDE_WALL_WIDTH;

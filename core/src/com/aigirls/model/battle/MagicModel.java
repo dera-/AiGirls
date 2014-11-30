@@ -13,6 +13,7 @@ public class MagicModel {
     private String name;
     private double attackRate;
     private double ballAttackRate;
+    private int recoverBall;
     private MagicOutbreakModel outbreakModel;
 
     public MagicModel(MagicEntity entity)
@@ -20,11 +21,12 @@ public class MagicModel {
         name = entity.name;
         attackRate = entity.attackRate;
         ballAttackRate = entity.magicAttackRate;
+        recoverBall = entity.recoverBall;
         outbreakModel = OutbreakFileReader.getMagicOutbreakModel(entity.outbreakFilePath);
     }
 
     public ActiveMagicModel generateActiveMagicModel(BallModel[][] balls) {
-        return new ActiveMagicModel(name, attackRate, ballAttackRate, outbreakModel, getTargetBallsInfo(balls));
+        return new ActiveMagicModel(name, attackRate, ballAttackRate, recoverBall, outbreakModel, getTargetBallsInfo(balls));
     }
 
     /**

@@ -35,22 +35,22 @@ public class CharacterModel
 
     public int getAttack()
     {
-        return attack;
+        return (int) Math.round(attack * ballStack.getStatusRate());
     }
 
     public int getDefense()
     {
-        return defense;
+        return (int) Math.round(defense * ballStack.getStatusRate());
     }
 
     public int getMagicAttack()
     {
-        return magicAttack;
+        return (int) Math.round(magicAttack * ballStack.getStatusRate());
     }
 
     public int getMagicDefense()
     {
-        return magicDefense;
+        return (int) Math.round(magicDefense * ballStack.getStatusRate());
     }
 
     public void addBallToStack(int num)
@@ -58,9 +58,13 @@ public class CharacterModel
         ballStack.addBall(num);
     }
 
-    public void setBall(int x, BallModel ball)
+    public void removeBallFromStack()
     {
         ballStack.removeBall();
+    }
+
+    public void setBall(int x, BallModel ball)
+    {
         board.setBall(x, ball);
     }
 

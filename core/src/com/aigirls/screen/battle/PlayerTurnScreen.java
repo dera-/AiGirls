@@ -23,6 +23,7 @@ public class PlayerTurnScreen extends TurnStartScreen {
         PlayerEnum attackerEnum,
         int totalBallCount) {
         super(new PlayerTurnScreenView(view), attacker, defender, attackerEnum, totalBallCount);
+        System.out.println("player turn");
     }
 
     @Override
@@ -51,7 +52,7 @@ public class PlayerTurnScreen extends TurnStartScreen {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             if (druggedPlace != null) {
                 druggedEvent(touchedPlace.x, touchedPlace.y);
-            } else {
+            } else if (Gdx.input.justTouched()) {
                 touchedEvent(touchedPlace.x, touchedPlace.y);
             }
         } else if (druggedPlace != null) {
@@ -68,7 +69,6 @@ public class PlayerTurnScreen extends TurnStartScreen {
     private void touchedEvent(int x, int y)
     {
         int index = getGameView().getChoicedPlace(x, y);
-        System.out.println(index);
         switch(index) {
             case PlayerTurnScreenView.INDEX_BALL_STACK:
                 if (!attacker.canReleaseBallFromStack()) {
@@ -83,6 +83,9 @@ public class PlayerTurnScreen extends TurnStartScreen {
             case PlayerTurnScreenView.INDEX_DECIDE_BUTTOM:
                 MagicSelectScreen.setMagicSelectScreen(getBattleScreenView(), attacker.getActiveMagicModels());
                 ScreenManager.changeScreen(ScreenEnum.GameAtMagicSelect);
+                return;
+            case PlayerTurnScreenView.INDEX_FINISH_BUTTOM:
+                ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
                 return;
         }
     }
@@ -115,7 +118,8 @@ public class PlayerTurnScreen extends TurnStartScreen {
 
     private void cancelPutBall()
     {
-        for (int id=0; id<droppedBallNums; id++) {
+        for (int i = 1; i <= droppedBallNums; i++) {
+            int id = totalBallCount + i;
             attacker.cancelAddingBall(id);
             getBattleScreenView().removeBall(id, attackerEnum);
             getBattleScreenView().addToBallStack(attackerEnum);

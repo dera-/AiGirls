@@ -10,6 +10,7 @@ public class ActiveMagicModel {
     private String name;
     private double attackRate;
     private double ballAttackRate;
+    private int recoverBall;
     private MagicOutbreakModel outbreak;
     private List<BallInfoModel[]> targetBalls;
 
@@ -18,12 +19,14 @@ public class ActiveMagicModel {
         String name,
         double attackRate,
         double ballAttackRate,
+        int recoverBall,
         MagicOutbreakModel outbreak,
         List<BallInfoModel[]> targetBalls)
     {
         this.name = name;
         this.attackRate = attackRate;
         this.ballAttackRate = ballAttackRate;
+        this.recoverBall    = recoverBall;
         this.outbreak = outbreak;
         this.targetBalls = targetBalls;
     }
@@ -42,6 +45,10 @@ public class ActiveMagicModel {
 
     public boolean canOutbreak() {
         return targetBalls.size() > 0;
+    }
+
+    public int getRecoverBall() {
+        return recoverBall;
     }
 
     public Point[] getConditionBallPlaces() {

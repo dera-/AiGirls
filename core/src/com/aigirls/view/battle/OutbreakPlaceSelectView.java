@@ -18,15 +18,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class OutbreakPlaceSelectView extends SelectView {
-    private static final int LEFT_ARROW_X = (int) Math.round(0.05*GameConfig.GAME_WIDTH);
-    private static final int RIGHT_ARROW_X = (int) Math.round(0.85*GameConfig.GAME_WIDTH);
-    private static final int ARROW_Y = (int) Math.round(0.5*GameConfig.GAME_HEIGHT);
+    private static final int LEFT_ARROW_X = (int) Math.round(0.01*GameConfig.GAME_WIDTH);
+    private static final int RIGHT_ARROW_X = (int) Math.round(0.45*GameConfig.GAME_WIDTH);
+    private static final int ARROW_Y = (int) Math.round(0.03*GameConfig.GAME_HEIGHT);
     private static final int ARROW_WIDTH = (int) Math.round(0.1*GameConfig.GAME_WIDTH);
     private static final int ARROW_HEIGHT = (int) Math.round(0.1*GameConfig.GAME_HEIGHT);
-    private static final int DECIDE_BUTTOM_X = (int) Math.round(0.4*GameConfig.GAME_WIDTH);
-    private static final int CANCEL_BUTTOM_X = (int) Math.round(0.6*GameConfig.GAME_WIDTH);
-    private static final int BUTTOM_Y = (int) Math.round(0.1*GameConfig.GAME_HEIGHT);
-    private static final int BUTTOM_WIDTH = (int) Math.round(0.15*GameConfig.GAME_WIDTH);
+    private static final int DECIDE_BUTTOM_X = (int) Math.round(0.15*GameConfig.GAME_WIDTH);
+    private static final int CANCEL_BUTTOM_X = (int) Math.round(0.3*GameConfig.GAME_WIDTH);
+    private static final int BUTTOM_Y = (int) Math.round(0.03*GameConfig.GAME_HEIGHT);
+    private static final int BUTTOM_WIDTH = (int) Math.round(0.12*GameConfig.GAME_WIDTH);
     private static final int BUTTOM_HEIGHT = (int) Math.round(0.1*GameConfig.GAME_HEIGHT);
     public static final int DECIDE_BUTTOM_INDEX = 0;
     public static final int CANCEL_BUTTOM_INDEX = 1;

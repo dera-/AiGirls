@@ -48,7 +48,9 @@ public abstract class TurnStartScreen extends GameScreen
 
     protected void dropBallEvent(int xPlace, int yPlace)
     {
+        droppedBallNums++;
         int ballId = totalBallCount + droppedBallNums;
+        attacker.removeBallFromStack();
         attacker.setBall(xPlace, new BallModel(ballId));
         getBattleScreenView().addBall(ballId, xPlace, yPlace, attackerEnum);
         int defenserYPlace = defender.getDropPlace(xPlace);
@@ -65,7 +67,6 @@ public abstract class TurnStartScreen extends GameScreen
                 new ObstacleBallModel(ballId, attacker.getMagicDefense()));
             getBattleScreenView().addObstacle(ballId, xPlace, defenserYPlace, defenderEnum);
         }
-        droppedBallNums++;
     }
 
     protected abstract BattleScreenView getBattleScreenView();

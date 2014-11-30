@@ -18,7 +18,8 @@ public class MagicFileAccessor extends CsvFileAccessor {
         entity.cost = Integer.parseInt(record[2]);
         entity.attackRate = Double.parseDouble(record[3]);
         entity.magicAttackRate = Double.parseDouble(record[4]);
-        entity.outbreakFilePath = record[5];
+        entity.recoverBall = Integer.parseInt(record[5]);
+        entity.outbreakFilePath = record[6];
         return entity;
     }
 

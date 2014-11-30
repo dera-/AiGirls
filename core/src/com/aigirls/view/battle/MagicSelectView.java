@@ -54,8 +54,10 @@ public class MagicSelectView extends SelectView {
         //技情報の描画
         if (selectedIndex != NON_SELECTED) {
             batch.begin();
-            font.draw(batch, "効果1：相手へ"+cards[selectedIndex].getAttackPercent()+"%攻撃", START_X, (int) Math.round(0.16 * GameConfig.GAME_HEIGHT));
-            font.draw(batch, "効果2:邪魔ボールへ"+cards[selectedIndex].getBallAttackPercent()+"%攻撃", START_X, (int) Math.round(0.08 * GameConfig.GAME_HEIGHT));
+            font.setColor(1f, 1f, 1f, 1f);
+            font.draw(batch, "効果1：相手へ"+cards[selectedIndex].getAttackPercent()+"%攻撃", START_X, (int) Math.round(0.24 * GameConfig.GAME_HEIGHT));
+            font.draw(batch, "効果2:邪魔玉へ"+cards[selectedIndex].getBallAttackPercent()+"%攻撃", START_X, (int) Math.round(0.16 * GameConfig.GAME_HEIGHT));
+            font.draw(batch, "効果3:"+cards[selectedIndex].getRecoverBall()+"個ボール補充", START_X, (int) Math.round(0.08 * GameConfig.GAME_HEIGHT));
             batch.end();
         }
     }

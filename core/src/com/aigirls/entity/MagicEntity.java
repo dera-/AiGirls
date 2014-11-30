@@ -5,5 +5,6 @@ public class MagicEntity extends BaseEntity{
     public int cost;
     public double attackRate;
     public double magicAttackRate;
+    public int recoverBall;
     public String outbreakFilePath;
 }

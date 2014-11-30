@@ -16,7 +16,6 @@ public class BallView extends GameView {
     private boolean clearFlag = false;
     private Sprite starSprite;
 
-
     static {
         TextureManager.generateTexture(FileConfig.BALL1_IMAGE_PATH, FileConfig.BALL1_KEY);
         TextureManager.generateTexture(FileConfig.BALL2_IMAGE_PATH, FileConfig.BALL2_KEY);

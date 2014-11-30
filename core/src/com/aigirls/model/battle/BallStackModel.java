@@ -4,14 +4,13 @@ import com.aigirls.config.GameConfig;
 
 public class BallStackModel {
     private int currentBallCount;
-    public static final double[] STATUS_RATES = {0.5, 0.75, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0};
 
     public BallStackModel() {
         currentBallCount = GameConfig.DEFAULT_STACKED_BALL_NUM;
     }
 
     public double getStatusRate() {
-        return STATUS_RATES[currentBallCount];
+        return GameConfig.STATUS_RATES[currentBallCount];
     }
 
     public boolean addBall() {
@@ -23,10 +22,12 @@ public class BallStackModel {
     }
 
     public boolean removeBall() {
+        System.out.println("減少："+(currentBallCount-1));
         return changeBallCount(-1);
     }
 
     public boolean isExistBall() {
+        System.out.println(currentBallCount);
         return currentBallCount > 0;
     }
 

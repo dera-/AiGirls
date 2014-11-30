@@ -3,8 +3,11 @@ package com.aigirls.view;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
+import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.model.ChoiceModel;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -14,6 +17,7 @@ public class BallStackView extends GameView {
     private final int interval;
     private List<BallView> balls;
     private ChoiceModel choiceModel;
+    private BitmapFont font;
 
     public BallStackView(int x, int y, int w, int h, int wallWidth, int wallHeight, String ballName)
     {
@@ -26,6 +30,7 @@ public class BallStackView extends GameView {
             addBall(ballName);
         }
         choiceModel = new ChoiceModel(x, y, w, h);
+        font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
     }
 
     public void addBall(String ballName)
@@ -86,6 +91,15 @@ public class BallStackView extends GameView {
             shapeRenderer.line(leftX+dx, lowerY, leftX+dx, lowerY+height);
         }
         shapeRenderer.end();
+
+        //能力値増減の表示
+        batch.begin();
+        font.setColor(1, 1, 1, 1);
+        double rate = GameConfig.STATUS_RATES[balls.size()];
+        String str = rate < 1 ? "減少" : "増加";
+        int parsent = (int)Math.abs(rate*100 - 100);
+        font.draw(batch, "能力値"+parsent+"%"+str, leftX, (int)(lowerY+1.55*(height+wallHeight)));
+        batch.end();
     }
 
     public ChoiceModel getChoiceModel()

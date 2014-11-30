@@ -41,7 +41,7 @@ public class HpBarView extends GameView{
         double spaceRateY = 0.18;
         //HPの値の描画
         int currentHp = (int) Math.round(1.0 * maxHp * (targetPosition.x - leftX) / width);
-        font.draw(batch, currentHp + "/" + maxHp, (int)(leftX+spaceRateX*width), (int)(lowerY + (1-spaceRateY) * height));
+        font.draw(batch, "HP：" + currentHp + "/" + maxHp, (int)(leftX+spaceRateX*width), (int)(lowerY + (1-spaceRateY) * height));
         batch.end();
     }
 

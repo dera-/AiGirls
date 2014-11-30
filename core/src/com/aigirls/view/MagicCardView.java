@@ -78,6 +78,11 @@ public class MagicCardView extends GameView {
         return (int) Math.round(100*magicInfo.getBallAttackRate());
     }
 
+    public int getRecoverBall()
+    {
+        return magicInfo.getRecoverBall();
+    }
+
     public ChoiceModel getChoiceModel()
     {
         return new ChoiceModel(leftX, lowerY, width, height);
