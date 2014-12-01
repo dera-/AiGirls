@@ -82,6 +82,53 @@ public class BoardModel {
         }
     }
 
+    public ObstacleBallInfoModel[] getObstacleBalls(int damage, BallInfoModel[] targets)
+    {
+        List<ObstacleBallInfoModel> list = new ArrayList<ObstacleBallInfoModel>();
+        for (BallInfoModel target : targets) {
+            list.addAll(getObstacleBallList(damage, target.x, target.y));
+        }
+        for (int index = 0; index < list.size(); index++) {
+            ObstacleBallInfoModel target = list.get(index);
+            for (int i = index+1; i < list.size();) {
+                ObstacleBallInfoModel elem = list.get(i);
+                if (target.id == elem.id) {
+                    target.addDamage(elem.getDamage());
+                    list.remove(i);
+                } else {
+                    i++;
+                }
+            }
+        }
+        return (ObstacleBallInfoModel[])list.toArray(new ObstacleBallInfoModel[list.size()]);
+    }
+
+    private List<ObstacleBallInfoModel> getObstacleBallList(int damage, int x, int y)
+    {
+        List<ObstacleBallInfoModel> list = new ArrayList<ObstacleBallInfoModel>();
+        if (x+1 < GameConfig.BOARD_WIDTH && balls[y][x+1] instanceof ObstacleBallModel) {
+            ObstacleBallModel obstacle = (ObstacleBallModel) balls[y][x+1];
+            ObstacleBallInfoModel info = new ObstacleBallInfoModel(obstacle.id, x+1, y, obstacle.getCurrentHp(), damage);
+            list.add(info);
+        }
+        if (0 <= x-1 && balls[y][x-1] instanceof ObstacleBallModel) {
+            ObstacleBallModel obstacle = (ObstacleBallModel) balls[y][x-1];
+            ObstacleBallInfoModel info = new ObstacleBallInfoModel(obstacle.id, x-1, y, obstacle.getCurrentHp(), damage);
+            list.add(info);
+        }
+        if (y+1 < GameConfig.BOARD_HEIGHT && balls[y+1][x] instanceof ObstacleBallModel) {
+            ObstacleBallModel obstacle = (ObstacleBallModel) balls[y+1][x];
+            ObstacleBallInfoModel info = new ObstacleBallInfoModel(obstacle.id, x, y+1, obstacle.getCurrentHp(), damage);
+            list.add(info);
+        }
+        if (0 <= y-1 && balls[y-1][x] instanceof ObstacleBallModel) {
+            ObstacleBallModel obstacle = (ObstacleBallModel) balls[y-1][x];
+            ObstacleBallInfoModel info = new ObstacleBallInfoModel(obstacle.id, x, y-1, obstacle.getCurrentHp(), damage);
+            list.add(info);
+        }
+        return list;
+    }
+
     private void attackToObstacleBall(int damage, int x, int y)
     {
         if (x+1 < GameConfig.BOARD_WIDTH && balls[y][x+1] instanceof ObstacleBallModel) {

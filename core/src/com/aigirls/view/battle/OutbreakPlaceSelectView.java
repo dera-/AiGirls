@@ -1,5 +1,8 @@
 package com.aigirls.view.battle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.BitmapFontManager;
@@ -8,9 +11,11 @@ import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.ChoiceModel;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.model.battle.BallInfoModel;
+import com.aigirls.model.battle.ObstacleBallInfoModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.view.ButtomView;
+import com.aigirls.view.HpBarView;
 import com.aigirls.view.SelectView;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -41,6 +46,7 @@ public class OutbreakPlaceSelectView extends SelectView {
     private ButtomView cancelButtomView;
 
     private ActiveMagicModel activeMagicModel = null;
+    private List<ObstacleBallInfoModel[]> obstaclesList = new ArrayList<ObstacleBallInfoModel[]>();
     private int currentSelected = 0;
 
     public OutbreakPlaceSelectView (BattleScreenView battleScreenView) {
@@ -73,6 +79,11 @@ public class OutbreakPlaceSelectView extends SelectView {
         activeMagicModel = magic;
     }
 
+    public void setObstaclesList(List<ObstacleBallInfoModel[]> list)
+    {
+        obstaclesList = list;
+    }
+
     @Override
     protected ChoiceListModel getChoiceListModel() {
         ChoiceModel[] choices = new ChoiceModel[4];
@@ -90,12 +101,12 @@ public class OutbreakPlaceSelectView extends SelectView {
             case LEFT_ARROW_INDEX:
                 currentSelected--;
                 if(currentSelected < 0) currentSelected = activeMagicModel.getNumTargetBalls()-1;
-                setTargetBalls();
+                setFlagsToBalls();
                 break;
             case RIGHT_ARROW_INDEX:
                 currentSelected++;
                 if(currentSelected >= activeMagicModel.getNumTargetBalls()) currentSelected = 0;
-                setTargetBalls();
+                setFlagsToBalls();
                 break;
         }
         return choiced;
@@ -111,27 +122,37 @@ public class OutbreakPlaceSelectView extends SelectView {
         return activeMagicModel.getBallInfoModels(currentSelected);
     }
 
-    public void setTargetBalls()
+    public void setFlagsToBalls()
     {
-        setTargetBalls(activeMagicModel.getBallInfoModels(currentSelected));
+        setFlagsToBalls(currentSelected);
     }
 
-    private void setTargetBalls(BallInfoModel[] ballInfoModels)
+    private void setFlagsToBalls(int index)
     {
+        BallInfoModel[] ballInfoModels = activeMagicModel.getBallInfoModels(index);
+        ObstacleBallInfoModel[] obstacleBallInfoModels = obstaclesList.get(index);
+        battleScreenView.initializeBall(PlayerEnum.Player1);
         battleScreenView.setTargetBalls(ballInfoModels, PlayerEnum.Player1);
-        battleScreenView.setTargetBalls(ballInfoModels, PlayerEnum.Player2);
+        battleScreenView.setFlagToObstacle(obstacleBallInfoModels, PlayerEnum.Player1);
     }
 
     public void formatTemporaryParameters()
     {
-        setTargetBalls(new BallInfoModel[0]);
+        battleScreenView.initializeBall(PlayerEnum.Player1);
         activeMagicModel = null;
+        obstaclesList = new ArrayList<ObstacleBallInfoModel[]>();
         currentSelected = 0;
+        setTemporaryDamage(0);
     }
 
     public void filledNothing () {
         this.battleScreenView.setFilledAllowFlag(BattleScreen.ALLY_INDEX, false);
         this.battleScreenView.setFilledAllowFlag(BattleScreen.ENEMY_INDEX, false);
+    }
+
+    public void setTemporaryDamage(int damage)
+    {
+        this.battleScreenView.setTemporaryDamage(damage, PlayerEnum.Player2);
     }
 
 }

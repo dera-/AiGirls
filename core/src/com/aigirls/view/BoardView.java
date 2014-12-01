@@ -7,6 +7,7 @@ import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.TextureManager;
 import com.aigirls.model.ChoiceListModel;
+import com.aigirls.view.battle.OutbreakPlaceSelectView;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -71,20 +72,25 @@ public class BoardView extends SelectView{
         }
     }
 
-    public void setTargetFlag(int id)
-    {
-        for (BallView ball: balls) {
-            if (id == ball.getBallId()) {
-                ball.setTargetFlag(true);
-                return;
-            }
-        }
-    }
-
     public void initializeTargetFlags()
     {
         for (BallView ball: balls) {
-            ball.setTargetFlag(false);
+            ball.setStateFlag(BallView.FLAG_MEAN_NORMAL);
+        }
+    }
+
+    public void setTargetFlag(int id)
+    {
+        setFlagToBall(id, BallView.FLAG_MEAN_TARGET);
+    }
+
+    public void setFlagToBall(int id, int flag)
+    {
+        for (BallView ball: balls) {
+            if (id == ball.getBallId()) {
+                ball.setStateFlag(flag);
+                return;
+            }
         }
     }
 

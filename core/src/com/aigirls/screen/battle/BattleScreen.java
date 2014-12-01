@@ -22,7 +22,7 @@ public class BattleScreen extends GameScreen
         players = new CharacterModel[2];
         players[ALLY_INDEX] = ally;
         players[ENEMY_INDEX] = enemy;
-        OutbreakPlaceSelectScreen.setOutbreakPlaceSelectScreen(getGameView());
+        OutbreakPlaceSelectScreen.setOutbreakPlaceSelectScreen(getGameView(), players);
         MagicOutbreakScreen.setMagicOutbreakScreen(getGameView(), players);
     }
 

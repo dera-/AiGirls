@@ -38,6 +38,13 @@ public class MagicOutbreakView extends GameView {
         battleScreenView.moveHpBar(damage, player);
     }
 
+    public void recoverBall(int num, PlayerEnum player)
+    {
+        for (int i = 0; i<num; i++) {
+            battleScreenView.addToBallStack(player);
+        }
+    }
+
     public void filledNothing () {
         this.battleScreenView.setFilledAllowFlag(BattleScreen.ALLY_INDEX, false);
         this.battleScreenView.setFilledAllowFlag(BattleScreen.ENEMY_INDEX, false);

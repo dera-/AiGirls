@@ -121,6 +121,7 @@ public class PlayerTurnScreen extends TurnStartScreen {
         for (int i = 1; i <= droppedBallNums; i++) {
             int id = totalBallCount + i;
             attacker.cancelAddingBall(id);
+            attacker.addBallToStack(1);
             getBattleScreenView().removeBall(id, attackerEnum);
             getBattleScreenView().addToBallStack(attackerEnum);
             boolean existBall = defender.cancelAddingBall(id);

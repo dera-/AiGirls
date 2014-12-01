@@ -2,23 +2,28 @@ package com.aigirls.model.battle;
 
 public class ObstacleBallModel extends BallModel{
     private final int hp;
-    private int nowHp;
+    private int currentHp;
 
     public ObstacleBallModel(int id, int hp)
     {
         super(id);
         this.hp = hp;
-        this.nowHp = hp;
+        this.currentHp = hp;
     }
 
     public boolean isBroken()
     {
-        return this.nowHp <= 0;
+        return this.currentHp <= 0;
     }
 
     public void beHurt(int damage)
     {
-        this.nowHp -= damage;
+        this.currentHp -= damage;
+    }
+
+    public int getCurrentHp()
+    {
+        return currentHp;
     }
 
 }

@@ -35,11 +35,15 @@ public class CharacterModel
 
     public int getAttack()
     {
+        System.out.println("attack:"+(int) Math.round(attack * ballStack.getStatusRate()));
         return (int) Math.round(attack * ballStack.getStatusRate());
     }
 
     public int getDefense()
     {
+        System.out.println("de:"+defense);
+        System.out.println("stack:"+ballStack.getStatusRate());
+        System.out.println("defense:"+(int) Math.round(defense * ballStack.getStatusRate()));
         return (int) Math.round(defense * ballStack.getStatusRate());
     }
 
@@ -85,11 +89,7 @@ public class CharacterModel
 
     public boolean cancelAddingBall(int id)
     {
-        boolean ballExist = board.removeBall(id);
-        if (ballExist) {
-            ballStack.addBall();
-        }
-        return ballExist;
+        return board.removeBall(id);
     }
 
     public CharacterViewModel getCharacterViewModel()
@@ -128,6 +128,10 @@ public class CharacterModel
             activeMagicModels[i] = magics[i].generateActiveMagicModel(balls);
         }
         return activeMagicModels;
+    }
+
+    public ObstacleBallInfoModel[] getObstacleBallInfoModels(int damage, BallInfoModel[] targets) {
+        return board.getObstacleBalls(damage, targets);
     }
 
 }

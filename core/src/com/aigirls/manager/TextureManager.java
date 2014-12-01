@@ -14,6 +14,8 @@ public class TextureManager
         generateTexture(FileConfig.RIGHT_ARROW_IMAGE_PATH, FileConfig.RIGHT_ARROW_KEY);
         generateTexture(FileConfig.LEFT_ARROW_IMAGE_PATH, FileConfig.LEFT_ARROW_KEY);
         generateTexture(FileConfig.STAR_IMAGE_PATH, FileConfig.STAR_KEY);
+        generateTexture(FileConfig.SMALL_DAMAGE_IMAGE_PATH, FileConfig.SMALL_DAMAGE_KEY);
+        generateTexture(FileConfig.BIG_DAMAGE_IMAGE_PATH, FileConfig.BIG_DAMAGE_KEY);
     }
 
     public static void setTexture(String name, Texture texture)

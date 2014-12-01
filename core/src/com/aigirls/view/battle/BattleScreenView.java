@@ -5,8 +5,10 @@ import com.aigirls.config.GameConfig;
 import com.aigirls.model.ChoiceModel;
 import com.aigirls.model.battle.BallInfoModel;
 import com.aigirls.model.battle.CharacterViewModel;
+import com.aigirls.model.battle.ObstacleBallInfoModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.view.BallStackView;
+import com.aigirls.view.BallView;
 import com.aigirls.view.BoardView;
 import com.aigirls.view.CharacterView;
 import com.aigirls.view.FilledView;
@@ -121,12 +123,26 @@ public class BattleScreenView extends GameView
         hpBar.setRestHp(damage);
     }
 
-    public void setTargetBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
+    public void initializeBall(PlayerEnum player)
     {
         BoardView board = getBoardView(player);
         board.initializeTargetFlags();
+    }
+
+    public void setTargetBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
         for (BallInfoModel ball : ballsInfo) {
             board.setTargetFlag(ball.id);
+        }
+    }
+
+    public void setFlagToObstacle(ObstacleBallInfoModel[] ballsInfo, PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        for (ObstacleBallInfoModel ball : ballsInfo) {
+            int flag = (ball.isBroken()) ? BallView.FLAG_MEAN_BIG_DAMAGE : BallView.FLAG_MEAN_SMALL_DAMAGE;
+            board.setFlagToBall(ball.id, flag);
         }
     }
 
@@ -146,6 +162,12 @@ public class BattleScreenView extends GameView
         for (BallInfoModel ball : ballsInfo) {
             board.dropBall(ball.id, ball.y);
         }
+    }
+
+    public void setTemporaryDamage(int damage, PlayerEnum player)
+    {
+        HpBarView hpBar = getHpBarView(player);
+        hpBar.setTemporaryDamage(damage);
     }
 
     private BoardView getBoardView(PlayerEnum player)

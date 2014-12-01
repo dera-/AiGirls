@@ -67,6 +67,7 @@ public abstract class TurnStartScreen extends GameScreen
                 new ObstacleBallModel(ballId, attacker.getMagicDefense()));
             getBattleScreenView().addObstacle(ballId, xPlace, defenserYPlace, defenderEnum);
         }
+        System.out.println("damage:"+damageByDroppingBall);
     }
 
     protected abstract BattleScreenView getBattleScreenView();

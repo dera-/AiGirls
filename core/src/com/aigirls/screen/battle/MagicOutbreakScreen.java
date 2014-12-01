@@ -70,6 +70,7 @@ public class MagicOutbreakScreen extends GameScreen {
         removedBalls = players[attackerIndex].getRemovedBallInfoModels();
         droppedBalls = players[attackerIndex].dropBalls();
         players[defenderIndex].beHurt(damage);
+        players[attackerIndex].addBallToStack(magic.getRecoverBall()); //ボール追加
     }
 
     @Override
@@ -89,6 +90,7 @@ public class MagicOutbreakScreen extends GameScreen {
         getGameView().removeBalls(removedBalls, getPlayerEnum(attackerIndex));
         getGameView().dropBalls(droppedBalls, getPlayerEnum(attackerIndex));
         getGameView().damageToChara(damage, getPlayerEnum((attackerIndex+1)%2));
+        getGameView().recoverBall(magic.getRecoverBall(), getPlayerEnum(attackerIndex));
         ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
     }
 

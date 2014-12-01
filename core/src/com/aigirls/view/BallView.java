@@ -8,13 +8,20 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class BallView extends GameView {
+    public final static int FLAG_MEAN_NORMAL = 0;
+    public final static int FLAG_MEAN_TARGET = 1;
+    public final static int FLAG_MEAN_SMALL_DAMAGE = 2;
+    public final static int FLAG_MEAN_BIG_DAMAGE = 3;
+
     private final int id;
     private Sprite ballSprite;
     private Vector2 position;
     private Vector2 targetPosition;
-    private boolean targetFlag = false;
+    private int stateFlag = FLAG_MEAN_NORMAL;
     private boolean clearFlag = false;
     private Sprite starSprite;
+    private Sprite smallDamageSprite;
+    private Sprite bigDamageSprite;
 
     static {
         TextureManager.generateTexture(FileConfig.BALL1_IMAGE_PATH, FileConfig.BALL1_KEY);
@@ -30,6 +37,8 @@ public class BallView extends GameView {
         this.position= new Vector2(x, y);
         this.targetPosition = new Vector2(x, y);
         starSprite = new Sprite(TextureManager.getTexture(FileConfig.STAR_KEY));
+        smallDamageSprite = new Sprite(TextureManager.getTexture(FileConfig.SMALL_DAMAGE_KEY));
+        bigDamageSprite = new Sprite(TextureManager.getTexture(FileConfig.BIG_DAMAGE_KEY));
     }
 
     @Override
@@ -42,12 +51,30 @@ public class BallView extends GameView {
         ballSprite.setPosition(position.x, position.y);
         ballSprite.setSize(width, height);
         ballSprite.draw(batch);
-        if(targetFlag){
-            starSprite.setPosition(position.x, position.y);
-            starSprite.setSize(width, height);
-            starSprite.draw(batch);
-        }
+        drawState(batch);
         batch.end();
+    }
+
+    private void drawState(SpriteBatch batch)
+    {
+        Sprite sprite = null;
+        switch (stateFlag) {
+            case FLAG_MEAN_TARGET:
+                sprite = starSprite;
+                break;
+            case FLAG_MEAN_SMALL_DAMAGE:
+                sprite = smallDamageSprite;
+                break;
+            case FLAG_MEAN_BIG_DAMAGE:
+                sprite = bigDamageSprite;
+                break;
+        }
+        if (sprite == null) {
+            return;
+        }
+        sprite.setPosition(position.x, position.y);
+        sprite.setSize(width, height);
+        sprite.draw(batch);
     }
 
     public void drop(int y)
@@ -64,9 +91,9 @@ public class BallView extends GameView {
         return id;
     }
 
-    public void setTargetFlag(boolean targetFlag)
+    public void setStateFlag(int flag)
     {
-        this.targetFlag = targetFlag;
+        this.stateFlag = flag;
     }
 
     public void setClearFlag(boolean clearFlag)
