@@ -23,7 +23,6 @@ public class PlayerTurnScreen extends TurnStartScreen {
         PlayerEnum attackerEnum,
         int totalBallCount) {
         super(new PlayerTurnScreenView(view), attacker, defender, attackerEnum, totalBallCount);
-        System.out.println("player turn");
     }
 
     @Override
@@ -46,8 +45,7 @@ public class PlayerTurnScreen extends TurnStartScreen {
     }
 
     @Override
-    //TODO ドラッグandドロップの仕様にする
-    protected void update(float delta) {
+    protected void action(float delta) {
         if (Gdx.input.isTouched()) {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             if (druggedPlace != null) {
@@ -134,6 +132,21 @@ public class PlayerTurnScreen extends TurnStartScreen {
         damageByDroppingBall = 0;
         droppedBallNums = 0;
         getGameView().setCancelButtomFlag(false);
+    }
+
+    @Override
+    protected void startAnimation() {
+        getGameView().display();
+    }
+
+    @Override
+    protected void animation(float time) {
+        getGameView().animation(time);
+    }
+
+    @Override
+    protected void endAnimation() {
+        getGameView().dispose();
     }
 
 }

@@ -12,8 +12,12 @@ public class CharacterView extends GameView
     public static final int EXPRESSION_NORMAL = 0;
     public static final int EXPRESSION_WIN  = 1;
     public static final int EXPRESSION_LOSE = 2;
-    private static final int EXPRESSION_NUMS = 3;
+    public static final int EXPRESSION_WAIT = 3;
+    public static final int EXPRESSION_ATTACK = 4;
+    public static final int EXPRESSION_DAMEGE = 5;
+    private static final int EXPRESSION_NUMS = 6;
 
+    private final int realWidth;
     private Sprite[] charaSprites;
     private int currentIndex;
     private CharacterViewModel characterViewModel;
@@ -27,18 +31,26 @@ public class CharacterView extends GameView
         String pathPrefix = FileConfig.IMAGE_DIR_PATH + keyPrefix;
         charaSprites = new Sprite[EXPRESSION_NUMS];
         charaSprites[EXPRESSION_NORMAL] = new Sprite(
-            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL));
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL));
         charaSprites[EXPRESSION_WIN] = new Sprite(
-            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN));
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN));
         charaSprites[EXPRESSION_LOSE] = new Sprite(
-            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE+FileConfig.IMAGE_FORMAT, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE));
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE));
+        charaSprites[EXPRESSION_WAIT] = new Sprite(
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_WAIT+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_WAIT));
+        charaSprites[EXPRESSION_ATTACK] = new Sprite(
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_ATTACK+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_ATTACK));
+        charaSprites[EXPRESSION_DAMEGE] = new Sprite(
+            TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_PINCH+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_PINCH));
+        realWidth = (int) Math.round(height * charaSprites[EXPRESSION_NORMAL].getWidth() / charaSprites[EXPRESSION_NORMAL].getHeight());
+
     }
 
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer)
     {
         batch.begin();
-        charaSprites[currentIndex].setSize(width, height);
+        charaSprites[currentIndex].setSize(realWidth, height);
         charaSprites[currentIndex].setPosition(leftX, lowerY);
 
         charaSprites[currentIndex].draw(batch);

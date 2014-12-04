@@ -32,6 +32,8 @@ public class BattleScreenView extends GameView
 
     private static final int ALLY_X  = (int) Math.round(0.05 * GameConfig.GAME_WIDTH);
     private static final int ENEMY_X = (int) Math.round(0.53 * GameConfig.GAME_WIDTH);
+    private static final int ENEMY_IMAGE_X = (int) Math.round(0.62 * GameConfig.GAME_WIDTH);
+    private static final int CHARA_Y = (int) Math.round(0.28 * GameConfig.GAME_HEIGHT);
     private static final int HP_BAR_Y  = (int) Math.round(0.15 * GameConfig.GAME_HEIGHT);
     private static final int BOARD_Y  = (int) Math.round(0.25 * GameConfig.GAME_HEIGHT);
     private static final int BOARD_WIDTH   = (int) Math.round(0.42 * GameConfig.GAME_WIDTH);
@@ -57,8 +59,8 @@ public class BattleScreenView extends GameView
     {
         super();
         views = new GameView[ELEMENT_NUMS];
-        views[ALLY_IMAGE]   = new CharacterView(ALLY_X, BOARD_Y, CHARACTER_WIDTH, CHARACTER_HEIGHT, ally);
-        views[ENEMY_IMAGE]  = new CharacterView(ENEMY_X, BOARD_Y, CHARACTER_WIDTH, CHARACTER_HEIGHT, enemy);
+        views[ALLY_IMAGE]   = new CharacterView(ALLY_X, CHARA_Y, CHARACTER_WIDTH, CHARACTER_HEIGHT, ally);
+        views[ENEMY_IMAGE]  = new CharacterView(ENEMY_IMAGE_X, CHARA_Y, CHARACTER_WIDTH, CHARACTER_HEIGHT, enemy);
         views[ALLY_BOARD]   = new BoardView(ALLY_X, BOARD_Y, BOARD_WIDTH, BOARD_HEIGHT, BOARD_SIDE_WALL_WIDTH, BOARD_BOTTOM_WALL_WIDTH);
         views[ENEMY_BOARD]  = new BoardView(ENEMY_X, BOARD_Y, BOARD_WIDTH, BOARD_HEIGHT, BOARD_SIDE_WALL_WIDTH, BOARD_BOTTOM_WALL_WIDTH);
         views[ALLY_HP_BAR]  = new HpBarView(ALLY_X, HP_BAR_Y, HP_BAR_WIDTH, HP_BAR_HEIGHT, ally.getMaxHp());
@@ -160,7 +162,7 @@ public class BattleScreenView extends GameView
         BoardView board = getBoardView(player);
         if (board == null) return;
         for (BallInfoModel ball : ballsInfo) {
-            board.dropBall(ball.id, ball.y);
+            board.dropBall(ball.id, ball.y, true);
         }
     }
 
@@ -169,6 +171,19 @@ public class BattleScreenView extends GameView
         HpBarView hpBar = getHpBarView(player);
         hpBar.setTemporaryDamage(damage);
     }
+
+    private CharacterView getCharacter(PlayerEnum player)
+    {
+        switch(player) {
+            case Player1:
+                return (CharacterView) views[ALLY_IMAGE];
+            case Player2:
+                return (CharacterView) views[ENEMY_IMAGE];
+            default:
+                return null;
+        }
+    }
+
 
     private BoardView getBoardView(PlayerEnum player)
     {
@@ -266,6 +281,56 @@ public class BattleScreenView extends GameView
     {
         BoardView board = getBoardView(PlayerEnum.Player1);
         board.noFillOneLine();
+    }
+
+    public void startBallsAnimationInBoard(BallInfoModel[] targetBalls, PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        for (BallInfoModel ball : targetBalls) {
+            board.startBallAnimation(ball.id);
+        }
+    }
+
+    public void ballsAnimationInBoard(float time, PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        board.allBallsAnimation(time);
+    }
+
+    public void startBallsAnimationInStack(int num, PlayerEnum player)
+    {
+        BallStackView ballStack = getBallStackView(player);
+        ballStack.startBallsAnimation(num, getBallName(player));
+    }
+
+    public void ballsAnimationInStack(float time, PlayerEnum player)
+    {
+        BallStackView ballStack = getBallStackView(player);
+        ballStack.ballsAnimation(time);
+    }
+
+    public void displayBallsnInStack(PlayerEnum player)
+    {
+        BallStackView ballStack = getBallStackView(player);
+        ballStack.displayBalls();
+    }
+
+    public void startAttackAnimation(PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        board.startAttackAnimation();
+    }
+
+    public void attackAnimation(float time, PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        board.attackAnimate(time);
+    }
+
+    public void changeCharaExpression(int index, PlayerEnum player)
+    {
+        CharacterView chara = getCharacter(player);
+        chara.changeExpression(index);
     }
 
 }

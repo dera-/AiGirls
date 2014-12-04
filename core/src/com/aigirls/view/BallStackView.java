@@ -107,6 +107,30 @@ public class BallStackView extends GameView {
         return choiceModel;
     }
 
+    public void startBallsAnimation(int ballNums, String ballName)
+    {
+        int num = balls.size();
+        for (int i=1; i<=ballNums; i++) {
+            BallView ball = balls.get(num-i);
+            ball.setClearFlag(true);
+            ball.setAnimation();
+        }
+    }
+
+    public void ballsAnimation(float time)
+    {
+        for (BallView ball : balls) {
+            ball.animate(time);
+        }
+    }
+
+    public void displayBalls()
+    {
+        for (BallView ball : balls) {
+            ball.setClearFlag(false);
+        }
+    }
+
     private int getX(int x)
     {
         return leftX + x*interval;

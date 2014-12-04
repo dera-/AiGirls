@@ -2,17 +2,20 @@ package com.aigirls.view.battle;
 
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
+import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.ChoiceModel;
 import com.aigirls.param.battle.PlayerEnum;
+import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.view.BallView;
 import com.aigirls.view.ButtomView;
 import com.aigirls.view.SelectView;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class PlayerTurnScreenView extends SelectView {
+public class PlayerTurnScreenView extends SelectView implements TurnStartView {
     private static final int DECIDE_BUTTOM_X = (int) Math.round(0.05*GameConfig.GAME_WIDTH);
     private static final int CANCEL_BUTTOM_X = (int) Math.round(0.15*GameConfig.GAME_WIDTH);
     private static final int FINISH_BUTTOM_X = (int) Math.round(0.25*GameConfig.GAME_WIDTH);
@@ -34,6 +37,9 @@ public class PlayerTurnScreenView extends SelectView {
     //ボール
     private BallView selectedBallView;
 
+    private BitmapFont font;
+    private boolean turnStartFlag = false;
+
     public PlayerTurnScreenView(BattleScreenView battleScreenView){
         super(0, 0, GameConfig.GAME_WIDTH, GameConfig.GAME_HEIGHT, SELECT_ITEM_NUMS);
         this.battleScreenView = battleScreenView;
@@ -42,6 +48,7 @@ public class PlayerTurnScreenView extends SelectView {
         finishButtomView = new ButtomView(FINISH_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "終了", new Color(0.8f, 0, 0, 1), new Color(1, 1, 1, 1));
         cancelButtomView.setCanPush(false);
         choiceList = getChoiceListModel();
+        font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
         selectedBallView = null;
     }
 
@@ -57,6 +64,12 @@ public class PlayerTurnScreenView extends SelectView {
         finishButtomView.draw(batch, shapeRenderer);
         if (selectedBallView != null) {
             selectedBallView.draw(batch, shapeRenderer);
+        }
+        if (turnStartFlag) {
+            batch.begin();
+            font.setColor(1, 1, 1, 1);
+            font.draw(batch, TurnStartView.ALLY_TURN, TurnStartView.X, TurnStartView.Y);
+            batch.end();
         }
     }
 
@@ -106,6 +119,26 @@ public class PlayerTurnScreenView extends SelectView {
             return ChoiceListModel.NOT_CHOICED;
         }
         return index;
+    }
+
+    @Override
+    public void display() {
+        turnStartFlag = true;
+        battleScreenView.setFilledAllowFlag(BattleScreen.ALLY_INDEX, true);
+        battleScreenView.setFilledAllowFlag(BattleScreen.ENEMY_INDEX, true);
+        battleScreenView.startBallsAnimationInStack(1, PlayerEnum.Player1);
+    }
+
+    @Override
+    public void dispose() {
+        turnStartFlag = false;
+        battleScreenView.displayBallsnInStack(PlayerEnum.Player1);
+        battleScreenView.setFilledAllowFlag(BattleScreen.ALLY_INDEX, false);
+    }
+
+    @Override
+    public void animation(float time) {
+        battleScreenView.ballsAnimationInStack(time, PlayerEnum.Player1);
     }
 
 }

@@ -4,6 +4,7 @@ import com.aigirls.config.GameConfig;
 import com.aigirls.model.battle.BallInfoModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.battle.BattleScreen;
+import com.aigirls.view.CharacterView;
 import com.aigirls.view.GameView;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -20,7 +21,35 @@ public class MagicOutbreakView extends GameView {
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         battleScreenView.draw(batch, shapeRenderer);
-        //TODO 魔法名とかエフェクトとかの描画
+    }
+
+    public void animation(float time, PlayerEnum attacker, PlayerEnum deffender)
+    {
+        battleScreenView.ballsAnimationInBoard(time, attacker);
+        battleScreenView.ballsAnimationInStack(time, attacker);
+        battleScreenView.attackAnimation(time, deffender);
+    }
+
+    public void startOutbreaking(BallInfoModel[] targetBalls, PlayerEnum player)
+    {
+        battleScreenView.startBallsAnimationInBoard(targetBalls, player);
+        battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_ATTACK, player);
+    }
+
+    public void outbreakInAttackerSide(BallInfoModel[] brokenBalls, int recoverBallNum, PlayerEnum player)
+    {
+        battleScreenView.startBallsAnimationInBoard(brokenBalls, player);
+        for (int i = 0; i<recoverBallNum; i++) {
+            battleScreenView.addToBallStack(player);
+        }
+        battleScreenView.startBallsAnimationInStack(recoverBallNum, player);
+    }
+
+    public void outbreakInDeffenderSide(int damage, PlayerEnum player)
+    {
+        battleScreenView.startAttackAnimation(player);
+        battleScreenView.moveHpBar(damage, player);
+        battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_DAMEGE, player);
     }
 
     public void removeBalls(BallInfoModel[] ballsInfo, PlayerEnum player)
@@ -33,16 +62,9 @@ public class MagicOutbreakView extends GameView {
         battleScreenView.dropBalls(ballsInfo, player);
     }
 
-    public void damageToChara(int damage, PlayerEnum player)
+    public void displayBallsnInStack(PlayerEnum player)
     {
-        battleScreenView.moveHpBar(damage, player);
-    }
-
-    public void recoverBall(int num, PlayerEnum player)
-    {
-        for (int i = 0; i<num; i++) {
-            battleScreenView.addToBallStack(player);
-        }
+        battleScreenView.displayBallsnInStack(player);
     }
 
     public void filledNothing () {

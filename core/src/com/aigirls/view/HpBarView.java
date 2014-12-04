@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class HpBarView extends GameView{
+    private final static float DEFAULT_BALL_SPEED = 0.05f;
     private Vector2 currentPosition;
     private Vector2 targetPosition;
     private BitmapFont font;
@@ -29,7 +30,7 @@ public class HpBarView extends GameView{
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(0, 0.6f, 0.3f, 1);
-        currentPosition.lerp(targetPosition, 0.3f);
+        currentPosition.lerp(targetPosition, DEFAULT_BALL_SPEED);
         shapeRenderer.rect(leftX, lowerY, currentPosition.x-leftX, height);
         int temporaryHpBarWidth = (int) Math.round(1.0*width*temporaryDamage/maxHp);
         shapeRenderer.setColor(0.75f, 0.1f, 0.1f, 1);

@@ -22,12 +22,10 @@ public class BallStackModel {
     }
 
     public boolean removeBall() {
-        System.out.println("減少："+(currentBallCount-1));
         return changeBallCount(-1);
     }
 
     public boolean isExistBall() {
-        System.out.println(currentBallCount);
         return currentBallCount > 0;
     }
 

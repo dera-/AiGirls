@@ -7,20 +7,19 @@ import com.aigirls.model.battle.CharacterModel;
 import com.aigirls.model.battle.EnemyCharacterModel;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.PlayerEnum;
-import com.aigirls.view.GameView;
+import com.aigirls.view.battle.AiTurnScreenView;
 import com.aigirls.view.battle.BattleScreenView;
 
 public class AiTurnScreen extends TurnStartScreen {
 
     public AiTurnScreen(
-        GameView view,
+        BattleScreenView view,
         CharacterModel attacker,
         CharacterModel defender,
         PlayerEnum attackerEnum,
         int totalBallCount)
     {
-        super(view, attacker, defender, attackerEnum, totalBallCount);
-        System.out.println("ai turn");
+        super(new AiTurnScreenView(view), attacker, defender, attackerEnum, totalBallCount);
     }
 
     @Override
@@ -44,10 +43,7 @@ public class AiTurnScreen extends TurnStartScreen {
     }
 
     @Override
-    protected void update(float delta) {
-//        time += delta;
-//        if(time < 2f) return;
-//        time = 0;
+    protected void action(float delta) {
         EnemyCharacterModel aiChara = (EnemyCharacterModel) attacker;
         int xPlace = aiChara.decidePutPlace(defender);
         dropBallEvent(xPlace, attacker.getDropPlace(xPlace));
@@ -62,13 +58,31 @@ public class AiTurnScreen extends TurnStartScreen {
         }
     }
 
-    protected BattleScreenView getGameView()
+    protected AiTurnScreenView getGameView()
     {
-        return (BattleScreenView) view;
+        return (AiTurnScreenView) view;
     }
 
     @Override
     protected BattleScreenView getBattleScreenView() {
-        return getGameView();
+        return getGameView().getBattleScreenView();
+    }
+
+    @Override
+    protected void startAnimation() {
+        System.out.println("enemyyyyyyyyyyyyyyyyyyyyyyyy");
+        getGameView().display();
+    }
+
+    @Override
+    protected void animation(float time) {
+        System.out.println("enemy animation");
+        getGameView().animation(time);
+    }
+
+    @Override
+    protected void endAnimation() {
+        System.out.println("enemy end");
+        getGameView().dispose();
     }
 }

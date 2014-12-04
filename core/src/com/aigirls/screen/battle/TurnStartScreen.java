@@ -7,11 +7,14 @@ import com.aigirls.model.battle.ObstacleBallModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.GameScreen;
 import com.aigirls.service.battle.DamageCalculateService;
+import com.aigirls.view.CharacterView;
 import com.aigirls.view.GameView;
 import com.aigirls.view.battle.BattleScreenView;
 
 public abstract class TurnStartScreen extends GameScreen
 {
+    public static final float TIME = 1f;
+
     protected final int totalBallCount;
     protected CharacterModel attacker;
     protected CharacterModel defender;
@@ -19,6 +22,7 @@ public abstract class TurnStartScreen extends GameScreen
     protected PlayerEnum defenderEnum;
     protected int droppedBallNums = 0;
     protected int damageByDroppingBall = 0;
+    protected float currentTime = 0;
 
     public TurnStartScreen(GameView view, CharacterModel attacker, CharacterModel defender, PlayerEnum attackerEnum, int totalBallCount)
     {
@@ -35,12 +39,36 @@ public abstract class TurnStartScreen extends GameScreen
         //スタックへのボールの補充
         attacker.addBallToStack(1);
         getBattleScreenView().addToBallStack(attackerEnum);
+
+        //表情リセット
+        getBattleScreenView().changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player1);
+        getBattleScreenView().changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player2);
+
+        //アニメーション開始
+        startAnimation();
     }
 
     @Override
-    public void show() {
-        getBattleScreenView().filledDefenderView(getIndex(defenderEnum));
+    public void show()
+    {
+        //getBattleScreenView().filledDefenderView(getIndex(defenderEnum));
     }
+
+    protected void update(float delta)
+    {
+        if (currentTime < TIME && TIME <= currentTime+delta) {
+            endAnimation();
+            currentTime += delta;
+            return;
+        } else if (currentTime+delta < TIME) {
+            animation(delta);
+            currentTime += delta;
+            return;
+        }
+        action(delta);
+    }
+
+    protected abstract void action(float delta);
 
     public int getDroppedBallNums() {
         return droppedBallNums;
@@ -67,7 +95,6 @@ public abstract class TurnStartScreen extends GameScreen
                 new ObstacleBallModel(ballId, attacker.getMagicDefense()));
             getBattleScreenView().addObstacle(ballId, xPlace, defenserYPlace, defenderEnum);
         }
-        System.out.println("damage:"+damageByDroppingBall);
     }
 
     protected abstract BattleScreenView getBattleScreenView();
@@ -82,4 +109,8 @@ public abstract class TurnStartScreen extends GameScreen
                 return -1;
         }
     }
+
+    protected abstract void startAnimation();
+    protected abstract void animation(float time);
+    protected abstract void endAnimation();
 }

@@ -7,13 +7,15 @@ import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.TextureManager;
 import com.aigirls.model.ChoiceListModel;
+import com.aigirls.model.battle.BallInfoModel;
 import com.aigirls.view.battle.OutbreakPlaceSelectView;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-public class BoardView extends SelectView{
+public class BoardView extends SelectView {
     private final int interval;
     private final int sideWallWidth;
     private final int bottomWallHeight;
@@ -22,6 +24,8 @@ public class BoardView extends SelectView{
     private Sprite bottomWallSprite;
     private List<BallView> balls;
     private FilledView filledLineView = null;
+    private Animation attackAnimation = null;
+    private float animationTime = 0;
 
     static {
         TextureManager.generateTexture(FileConfig.SIDE_WALL_IMAGE_PATH, FileConfig.SIDE_WALL_KEY);
@@ -36,6 +40,11 @@ public class BoardView extends SelectView{
         initializeTextures();
         interval = (int)Math.round(1.0*width/GameConfig.BOARD_WIDTH);
         balls = new ArrayList<BallView>();
+    }
+
+    private Animation getAttackAnimation()
+    {
+        return new Animation(0.05f, TextureManager.getTextureRegion(FileConfig.ATTACK_KEY));
     }
 
     private void initializeTextures()
@@ -64,9 +73,15 @@ public class BoardView extends SelectView{
 
     public void dropBall(int id, int y)
     {
+        dropBall(id, y, false);
+    }
+
+    public void dropBall(int id, int y, boolean slowly)
+    {
         for (BallView ball: balls) {
             if (id == ball.getBallId()) {
                 ball.drop(getY(y));
+                ball.changeBallSpeed(slowly);
                 return;
             }
         }
@@ -142,6 +157,13 @@ public class BoardView extends SelectView{
         if (filledLineView != null) {
             filledLineView.draw(batch, shapeRenderer);
         }
+
+        if (attackAnimation != null) {
+            batch.begin();
+            batch.draw(attackAnimation.getKeyFrame(animationTime), leftX, lowerY, width, height);
+            batch.end();
+        }
+
     }
 
     @Override
@@ -165,6 +187,50 @@ public class BoardView extends SelectView{
     private int getY(int y)
     {
         return lowerY + y*interval;
+    }
+
+    public void startBallAnimation(int id)
+    {
+        for(BallView ball: balls){
+            if (id == ball.getBallId()) {
+                ball.setClearFlag(true);
+                ball.setAnimation();
+                return;
+            }
+        }
+    }
+
+    public void allBallsAnimation(float m)
+    {
+        for(BallView ball: balls){
+            ball.animate(m);
+        }
+    }
+
+    public void finishBallsAnimation()
+    {
+        for(BallView ball: balls){
+            ball.finishAnimation();
+        }
+    }
+
+    public void startAttackAnimation() {
+        attackAnimation = getAttackAnimation();
+    }
+
+    public void attackAnimate(float m) {
+        if (attackAnimation == null) {
+            return;
+        }
+        if (attackAnimation.isAnimationFinished(animationTime)) {
+            finishAttackAnimation();
+        }
+        animationTime += m;
+    }
+
+    private void finishAttackAnimation() {
+        attackAnimation = null;
+        animationTime = 0;
     }
 
 }

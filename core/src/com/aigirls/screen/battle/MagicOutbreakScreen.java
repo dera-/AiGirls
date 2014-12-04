@@ -13,8 +13,12 @@ import com.aigirls.view.battle.MagicOutbreakView;
 
 public class MagicOutbreakScreen extends GameScreen {
     private static MagicOutbreakScreen screen;
-    private CharacterModel[] players;
+    private static final float START_OUTBREAK_TIME = 0.05f;
+    private static final float START_ATTACK_TIME = 0.85f;
+    private static final float END_ATTACK_TIME = 1.2f;
+    private static final float FINISH_OUTBREAK_TIME = 1.6f;
 
+    private CharacterModel[] players;
     private int attackerIndex = -1;
     private ActiveMagicModel magic = null;
     private BallInfoModel[] targetBalls = new BallInfoModel[0];
@@ -23,8 +27,10 @@ public class MagicOutbreakScreen extends GameScreen {
     private BallInfoModel[] droppedBalls = new BallInfoModel[0];
     private int damage = 0;
     private int damageToBall = 0;
+    private float currentTime = 0;
 
-    public MagicOutbreakScreen(BattleScreenView battleScreenView, CharacterModel[] players) {
+    public MagicOutbreakScreen(BattleScreenView battleScreenView, CharacterModel[] players)
+    {
         super(new MagicOutbreakView(battleScreenView));
         this.players = players;
     }
@@ -55,6 +61,7 @@ public class MagicOutbreakScreen extends GameScreen {
         droppedBalls = new BallInfoModel[0];
         damage = 0;
         damageToBall = 0;
+        currentTime = 0;
     }
 
     @Override
@@ -86,12 +93,26 @@ public class MagicOutbreakScreen extends GameScreen {
 
     @Override
     protected void update(float delta) {
-        getGameView().removeBalls(targetBalls, getPlayerEnum(attackerIndex));
-        getGameView().removeBalls(removedBalls, getPlayerEnum(attackerIndex));
-        getGameView().dropBalls(droppedBalls, getPlayerEnum(attackerIndex));
-        getGameView().damageToChara(damage, getPlayerEnum((attackerIndex+1)%2));
-        getGameView().recoverBall(magic.getRecoverBall(), getPlayerEnum(attackerIndex));
-        ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
+        if (isBeyondTargetTime(START_OUTBREAK_TIME, delta)) {
+            getGameView().startOutbreaking(targetBalls, getPlayerEnum(attackerIndex));
+        } else if (isBeyondTargetTime(START_ATTACK_TIME, delta)) {
+            getGameView().outbreakInAttackerSide(removedBalls, magic.getRecoverBall(), getPlayerEnum(attackerIndex));
+            getGameView().removeBalls(targetBalls, getPlayerEnum(attackerIndex));
+            getGameView().outbreakInDeffenderSide(damage, getPlayerEnum((attackerIndex+1)%2));
+        } else if (isBeyondTargetTime(END_ATTACK_TIME, delta)) {
+            getGameView().displayBallsnInStack(getPlayerEnum(attackerIndex));
+            getGameView().removeBalls(removedBalls, getPlayerEnum(attackerIndex));
+            getGameView().dropBalls(droppedBalls, getPlayerEnum(attackerIndex));
+        } else if (isBeyondTargetTime(FINISH_OUTBREAK_TIME, delta)) {
+            ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
+        }
+        getGameView().animation(delta, getPlayerEnum(attackerIndex), getPlayerEnum((attackerIndex+1)%2));
+        currentTime += delta;
+    }
+
+    private boolean isBeyondTargetTime(float targetTime, float delta)
+    {
+        return currentTime < targetTime && targetTime <= currentTime+delta;
     }
 
     protected MagicOutbreakView getGameView() {

@@ -35,15 +35,11 @@ public class CharacterModel
 
     public int getAttack()
     {
-        System.out.println("attack:"+(int) Math.round(attack * ballStack.getStatusRate()));
         return (int) Math.round(attack * ballStack.getStatusRate());
     }
 
     public int getDefense()
     {
-        System.out.println("de:"+defense);
-        System.out.println("stack:"+ballStack.getStatusRate());
-        System.out.println("defense:"+(int) Math.round(defense * ballStack.getStatusRate()));
         return (int) Math.round(defense * ballStack.getStatusRate());
     }
 

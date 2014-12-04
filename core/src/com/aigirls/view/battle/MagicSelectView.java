@@ -9,7 +9,9 @@ import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.ChoiceModel;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.model.battle.ReturnCardModel;
+import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.battle.BattleScreen;
+import com.aigirls.view.CharacterView;
 import com.aigirls.view.MagicCardView;
 import com.aigirls.view.SelectView;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -105,6 +107,7 @@ public class MagicSelectView extends SelectView {
     {
         selectedIndex = index;
         cards[selectedIndex].setCardPlace(x, y);
+        battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_WAIT, PlayerEnum.Player1);
     }
 
     public void moveMagicCard(int x, int y)
@@ -122,6 +125,7 @@ public class MagicSelectView extends SelectView {
     {
         Point place = cards[selectedIndex].getCardPlace();
         if (battleScreenView.getChoicedPlace(place.x, place.y) == ChoiceListModel.NOT_CHOICED) {
+            battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player1);
             return ChoiceListModel.NOT_CHOICED;
         } else {
             return selectedIndex;
