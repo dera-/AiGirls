@@ -3,7 +3,6 @@ package com.aigirls.screen.battle;
 import java.awt.Point;
 
 import com.aigirls.manager.ScreenManager;
-import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.battle.CharacterModel;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.screen.GameScreen;
@@ -38,6 +37,7 @@ public class BattleEndScreen extends GameScreen {
     public void show() {
         currentTime = 0;
         getGameView().noFillScreen();
+        getGameView().dicideUnusableButtom(players[BattleScreen.ALLY_INDEX].isAlive());
     }
 
     @Override
@@ -65,7 +65,11 @@ public class BattleEndScreen extends GameScreen {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
             if (selected == BattleEndScreenView.INDEX_TITLE_BUTTOM) {
-                ScreenManager.changeScreen(ScreenEnum.StartGame);
+                ScreenManager.changeScreen(ScreenEnum.GameAtReturnTitle);
+            } else if (selected == BattleEndScreenView.INDEX_RETRY_BUTTOM && !players[BattleScreen.ALLY_INDEX].isAlive()) {
+                ScreenManager.changeScreen(ScreenEnum.GameAtRetry);
+            } else if (selected == BattleEndScreenView.INDEX_NEXT_BUTTOM && players[BattleScreen.ALLY_INDEX].isAlive()) {
+                ScreenManager.changeScreen(ScreenEnum.GameAtNext);
             }
         }
     }

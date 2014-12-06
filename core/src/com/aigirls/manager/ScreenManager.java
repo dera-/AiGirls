@@ -28,9 +28,7 @@ public class ScreenManager {
                 screenStack.push(StrengthSelectScreen.getStrengthSelect());
                 break;
             case StartBattle:
-                BattleScreen battlescreen = BattleScreenFactory.generateBattleScreen(enemyNumber, EnemyType.MONSTER);
-                screenStack.push(battlescreen);
-                screenStack.push(battlescreen.getTurnStartScreen());
+                startBattle();
                 break;
             case GameAtMagicSelect:
                 screenStack.push(MagicSelectScreen.getMagicSelectScreen());
@@ -56,14 +54,45 @@ public class ScreenManager {
             case GameAtBattleEnd:
                 screenStack.push(BattleEndScreen.getBattleEndScreen());
                 break;
+            case GameAtRetry:
+                deleteCureentBattleScreen();
+                startBattle();
+                break;
+            case GameAtReturnTitle:
+                deleteCureentBattleScreen();
+                screenStack.push(GameStartScreen.getGameStartScreen());
+                break;
+            case GameAtNext:
+                deleteCureentBattleScreen();
+                setNumber(enemyNumber+1);
+                startBattle();
+                break;
             default:
                 break;
         }
     }
 
+    private static void startBattle()
+    {
+        BattleScreen battlescreen = BattleScreenFactory.generateBattleScreen(enemyNumber, EnemyType.MONSTER);
+        screenStack.push(battlescreen);
+        screenStack.push(battlescreen.getTurnStartScreen());
+    }
+
     private static void deleteScreensUntilBattleScreen()
     {
         while (!(screenStack.peek() instanceof BattleScreen)) {
+            screenStack.pop();
+        }
+    }
+
+    private static void deleteCureentBattleScreen()
+    {
+        deleteScreensUntilBattleScreen();
+        Screen screen = getNowScreen();
+        if (screen instanceof BattleScreen) {
+            BattleScreen battleScreen = (BattleScreen) screen;
+            battleScreen.dispose();
             screenStack.pop();
         }
     }

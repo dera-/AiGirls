@@ -39,10 +39,11 @@ public class OutbreakPlaceSelectScreen extends GameScreen {
         int damage = DamageCalculateService.getDamageValue(
                 (int) Math.round(magic.getAttackRate() * players[BattleScreen.ALLY_INDEX].getAttack()),
                 players[BattleScreen.ENEMY_INDEX].getDefense());
+        int damageToBall = (int) Math.round(magic.getBallAttackRate() * players[BattleScreen.ALLY_INDEX].getMagicAttack());
         List<ObstacleBallInfoModel[]> obstaclesList = new ArrayList<ObstacleBallInfoModel[]>();
         //ダメージが与えられる邪魔玉を取得
         for (int i=0; i<magic.getNumTargetBalls(); i++) {
-            obstaclesList.add(players[BattleScreen.ALLY_INDEX].getObstacleBallInfoModels(damage, magic.getBallInfoModels(i)));
+            obstaclesList.add(players[BattleScreen.ALLY_INDEX].getObstacleBallInfoModels(damageToBall, magic.getBallInfoModels(i)));
         }
         getGameView().setActiveMagicModel(magic);
         getGameView().setObstaclesList(obstaclesList);

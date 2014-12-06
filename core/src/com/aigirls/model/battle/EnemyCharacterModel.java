@@ -11,9 +11,11 @@ public class EnemyCharacterModel extends CharacterModel {
 
     private ActiveMagicModel magicToUse = null;
     private BallInfoModel[] ballsToUse = new BallInfoModel[0];
+    private EnemyBrainModel brain;
 
     public EnemyCharacterModel(CharacterEntity entity, MagicModel[] magics) {
         super(entity, magics);
+        brain = new EnemyBrainModel();
     }
 
     public int decidePutPlace(CharacterModel playerChara){

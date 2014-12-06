@@ -45,7 +45,7 @@ public class BattleScreenView extends GameView
     private static final int CHARACTER_WIDTH = BOARD_WIDTH - 2*BOARD_SIDE_WALL_WIDTH;
     private static final int CHARACTER_HEIGHT = BOARD_HEIGHT - BOARD_BOTTOM_WALL_WIDTH;
     private static final int BALL_STACK_Y  = (int) Math.round(0.82 * GameConfig.GAME_HEIGHT);
-    private static final int BALL_STACK_WIDTH  = BOARD_WIDTH;
+    private static final int BALL_STACK_WIDTH  = (int) Math.round(1.0*BOARD_WIDTH*GameConfig.LIMIT_STACKED_BALL_NUM/GameConfig.BOARD_WIDTH);
     private static final int BALL_STACK_HEIGHT  = (int) Math.round(0.1 * GameConfig.GAME_HEIGHT);
     private static final int BALL_STACK_WALL_WIDTH = BOARD_SIDE_WALL_WIDTH;
     private static final int BALL_STACK_WALL_HEIGHT = BOARD_SIDE_WALL_WIDTH;

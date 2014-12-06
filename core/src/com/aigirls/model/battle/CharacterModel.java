@@ -15,7 +15,8 @@ public class CharacterModel
     protected BoardModel board;
     protected BallStackModel ballStack;
 
-    public CharacterModel(CharacterEntity entity, MagicModel[] magics){
+    public CharacterModel(CharacterEntity entity, MagicModel[] magics)
+    {
         this.maxHp        = entity.hp;
         this.currentHp    = entity.hp;
         this.attack       = entity.attack;
@@ -26,6 +27,29 @@ public class CharacterModel
         this.magics = magics;
         this.board = new BoardModel();
         this.ballStack = new BallStackModel();
+    }
+
+    private CharacterModel(CharacterModel model)
+    {
+        this.maxHp        = model.maxHp;
+        this.currentHp    = model.currentHp;
+        this.attack       = model.attack;
+        this.defense      = model.defense;
+        this.magicAttack  = model.magicAttack;
+        this.magicDefense = model.magicDefense;
+        this.magics       = model.magics;
+        this.board        = model.board.getClone();
+        this.ballStack    = model.ballStack.getClone();
+    }
+
+    public CharacterModel getClone()
+    {
+        return new CharacterModel(this);
+    }
+
+    public int getCurrentHp()
+    {
+        return currentHp;
     }
 
     public int getMaxHp()
@@ -51,6 +75,11 @@ public class CharacterModel
     public int getMagicDefense()
     {
         return (int) Math.round(magicDefense * ballStack.getStatusRate());
+    }
+
+    public int getStackedBallNum()
+    {
+        return ballStack.getStackedBallNum();
     }
 
     public void addBallToStack(int num)

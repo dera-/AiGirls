@@ -12,4 +12,7 @@ public enum ScreenEnum {
     GameAtFinishTurn,
     GameAtBattleEnd,
     StrengthSelect,
+    GameAtRetry,
+    GameAtReturnTitle,
+    GameAtNext
 }

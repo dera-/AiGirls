@@ -73,15 +73,14 @@ public class ActiveMagicModel {
     }
 
     public double getStrength() {
-        return getStrength(1, 1);
+        return getStrength(1, 1, 0.6);
     }
 
-    public double getStrength(double attackWeight, double ballAttackWeight) {
+    public double getStrength(double attackWeight, double ballAttackWeight, double recoverWeight) {
         if (outbreak == null) {
             return 0;
         }
-        int ballNums = outbreak.getConditionBallPlaces().length;
-        return (attackWeight*attackRate + ballAttackWeight*ballAttackRate) / ballNums;
+        return (attackWeight*attackRate + ballAttackWeight*ballAttackRate + recoverWeight*recoverBall);
     }
 
 }

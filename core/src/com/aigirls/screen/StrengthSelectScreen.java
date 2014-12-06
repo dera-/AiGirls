@@ -43,7 +43,6 @@ public class StrengthSelectScreen extends GameScreen {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
             if (selected != ChoiceListModel.NOT_CHOICED) {
-                System.out.println(startNums[selected]);
                 ScreenManager.setNumber(startNums[selected]);
                 ScreenManager.changeScreen(ScreenEnum.StartBattle);
             }

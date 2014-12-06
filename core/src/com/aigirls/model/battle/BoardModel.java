@@ -14,6 +14,24 @@ public class BoardModel {
         formatBoard();
     }
 
+    private BoardModel(BallModel[][] balls)
+    {
+        for (int y = 0; y < balls.length; y++) {
+            for(int x = 0; x < balls[y].length; x++) {
+                if (balls[y][x] != null) {
+                    this.balls[y][x] = new BallModel(balls[y][x].id);
+                } else {
+                    this.balls[y][x] = null;
+                }
+            }
+        }
+    }
+
+    public BoardModel getClone()
+    {
+        return new BoardModel(balls);
+    }
+
     private void formatBoard()
     {
         for(int y = 0; y < balls.length; y++)

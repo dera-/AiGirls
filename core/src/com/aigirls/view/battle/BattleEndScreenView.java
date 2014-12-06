@@ -15,20 +15,28 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class BattleEndScreenView extends SelectView {
-    private static final int TITLE_BUTTOM_X = (int) Math.round(0.15*GameConfig.GAME_WIDTH);
+    private static final int TITLE_BUTTOM_X = (int) Math.round(0.05*GameConfig.GAME_WIDTH);
+    private static final int RETRY_BUTTOM_X = (int) Math.round(0.28*GameConfig.GAME_WIDTH);
+    private static final int NEXT_BUTTOM_X = (int) Math.round(0.51*GameConfig.GAME_WIDTH);
     private static final int BUTTOM_Y = (int) Math.round(0.02*GameConfig.GAME_HEIGHT);
-    private static final int BUTTOM_WIDTH = (int) Math.round(0.15*GameConfig.GAME_WIDTH);
+    private static final int TITLE_BUTTOM_WIDTH = (int) Math.round(0.18*GameConfig.GAME_WIDTH);
+    private static final int RETRY_BUTTOM_WIDTH = (int) Math.round(0.18*GameConfig.GAME_WIDTH);
+    private static final int NEXT_BUTTOM_WIDTH = (int) Math.round(0.15*GameConfig.GAME_WIDTH);
     private static final int BUTTOM_HEIGHT = (int) Math.round(0.1*GameConfig.GAME_HEIGHT);
     private static final int IMAGE_ALLY_X = (int) Math.round(0.1*GameConfig.GAME_WIDTH);
     private static final int IMAGE_ENEMY_X = (int) Math.round(0.6*GameConfig.GAME_WIDTH);
     private static final int IMAGE_Y = (int) Math.round(0.4*GameConfig.GAME_HEIGHT);
     private static final int IMAGE_WIDTH = (int) Math.round(0.3*GameConfig.GAME_WIDTH);
     private static final int IMAGE_HEIGHT = (int) Math.round(0.2*GameConfig.GAME_HEIGHT);
-    private static final int SELECT_ITEM_NUMS = 1;
+    private static final int SELECT_ITEM_NUMS = 3;
     public static final int INDEX_TITLE_BUTTOM = 0;
+    public static final int INDEX_RETRY_BUTTOM = 1;
+    public static final int INDEX_NEXT_BUTTOM = 2;
 
     private BattleScreenView view;
     private ButtomView titleButtomView;
+    private ButtomView retryButtomView;
+    private ButtomView nextButtomView;
     private Sprite allyResultSprite = null;
     private Sprite enemyResultSprite = null;
 
@@ -41,7 +49,21 @@ public class BattleEndScreenView extends SelectView {
     {
         super(0, 0, GameConfig.GAME_WIDTH, GameConfig.GAME_HEIGHT, 1);
         this.view = view;
-        this.titleButtomView = new ButtomView(TITLE_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "タイトルへ");
+        this.titleButtomView = new ButtomView(TITLE_BUTTOM_X, BUTTOM_Y, TITLE_BUTTOM_WIDTH, BUTTOM_HEIGHT, "タイトル");
+        this.retryButtomView = new ButtomView(RETRY_BUTTOM_X, BUTTOM_Y, RETRY_BUTTOM_WIDTH, BUTTOM_HEIGHT, "リトライ");
+        this.nextButtomView  = new ButtomView(NEXT_BUTTOM_X, BUTTOM_Y, NEXT_BUTTOM_WIDTH, BUTTOM_HEIGHT, "次へ");
+    }
+
+    public void dicideUnusableButtom(boolean allyAlive)
+    {
+        if (allyAlive) {
+            retryButtomView.setCanPush(false);
+            nextButtomView.setCanPush(true);
+
+        } else {
+            retryButtomView.setCanPush(true);
+            nextButtomView.setCanPush(false);
+        }
     }
 
     @Override
@@ -49,6 +71,8 @@ public class BattleEndScreenView extends SelectView {
         view.draw(batch, shapeRenderer);
         if (allyResultSprite!=null && enemyResultSprite!=null) {
             titleButtomView.draw(batch, shapeRenderer);
+            retryButtomView.draw(batch, shapeRenderer);
+            nextButtomView.draw(batch, shapeRenderer);
         }
         batch.begin();
         if (allyResultSprite != null) {
@@ -67,7 +91,9 @@ public class BattleEndScreenView extends SelectView {
     @Override
     protected ChoiceListModel getChoiceListModel() {
         ChoiceModel[] choices = new ChoiceModel[SELECT_ITEM_NUMS];
-        choices[INDEX_TITLE_BUTTOM] = new ChoiceModel(TITLE_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT);
+        choices[INDEX_TITLE_BUTTOM] = new ChoiceModel(TITLE_BUTTOM_X, BUTTOM_Y, TITLE_BUTTOM_WIDTH, BUTTOM_HEIGHT);
+        choices[INDEX_RETRY_BUTTOM] = new ChoiceModel(RETRY_BUTTOM_X, BUTTOM_Y, RETRY_BUTTOM_WIDTH, BUTTOM_HEIGHT);
+        choices[INDEX_NEXT_BUTTOM] = new ChoiceModel(NEXT_BUTTOM_X, BUTTOM_Y, NEXT_BUTTOM_WIDTH, BUTTOM_HEIGHT);
         ChoiceListModel listModel = new ChoiceListModel(choices);
         return listModel;
     }

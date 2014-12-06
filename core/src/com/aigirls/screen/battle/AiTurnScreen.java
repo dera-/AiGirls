@@ -70,19 +70,16 @@ public class AiTurnScreen extends TurnStartScreen {
 
     @Override
     protected void startAnimation() {
-        System.out.println("enemyyyyyyyyyyyyyyyyyyyyyyyy");
         getGameView().display();
     }
 
     @Override
     protected void animation(float time) {
-        System.out.println("enemy animation");
         getGameView().animation(time);
     }
 
     @Override
     protected void endAnimation() {
-        System.out.println("enemy end");
         getGameView().dispose();
     }
 }

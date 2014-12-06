@@ -9,6 +9,18 @@ public class BallStackModel {
         currentBallCount = GameConfig.DEFAULT_STACKED_BALL_NUM;
     }
 
+    public BallStackModel getClone()
+    {
+        BallStackModel model = new BallStackModel();
+        model.currentBallCount = this.currentBallCount;
+        return model;
+    }
+
+    public int getStackedBallNum()
+    {
+        return currentBallCount;
+    }
+
     public double getStatusRate() {
         return GameConfig.STATUS_RATES[currentBallCount];
     }

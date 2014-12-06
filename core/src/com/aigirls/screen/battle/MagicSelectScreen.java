@@ -7,7 +7,6 @@ import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.screen.GameScreen;
-import com.aigirls.view.MagicCardView;
 import com.aigirls.view.battle.BattleScreenView;
 import com.aigirls.view.battle.MagicSelectView;
 import com.badlogic.gdx.Gdx;
