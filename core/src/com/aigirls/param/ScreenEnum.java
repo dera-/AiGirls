@@ -10,4 +10,6 @@ public enum ScreenEnum {
     GameAtMagicOutbreak,
     StartBattle,
     GameAtFinishTurn,
+    GameAtBattleEnd,
+    StrengthSelect,
 }

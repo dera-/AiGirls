@@ -79,5 +79,13 @@ public class TextureManager
         return region;
     }
 
+    public static TextureRegion[] getTextureRegions(String[] paths, String[] keys, int num)
+    {
+        TextureRegion[] regions = new TextureRegion[num];
+        for (int i=0; i<num; i++) {
+            regions[i] = new TextureRegion(generateTexture(paths[i], keys[i]));
+        }
+        return regions;
+    }
 
 }

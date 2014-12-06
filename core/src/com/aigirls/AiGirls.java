@@ -10,7 +10,7 @@ public class AiGirls extends Game {
 
     @Override
     public void create () {
-        ScreenManager.changeScreen(ScreenEnum.StartBattle);
+        ScreenManager.changeScreen(ScreenEnum.StartGame);
     }
 
     @Override

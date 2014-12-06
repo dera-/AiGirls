@@ -333,4 +333,16 @@ public class BattleScreenView extends GameView
         chara.changeExpression(index);
     }
 
+    public void startExploding(PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        board.startExploding();
+    }
+
+    public void removeBalls(PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
+        board.removeBalls();
+    }
+
 }

@@ -1,9 +1,11 @@
 package com.aigirls.screen.battle;
 
+import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.battle.BallModel;
 import com.aigirls.model.battle.BoardModel;
 import com.aigirls.model.battle.CharacterModel;
 import com.aigirls.model.battle.ObstacleBallModel;
+import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.GameScreen;
 import com.aigirls.service.battle.DamageCalculateService;
@@ -49,10 +51,7 @@ public abstract class TurnStartScreen extends GameScreen
     }
 
     @Override
-    public void show()
-    {
-        //getBattleScreenView().filledDefenderView(getIndex(defenderEnum));
-    }
+    public void show(){}
 
     protected void update(float delta)
     {
@@ -64,6 +63,9 @@ public abstract class TurnStartScreen extends GameScreen
             animation(delta);
             currentTime += delta;
             return;
+        }
+        if (!attacker.isAlive()) {
+            ScreenManager.changeScreen(ScreenEnum.GameAtBattleEnd);
         }
         action(delta);
     }
@@ -94,6 +96,9 @@ public abstract class TurnStartScreen extends GameScreen
                 xPlace,
                 new ObstacleBallModel(ballId, attacker.getMagicDefense()));
             getBattleScreenView().addObstacle(ballId, xPlace, defenserYPlace, defenderEnum);
+        }
+        if (!defender.isAlive()) {
+            ScreenManager.changeScreen(ScreenEnum.GameAtBattleEnd);
         }
     }
 

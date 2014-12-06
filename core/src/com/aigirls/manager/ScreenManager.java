@@ -5,6 +5,9 @@ import java.util.Stack;
 import com.aigirls.factory.BattleScreenFactory;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.EnemyType;
+import com.aigirls.screen.GameStartScreen;
+import com.aigirls.screen.StrengthSelectScreen;
+import com.aigirls.screen.battle.BattleEndScreen;
 import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.screen.battle.MagicOutbreakScreen;
 import com.aigirls.screen.battle.MagicSelectScreen;
@@ -13,12 +16,19 @@ import com.badlogic.gdx.Screen;
 
 public class ScreenManager {
     private static Stack<Screen> screenStack = new Stack<Screen>();
+    private static int enemyNumber = 0;
 
     public static void changeScreen(ScreenEnum screenEnum)
     {
         switch (screenEnum) {
+            case StartGame:
+                screenStack.push(GameStartScreen.getGameStartScreen());
+                break;
+            case StrengthSelect:
+                screenStack.push(StrengthSelectScreen.getStrengthSelect());
+                break;
             case StartBattle:
-                BattleScreen battlescreen = BattleScreenFactory.generateBattleScreen(1, EnemyType.MONSTER);
+                BattleScreen battlescreen = BattleScreenFactory.generateBattleScreen(enemyNumber, EnemyType.MONSTER);
                 screenStack.push(battlescreen);
                 screenStack.push(battlescreen.getTurnStartScreen());
                 break;
@@ -43,6 +53,9 @@ public class ScreenManager {
                     screenStack.push(battleScreen.getTurnStartScreen());
                 }
                 break;
+            case GameAtBattleEnd:
+                screenStack.push(BattleEndScreen.getBattleEndScreen());
+                break;
             default:
                 break;
         }
@@ -55,11 +68,14 @@ public class ScreenManager {
         }
     }
 
-
     public static Screen getNowScreen()
     {
         return screenStack.peek();
     }
 
+    public static void setNumber(int num)
+    {
+        enemyNumber = num;
+    }
 
 }

@@ -55,24 +55,24 @@ public class BallView extends GameView {
     {
         if (ballName.equals(FileConfig.BALL1_KEY)) {
             if (id == ID_IN_STACK) {
-                System.out.println(FileConfig.BLUE_RECOVER_KEY);
                 return new Animation(0.03f, TextureManager.getTextureRegion(FileConfig.BLUE_RECOVER_KEY));
             } else {
-                System.out.println(FileConfig.BLUE_STAR_KEY);
                 return new Animation(0.05f, TextureManager.getTextureRegion(FileConfig.BLUE_STAR_KEY));
             }
         } else if (ballName.equals(FileConfig.BALL2_KEY)) {
             if (id == ID_IN_STACK) {
-                System.out.println(FileConfig.RED_RECOVER_KEY);
                 return new Animation(0.03f, TextureManager.getTextureRegion(FileConfig.RED_RECOVER_KEY));
             } else {
-                System.out.println(FileConfig.RED_STAR_KEY);
                 return new Animation(0.05f, TextureManager.getTextureRegion(FileConfig.RED_STAR_KEY));
             }
         } else {
-            System.out.println(FileConfig.EXPLODE_KEY);
             return new Animation(0.05f, TextureManager.getTextureRegion(FileConfig.EXPLODE_KEY));
         }
+    }
+
+    private Animation getExplodedBallAnimation()
+    {
+        return new Animation(0.05f, TextureManager.getTextureRegion(FileConfig.EXPLODE_KEY));
     }
 
     @Override
@@ -148,6 +148,10 @@ public class BallView extends GameView {
 
     public void setAnimation() {
         ballAnimation = getBallAnimation();
+    }
+
+    public void startExploding() {
+        ballAnimation = getExplodedBallAnimation();
     }
 
     public void animate(float m) {

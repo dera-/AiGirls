@@ -54,6 +54,7 @@ public abstract class GameScreen implements Screen {
     public void dispose()
     {
         batch.dispose();
+        shapeRenderer.dispose();
     };
 
     @Override

@@ -71,6 +71,11 @@ public class BoardView extends SelectView {
         }
     }
 
+    public void removeBalls()
+    {
+        balls.clear();
+    }
+
     public void dropBall(int id, int y)
     {
         dropBall(id, y, false);
@@ -197,6 +202,13 @@ public class BoardView extends SelectView {
                 ball.setAnimation();
                 return;
             }
+        }
+    }
+
+    public void startExploding()
+    {
+        for(BallView ball: balls){
+            ball.startExploding();
         }
     }
 

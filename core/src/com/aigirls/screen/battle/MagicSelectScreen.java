@@ -16,7 +16,7 @@ public class MagicSelectScreen extends GameScreen {
     private static MagicSelectScreen screen;
     private ActiveMagicModel[] activeMagicModels;
 
-    public MagicSelectScreen(BattleScreenView battleScreenView, ActiveMagicModel[] magics){
+    private MagicSelectScreen(BattleScreenView battleScreenView, ActiveMagicModel[] magics){
         super(new MagicSelectView(battleScreenView, magics));
         activeMagicModels = magics;
     }

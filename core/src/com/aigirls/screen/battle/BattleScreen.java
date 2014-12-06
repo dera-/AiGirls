@@ -24,6 +24,7 @@ public class BattleScreen extends GameScreen
         players[ENEMY_INDEX] = enemy;
         OutbreakPlaceSelectScreen.setOutbreakPlaceSelectScreen(getGameView(), players);
         MagicOutbreakScreen.setMagicOutbreakScreen(getGameView(), players);
+        BattleEndScreen.setBattleEndScreen(getGameView(), players);
     }
 
     public void nextTurn()

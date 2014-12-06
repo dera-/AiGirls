@@ -19,7 +19,7 @@ public class OutbreakPlaceSelectScreen extends GameScreen {
     private static OutbreakPlaceSelectScreen screen;
     private CharacterModel[] players;
 
-    public OutbreakPlaceSelectScreen(BattleScreenView battleScreenView, CharacterModel[] players) {
+    private OutbreakPlaceSelectScreen(BattleScreenView battleScreenView, CharacterModel[] players) {
         super(new OutbreakPlaceSelectView(battleScreenView));
         this.players = players;
     }

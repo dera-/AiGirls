@@ -29,7 +29,7 @@ public class MagicOutbreakScreen extends GameScreen {
     private int damageToBall = 0;
     private float currentTime = 0;
 
-    public MagicOutbreakScreen(BattleScreenView battleScreenView, CharacterModel[] players)
+    private MagicOutbreakScreen(BattleScreenView battleScreenView, CharacterModel[] players)
     {
         super(new MagicOutbreakView(battleScreenView));
         this.players = players;
@@ -104,7 +104,11 @@ public class MagicOutbreakScreen extends GameScreen {
             getGameView().removeBalls(removedBalls, getPlayerEnum(attackerIndex));
             getGameView().dropBalls(droppedBalls, getPlayerEnum(attackerIndex));
         } else if (isBeyondTargetTime(FINISH_OUTBREAK_TIME, delta)) {
-            ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
+            if (!players[(attackerIndex+1)%2].isAlive()) {
+                ScreenManager.changeScreen(ScreenEnum.GameAtBattleEnd);
+            } else {
+                ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
+            }
         }
         getGameView().animation(delta, getPlayerEnum(attackerIndex), getPlayerEnum((attackerIndex+1)%2));
         currentTime += delta;
