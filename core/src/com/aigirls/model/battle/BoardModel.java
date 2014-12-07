@@ -18,10 +18,13 @@ public class BoardModel {
     {
         for (int y = 0; y < balls.length; y++) {
             for(int x = 0; x < balls[y].length; x++) {
-                if (balls[y][x] != null) {
-                    this.balls[y][x] = new BallModel(balls[y][x].id);
-                } else {
+                if (balls[y][x] == null) {
                     this.balls[y][x] = null;
+                } else if (balls[y][x] instanceof ObstacleBallModel) {
+                    ObstacleBallModel obstacle = (ObstacleBallModel)balls[y][x];
+                    this.balls[y][x] = obstacle.getClone();
+                } else {
+                    this.balls[y][x] = new BallModel(balls[y][x].id);
                 }
             }
         }

@@ -95,23 +95,31 @@ public class MagicOutbreakScreen extends GameScreen {
     protected void update(float delta) {
         if (isBeyondTargetTime(START_OUTBREAK_TIME, delta)) {
             getGameView().startOutbreaking(targetBalls, getPlayerEnum(attackerIndex));
+            //System.out.println("かいし");
         } else if (isBeyondTargetTime(START_ATTACK_TIME, delta)) {
             getGameView().outbreakInAttackerSide(removedBalls, magic.getRecoverBall(), getPlayerEnum(attackerIndex));
             getGameView().removeBalls(targetBalls, getPlayerEnum(attackerIndex));
             getGameView().outbreakInDeffenderSide(damage, getPlayerEnum((attackerIndex+1)%2));
+            //System.out.println("こうげき");
         } else if (isBeyondTargetTime(END_ATTACK_TIME, delta)) {
             getGameView().displayBallsnInStack(getPlayerEnum(attackerIndex));
             getGameView().removeBalls(removedBalls, getPlayerEnum(attackerIndex));
             getGameView().dropBalls(droppedBalls, getPlayerEnum(attackerIndex));
+            //System.out.println("こうげき２");
         } else if (isBeyondTargetTime(FINISH_OUTBREAK_TIME, delta)) {
             if (!players[(attackerIndex+1)%2].isAlive()) {
                 ScreenManager.changeScreen(ScreenEnum.GameAtBattleEnd);
             } else {
                 ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
             }
+            //System.out.println("しゅーりょー");
         }
         getGameView().animation(delta, getPlayerEnum(attackerIndex), getPlayerEnum((attackerIndex+1)%2));
-        currentTime += delta;
+        if(isBeyondTargetTime(START_OUTBREAK_TIME, delta)) {
+            currentTime = START_OUTBREAK_TIME + 0.001f;
+        } else {
+            currentTime += delta;
+        }
     }
 
     private boolean isBeyondTargetTime(float targetTime, float delta)

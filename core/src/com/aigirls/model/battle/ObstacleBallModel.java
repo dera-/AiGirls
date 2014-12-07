@@ -11,6 +11,13 @@ public class ObstacleBallModel extends BallModel{
         this.currentHp = hp;
     }
 
+    public ObstacleBallModel getClone()
+    {
+        ObstacleBallModel model = new ObstacleBallModel(id, hp);
+        model.currentHp = currentHp;
+        return model;
+    }
+
     public boolean isBroken()
     {
         return this.currentHp <= 0;

@@ -4,6 +4,7 @@ import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.model.battle.BallInfoModel;
 import com.aigirls.model.battle.CharacterModel;
+import com.aigirls.model.battle.EnemyActionModel;
 import com.aigirls.model.battle.EnemyCharacterModel;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.PlayerEnum;
@@ -25,7 +26,6 @@ public class AiTurnScreen extends TurnStartScreen {
     @Override
     public void show() {
         super.show();
-        ((EnemyCharacterModel) attacker).formatTemporaryParameters();
     }
 
     @Override
@@ -45,11 +45,17 @@ public class AiTurnScreen extends TurnStartScreen {
     @Override
     protected void action(float delta) {
         EnemyCharacterModel aiChara = (EnemyCharacterModel) attacker;
-        int xPlace = aiChara.decidePutPlace(defender);
-        dropBallEvent(xPlace, attacker.getDropPlace(xPlace));
-        aiChara.useMagic(defender);
-        ActiveMagicModel magic = aiChara.getMagicToUse();
-        BallInfoModel[] balls = aiChara.getBallsToUse();
+        EnemyActionModel action = aiChara.getAction(defender, totalBallCount);
+        for (BallInfoModel ball: action.targetBalls) {
+            System.out.println("ID:"+ball.id);
+        }
+//        System.out.println(action.score);
+        int[] xPlaces = action.putPlaces;
+        for (int x : xPlaces) {
+            dropBallEvent(x, attacker.getDropPlace(x));
+        }
+        ActiveMagicModel magic = action.magicModel;
+        BallInfoModel[] balls = action.targetBalls;
         if (magic == null) {
             ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
         } else {

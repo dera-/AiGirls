@@ -55,7 +55,10 @@ public abstract class TurnStartScreen extends GameScreen
 
     protected void update(float delta)
     {
-        if (currentTime < TIME && TIME <= currentTime+delta) {
+        if (currentTime == 0){
+            currentTime = 0.001f;
+            return;
+        } else if (currentTime < TIME && TIME <= currentTime+delta) {
             endAnimation();
             currentTime += delta;
             return;

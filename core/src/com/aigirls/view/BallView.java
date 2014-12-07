@@ -63,6 +63,7 @@ public class BallView extends GameView {
             if (id == ID_IN_STACK) {
                 return new Animation(0.03f, TextureManager.getTextureRegion(FileConfig.RED_RECOVER_KEY));
             } else {
+                System.out.println("red star");
                 return new Animation(0.05f, TextureManager.getTextureRegion(FileConfig.RED_STAR_KEY));
             }
         } else {
