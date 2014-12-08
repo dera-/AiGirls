@@ -4,6 +4,7 @@ import com.aigirls.config.FileConfig;
 import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.battle.BattleScreen;
+import com.aigirls.view.CharacterView;
 import com.aigirls.view.GameView;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,12 +29,14 @@ public class AiTurnScreenView extends GameView implements TurnStartView{
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         battleScreenView.draw(batch, shapeRenderer);
+        batch.begin();
+        font.setColor(1, 1, 1, 1);
         if (turnStartFlag) {
-            batch.begin();
-            font.setColor(1, 1, 1, 1);
             font.draw(batch, TurnStartView.ENEMY_TURN, TurnStartView.X, TurnStartView.Y);
-            batch.end();
+        } else {
+            font.draw(batch, "あいて思考中", TurnStartView.X, TurnStartView.Y);
         }
+        batch.end();
     }
 
     @Override
@@ -49,6 +52,7 @@ public class AiTurnScreenView extends GameView implements TurnStartView{
         turnStartFlag = false;
         battleScreenView.displayBallsnInStack(PlayerEnum.Player2);
         battleScreenView.setFilledAllowFlag(BattleScreen.ENEMY_INDEX, false);
+        battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_WAIT, PlayerEnum.Player2);
     }
 
     @Override

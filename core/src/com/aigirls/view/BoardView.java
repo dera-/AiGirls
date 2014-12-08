@@ -124,6 +124,16 @@ public class BoardView extends SelectView {
         }
     }
 
+    public void fillBoard(int x, int y)
+    {
+        int index = getChoicedPlace(x, y);
+        if(index < 0 || index >= GameConfig.BOARD_WIDTH){
+            filledLineView = null;
+        } else {
+            filledLineView = new FilledView(leftX, lowerY, width, height, new Color(0.6f, 0.6f, 0, 0.6f));
+        }
+    }
+
     public void noFillOneLine()
     {
         filledLineView = null;

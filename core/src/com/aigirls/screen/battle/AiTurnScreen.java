@@ -8,10 +8,12 @@ import com.aigirls.model.battle.EnemyActionModel;
 import com.aigirls.model.battle.EnemyCharacterModel;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.PlayerEnum;
+import com.aigirls.service.battle.AiThinkingService;
 import com.aigirls.view.battle.AiTurnScreenView;
 import com.aigirls.view.battle.BattleScreenView;
 
 public class AiTurnScreen extends TurnStartScreen {
+    private AiThinkingService aiThinkingSevice;
 
     public AiTurnScreen(
         BattleScreenView view,
@@ -26,6 +28,7 @@ public class AiTurnScreen extends TurnStartScreen {
     @Override
     public void show() {
         super.show();
+        aiThinkingSevice = new AiThinkingService(defender, (EnemyCharacterModel)attacker, totalBallCount);
     }
 
     @Override
@@ -44,12 +47,14 @@ public class AiTurnScreen extends TurnStartScreen {
 
     @Override
     protected void action(float delta) {
-        EnemyCharacterModel aiChara = (EnemyCharacterModel) attacker;
-        EnemyActionModel action = aiChara.getAction(defender, totalBallCount);
-        for (BallInfoModel ball: action.targetBalls) {
-            System.out.println("ID:"+ball.id);
+        EnemyActionModel action = aiThinkingSevice.getAiAction();
+        if (action != null) {
+            aiActionEvent(action);
         }
-//        System.out.println(action.score);
+    }
+
+    private void aiActionEvent(EnemyActionModel action)
+    {
         int[] xPlaces = action.putPlaces;
         for (int x : xPlaces) {
             dropBallEvent(x, attacker.getDropPlace(x));

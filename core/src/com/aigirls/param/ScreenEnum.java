@@ -14,5 +14,6 @@ public enum ScreenEnum {
     StrengthSelect,
     GameAtRetry,
     GameAtReturnTitle,
-    GameAtNext
+    GameAtNext,
+    LoadingBattle
 }

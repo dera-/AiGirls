@@ -18,6 +18,7 @@ public class CharacterView extends GameView
     private static final int EXPRESSION_NUMS = 6;
 
     private final int realWidth;
+    private final int realHeight;
     private Sprite[] charaSprites;
     private int currentIndex;
     private CharacterViewModel characterViewModel;
@@ -42,7 +43,15 @@ public class CharacterView extends GameView
             TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_ATTACK+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_ATTACK));
         charaSprites[EXPRESSION_DAMEGE] = new Sprite(
             TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_PINCH+FileConfig.IMAGE_FORMAT_PNG, keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_PINCH));
-        realWidth = (int) Math.round(height * charaSprites[EXPRESSION_NORMAL].getWidth() / charaSprites[EXPRESSION_NORMAL].getHeight());
+        float imageWidth = charaSprites[EXPRESSION_NORMAL].getWidth();
+        float imageHeight = charaSprites[EXPRESSION_NORMAL].getHeight();
+        if (imageWidth < imageHeight) {
+            realWidth = (int) Math.round(height * imageWidth / imageHeight);
+            realHeight = height;
+        } else {
+            realWidth = width;
+            realHeight = (int) Math.round(width * imageHeight / imageWidth);
+        }
 
     }
 
@@ -50,7 +59,7 @@ public class CharacterView extends GameView
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer)
     {
         batch.begin();
-        charaSprites[currentIndex].setSize(realWidth, height);
+        charaSprites[currentIndex].setSize(realWidth, realHeight);
         charaSprites[currentIndex].setPosition(leftX, lowerY);
 
         charaSprites[currentIndex].draw(batch);

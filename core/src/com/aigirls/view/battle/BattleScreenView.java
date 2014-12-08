@@ -32,7 +32,7 @@ public class BattleScreenView extends GameView
 
     private static final int ALLY_X  = (int) Math.round(0.05 * GameConfig.GAME_WIDTH);
     private static final int ENEMY_X = (int) Math.round(0.53 * GameConfig.GAME_WIDTH);
-    private static final int ENEMY_IMAGE_X = (int) Math.round(0.62 * GameConfig.GAME_WIDTH);
+    private static final int ENEMY_IMAGE_X = (int) Math.round(0.58 * GameConfig.GAME_WIDTH);
     private static final int CHARA_Y = (int) Math.round(0.28 * GameConfig.GAME_HEIGHT);
     private static final int HP_BAR_Y  = (int) Math.round(0.15 * GameConfig.GAME_HEIGHT);
     private static final int BOARD_Y  = (int) Math.round(0.25 * GameConfig.GAME_HEIGHT);
@@ -271,15 +271,21 @@ public class BattleScreenView extends GameView
         ballStack.displayBall(displayFlag);
     }
 
-    public void fillBoardOneLine(int x, int y)
+    public void fillBoardOneLine(int x, int y, PlayerEnum player)
     {
-        BoardView board = getBoardView(PlayerEnum.Player1);
+        BoardView board = getBoardView(player);
         board.fillOneLine(x, y);
     }
 
-    public void noFillBoard()
+    public void fillBoard(int x, int y, PlayerEnum player)
     {
-        BoardView board = getBoardView(PlayerEnum.Player1);
+        BoardView board = getBoardView(player);
+        board.fillBoard(x, y);
+    }
+
+    public void noFillBoard(PlayerEnum player)
+    {
+        BoardView board = getBoardView(player);
         board.noFillOneLine();
     }
 

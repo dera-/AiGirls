@@ -13,14 +13,17 @@ public class StrengthSelectScreenView extends SelectView {
     private static final int ITEM_START_X = (int) Math.round(0.1*GameConfig.GAME_WIDTH);
     private static final int ITEM_START_Y = (int) Math.round(0.03*GameConfig.GAME_HEIGHT);
     private static final int ITEM_INTERVAL = (int) Math.round(0.02*GameConfig.GAME_HEIGHT);
-    private static final int ITEM_NUMS = 5;
+    private static final int ITEM_NUMS = 3;
     private static final int WAVING_WIDTH = (int) Math.round(0.2*GameConfig.GAME_WIDTH);
     private static final int WAVING_HEIGHT = (int) Math.round(0.3*GameConfig.GAME_HEIGHT);
     private static final int WAVING_X = (int) Math.round(0.7*GameConfig.GAME_WIDTH);
     private static final int WAVING_Y = (int) Math.round(0.2*GameConfig.GAME_HEIGHT);
-    private static String[] strengths = {"やばい", "すごい", "つよい", "ふつう", "よわい"};
-    private static Color[] colors = {Color.RED, Color.YELLOW, Color.BLUE, Color.GREEN, Color.GRAY};
+    private static String[] strengths = {"つよい", "ふつう", "よわい"};
+    private static Color[] colors = {Color.RED, Color.GREEN, Color.BLUE};
     private static Color fontColor = new Color(1,1,1,1);
+    public static final int STRENGTH_STRONG = 0;
+    public static final int STRENGTH_NORMAL = 1;
+    public static final int STRENGTH_WEAK   = 2;
 
     private ButtomView[] items = new ButtomView[ITEM_NUMS];
     private WavingView waving = null;

@@ -113,11 +113,13 @@ public class MagicSelectView extends SelectView {
     public void moveMagicCard(int x, int y)
     {
         cards[selectedIndex].setCardPlace(x, y);
+        battleScreenView.fillBoard(x, y, PlayerEnum.Player1);
     }
 
     public void releaseMagicCard()
     {
         cards[selectedIndex].resetCardPlace();
+        battleScreenView.noFillBoard(PlayerEnum.Player1);
         selectedIndex = NON_SELECTED;
     }
 

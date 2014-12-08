@@ -1,17 +1,26 @@
 package com.aigirls.model.battle;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.aigirls.config.GameConfig;
 import com.aigirls.service.battle.DamageCalculateService;
 
 public class EnemyBrainModel {
-    private static final int DEFAULT_DEPTH = 2;
+    private static final int DEFAULT_DEPTH = 3;
     private static final int WIN_SCORE = 5000;  //高めに設定しておく
-    private static int[] ballHeightPenalty = {0, 0, 0, 2, 5, 14, 40, 120};
-    private static int[] decreaseHpPenalty = {0,30,40,80,120,400};//{0, 2, 20, 70, 300, 1000};
-    private static int[] ballStackScores = {-80, -30, 0, 0, 0, 0};//{-80, -30, 0, 15, 30, 60};
+    private static int[] ballHeightPenaltyForAi = {0, 0, 0, 3, 8, 15, 60, 100};
+    private static int[] obstacleHeightPenaltyForAi = {-30, 5, 15, 50, 120, 300, 600, 1000};
+    private static int[] ballHeightPenaltyForPlayer = {0, 0, 0, 0, 2, 7, 15, 40};
+    private static int[] obstacleHeightPenaltyForPlayer = {0, 1, 2, 7, 20, 40, 100, 600};
+    private static int[] decreaseHpPenalty = {0, 80, 170, 500, 1300, 2000};
+    private static int[] decreaseHpPenaltyForPlayer = {0, 60, 120, 300, 500, 1000};  //攻撃してほしいので高めに設定
+    private static int[] ballStackScores = {-200, -100, 0, 0, 0, 0};//{-80, -30, 0, 15, 30, 60};
     private static int[] FutureBeatScores = {1000, 800, 400, 150, 50};
     private static int IMPPOSIBLE_BEAT = 1000;
-    private final int depth;
+    private static int BALL_STACK_MIN_NUM = 1;
+    private int depth;
     private int[][] oneBalls = {
             {0}, {1}, {2}, {3}, {4}, {5}, {6},
             {0,0}, {0,1}, {0,2}, {0,3}, {0,4}, {0,5}, {0,6},
@@ -34,6 +43,7 @@ public class EnemyBrainModel {
             {1,2,6}, {1,3,4}, {1,3,5}, {1,3,6}, {1,4,5}, {1,4,6}, {1,5,6},
             {2,3,5}, {2,3,6}, {2,4,5}, {2,4,6}, {2,5,6}, {3,4,6}, {3,5,6},
         };
+    private int[][] tempPuts;
     private int totalBallCount = 0;
 
 
@@ -54,10 +64,13 @@ public class EnemyBrainModel {
 
     public EnemyActionModel decideAction(CharacterModel ai, CharacterModel player)
     {
-        return minMax(ai.getClone(), player.getClone(), depth);
+        List<int[]> list = Arrays.asList(oneBalls);
+        Collections.shuffle(list);
+        tempPuts = (int[][])list.toArray(new int[0][0]);
+        return alphabeta(ai.getClone(), player.getClone(), depth, null);
     }
 
-    //TODO attackerとdefenderに変更
+    //minmax
     private EnemyActionModel minMax(CharacterModel attacker, CharacterModel defender, int depth)
     {
         boolean first = (this.depth-depth)%2 == 0;
@@ -65,17 +78,20 @@ public class EnemyBrainModel {
             CharacterModel[] characters = getCharacterModels(attacker, defender, first);
             return new EnemyActionModel(new int[0], null, new BallInfoModel[0], getScore(characters[0], characters[1], first));
         }
-        int score = first ? -1*IMPPOSIBLE_BEAT : IMPPOSIBLE_BEAT;//getScore(characters[0], characters[1], first)
 
+        int score = first ? -1*WIN_SCORE : WIN_SCORE;//minMax(defender, attacker, depth-1).score;
         EnemyActionModel currentAction = new EnemyActionModel(new int[0], null, new BallInfoModel[0], score);
+
         //スタックへのボール追加
         if (depth != this.depth) {
             attacker.addBallToStack(1);
         }
-        int ballNumToUse = attacker.getStackedBallNum();
+        int ballNumToUse = attacker.getStackedBallNum() - BALL_STACK_MIN_NUM;
         int[] ballHeights = getBallHeights(attacker);
         for (int i=0; i<oneBalls.length ; i++) {
+            System.out.println("ボール個数："+oneBalls[i].length);
             if (ballNumToUse < oneBalls[i].length || !isPutBalls(oneBalls[i], ballHeights)) {
+                System.out.println("おーばー");
                 continue;
             }
             CharacterModel attackerClone = attacker.getClone();
@@ -97,6 +113,69 @@ public class EnemyBrainModel {
             }
         }
         return currentAction;
+    }
+
+    private EnemyActionModel alphabeta(CharacterModel attacker, CharacterModel defender, int depth, Integer currentScoreObject)
+    {
+        int[][] oneBalls = tempPuts;
+        boolean first = (this.depth-depth)%2 == 0;
+        if (depth == 0) {
+            CharacterModel[] characters = getCharacterModels(attacker, defender, first);
+            return new EnemyActionModel(new int[0], null, new BallInfoModel[0], getScore(characters[0], characters[1], first));
+        }
+
+        int currentScore;
+        if (currentScoreObject != null) {
+            currentScore = currentScoreObject.intValue();
+        } else {
+            currentScore = first ? -1*WIN_SCORE : WIN_SCORE;
+        }
+
+        int score = alphabeta(defender, attacker, depth-1, null).score;
+        EnemyActionModel currentAction = new EnemyActionModel(new int[0], null, new BallInfoModel[0], score);
+        if (canShortCut(first, currentScore, currentAction.score)) {
+            return currentAction;
+        }
+
+        //スタックへのボール追加
+        if (depth != this.depth) {
+            attacker.addBallToStack(1);
+        }
+        int ballNumToUse = attacker.getStackedBallNum() - BALL_STACK_MIN_NUM;
+        int[] ballHeights = getBallHeights(attacker);
+        for (int i=0; i<oneBalls.length ; i++) {
+            if (ballNumToUse < oneBalls[i].length || !isPutBalls(oneBalls[i], ballHeights)) {
+                continue;
+            }
+            CharacterModel attackerClone = attacker.getClone();
+            CharacterModel defenderClone = defender.getClone();
+            simulatePutBall(attackerClone, defenderClone, oneBalls[i]);
+            //いろいろきついので一番強い技だけを出すようにする
+            currentAction = getBetterAction(first, oneBalls[i], null, new BallInfoModel[0], alphabeta(defenderClone, attackerClone, depth-1, currentAction.score), currentAction);
+            if (canShortCut(first, currentScore, currentAction.score)) {
+                return currentAction;
+            }
+            ActiveMagicModel magicToUse = getBestMagic(attackerClone);
+            if (magicToUse == null) {
+                continue;
+            }
+            int length = magicToUse.getNumTargetBalls();
+            for (int index = 0 ; index < length; index++) {
+                CharacterModel attackerCloneClone = attackerClone.getClone();
+                CharacterModel defenderCloneClone = defenderClone.getClone();
+                BallInfoModel[] targetBalls = magicToUse.getBallInfoModels(index);
+                getScoreAfterAction(attackerCloneClone, defenderCloneClone, magicToUse, targetBalls);
+                currentAction = getBetterAction(first, oneBalls[i], magicToUse, targetBalls, alphabeta(defenderCloneClone, attackerCloneClone, depth-1, currentAction.score), currentAction);
+                if (canShortCut(first, currentScore, currentAction.score)) {
+                    return currentAction;
+                }
+            }
+        }
+        return currentAction;
+    }
+
+    private boolean canShortCut(boolean first, int currentScore, int targetScore) {
+        return (first && targetScore < currentScore) || (!first && targetScore > currentScore);
     }
 
     private EnemyActionModel getBetterAction(boolean attack, int[] puts, ActiveMagicModel magic, BallInfoModel[] balls, EnemyActionModel futureAction, EnemyActionModel currentAction)
@@ -172,32 +251,45 @@ public class EnemyBrainModel {
         if (!ai.isAlive()) {
             return -1*WIN_SCORE;
         }
-        int scoreForAI = calculateBoardScore(ai) + calculateHpScore(ai) + calculateBallStackScore(ai);
-        //System.out.println("ai:"+scoreForAI);
-        int scoreForPlayer = -1*calculateBoardScore(player) - calculateHpScore(player) - calculateBallStackScore(player);
-        //System.out.println("player:"+scoreForPlayer);
+        int scoreForAI = calculateBoardScoreForAi(ai) + calculateHpScoreForAi(ai) + calculateBallStackScore(ai);
+        int scoreForPlayer = -1*calculateBoardScoreForPlayer(player) - calculateHpScoreForPlayer(player) - calculateBallStackScore(player);
         int futureScore = 0;//calculateFutureScore(ai, player, first); //TODO 本当に使うかどうか速度と相談
-        //System.out.println("future:"+futureScore);
         return scoreForAI + scoreForPlayer + futureScore;
     }
 
+
+    private int calculateBoardScoreForAi(CharacterModel chara)
+    {
+        return calculateBoardScore(chara, ballHeightPenaltyForAi, obstacleHeightPenaltyForAi);
+    }
+
+    private int calculateBoardScoreForPlayer(CharacterModel chara)
+    {
+        return calculateBoardScore(chara, ballHeightPenaltyForPlayer, obstacleHeightPenaltyForPlayer);
+    }
 
     /**
      * ボードの評価値を返す
      * @param chara
      * @return
      */
-    private int calculateBoardScore(CharacterModel chara)
+    private int calculateBoardScore(CharacterModel chara, int[] ballHeightPenalty, int[] obstacleHeightPenalty)
     {
         int total = 0;
         for (int x = 0; x < GameConfig.BOARD_WIDTH; x++) {
-            int count = chara.getDropPlace(x);
-            if (count == BoardModel.CAN_NOT_SET_BALL) {
-                count = GameConfig.BOARD_HEIGHT;
-            }
-            total += ballHeightPenalty[count];
+            int[] counts = chara.getBallCounts(x);
+            total += ballHeightPenalty[counts[0]];
+            total += obstacleHeightPenalty[counts[1]];
         }
         return -1*total;
+    }
+
+    private int calculateHpScoreForAi(CharacterModel chara) {
+        return calculateHpScore(chara, decreaseHpPenalty);
+    }
+
+    private int calculateHpScoreForPlayer(CharacterModel chara) {
+        return calculateHpScore(chara, decreaseHpPenaltyForPlayer);
     }
 
     /**
@@ -205,7 +297,7 @@ public class EnemyBrainModel {
      * @param chara
      * @return
      */
-    private int calculateHpScore(CharacterModel chara)
+    private int calculateHpScore(CharacterModel chara, int[] decreaseHpPenalty)
     {
         double rate = 1 - 1.0*chara.getCurrentHp()/chara.getMaxHp();
         if (rate >= 1) {

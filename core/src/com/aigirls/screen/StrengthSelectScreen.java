@@ -2,6 +2,7 @@ package com.aigirls.screen;
 
 import java.awt.Point;
 
+import com.aigirls.manager.PlayerIdManager;
 import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.ChoiceListModel;
 import com.aigirls.param.ScreenEnum;
@@ -10,7 +11,7 @@ import com.badlogic.gdx.Gdx;
 
 public class StrengthSelectScreen extends GameScreen {
     private static StrengthSelectScreen selectScreen = null;
-    private static int[] startNums = {17, 13, 9, 5, 1};
+    private static int[] startNums = {9, 5, 1};
 
     public static StrengthSelectScreen getStrengthSelect()
     {
@@ -43,8 +44,9 @@ public class StrengthSelectScreen extends GameScreen {
             Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
             if (selected != ChoiceListModel.NOT_CHOICED) {
+                setPlayerId(selected);
                 ScreenManager.setNumber(startNums[selected]);
-                ScreenManager.changeScreen(ScreenEnum.StartBattle);
+                ScreenManager.changeScreen(ScreenEnum.LoadingBattle);
             }
         }
     }
@@ -52,6 +54,23 @@ public class StrengthSelectScreen extends GameScreen {
     protected StrengthSelectScreenView getGameView()
     {
         return (StrengthSelectScreenView) view;
+    }
+
+    private void setPlayerId(int selected)
+    {
+        int id = 1;
+        switch(selected){
+            case StrengthSelectScreenView.STRENGTH_WEAK:
+                id = 1;
+                break;
+            case StrengthSelectScreenView.STRENGTH_NORMAL:
+                id = 2;
+                break;
+            case StrengthSelectScreenView.STRENGTH_STRONG:
+                id = 3;
+                break;
+        }
+        PlayerIdManager.setPlayerId(id);
     }
 
 }

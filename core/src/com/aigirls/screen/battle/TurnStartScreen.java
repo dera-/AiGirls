@@ -42,16 +42,16 @@ public abstract class TurnStartScreen extends GameScreen
         attacker.addBallToStack(1);
         getBattleScreenView().addToBallStack(attackerEnum);
 
-        //表情リセット
-        getBattleScreenView().changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player1);
-        getBattleScreenView().changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player2);
-
         //アニメーション開始
         startAnimation();
     }
 
     @Override
-    public void show(){}
+    public void show(){
+        //表情リセット
+        getBattleScreenView().changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player1);
+        getBattleScreenView().changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player2);
+    }
 
     protected void update(float delta)
     {

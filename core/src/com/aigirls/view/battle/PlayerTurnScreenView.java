@@ -100,7 +100,8 @@ public class PlayerTurnScreenView extends SelectView implements TurnStartView {
     public void releaseBall(int xPlace)
     {
         selectedBallView = null;
-        battleScreenView.noFillBoard();
+        battleScreenView.noFillBoard(PlayerEnum.Player1);
+        battleScreenView.noFillBoard(PlayerEnum.Player2);
         if (xPlace == ChoiceListModel.NOT_CHOICED) {
             battleScreenView.displayBallInStack(PlayerEnum.Player1, true);
         }
@@ -109,7 +110,8 @@ public class PlayerTurnScreenView extends SelectView implements TurnStartView {
     public void moveBall(int x, int y)
     {
         selectedBallView.setPlace(x-SELECTED_BALL_SIZE/2, y-SELECTED_BALL_SIZE/2);
-        battleScreenView.fillBoardOneLine(x, y);
+        battleScreenView.fillBoardOneLine(x, y, PlayerEnum.Player1);
+        battleScreenView.fillBoardOneLine(x, y, PlayerEnum.Player2);
     }
 
     public int getChoicedPlace(int x, int y)

@@ -159,4 +159,9 @@ public class CharacterModel
         return board.getObstacleBalls(damage, targets);
     }
 
+    public int[] getBallCounts(int x)
+    {
+        return board.getBallCounts(x);
+    }
+
 }

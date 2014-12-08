@@ -82,6 +82,22 @@ public class BoardModel {
         return CAN_NOT_SET_BALL;
     }
 
+    //0:ボール、1:邪魔玉
+    public int[] getBallCounts(int x)
+    {
+        int[] counts = {0,0};
+        for(int y = 0; y < balls.length; y++){
+            if (balls[y][x] == null) {
+                break;
+            } else if (balls[y][x] instanceof ObstacleBallModel) {
+                counts[1]++;
+            } else {
+                counts[0]++;
+            }
+        }
+        return counts;
+    }
+
     public boolean removeBall(int id)
     {
         for (int y = 0; y < balls.length; y++) {

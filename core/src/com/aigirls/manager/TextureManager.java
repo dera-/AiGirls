@@ -7,6 +7,7 @@ import java.util.List;
 import com.aigirls.config.FileConfig;
 import com.aigirls.entity.BaseEntity;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TextureManager
@@ -29,6 +30,16 @@ public class TextureManager
         generateTextureRegions(FileConfig.RED_RECOVER_IMAGE_PATH, FileConfig.RED_RECOVER_KEY, FileConfig.IMAGE_SPLITTED_WIDTH, FileConfig.IMAGE_SPLITTED_HEIGHT);
         generateTextureRegions(FileConfig.ATTACK_IMAGE_PATH, FileConfig.ATTACK_KEY, FileConfig.ATTACK_IMAGE_SPLITTED_WIDTH, FileConfig.IMAGE_SPLITTED_HEIGHT);
         generateTextureRegions(FileConfig.EXPLODE_IMAGE_PATH, FileConfig.EXPLODE_KEY, FileConfig.IMAGE_SPLITTED_WIDTH, FileConfig.IMAGE_SPLITTED_HEIGHT);
+
+        //以下、クラウディアさん
+        String keyPrefix = "cloud_";
+        String pathPrefix = FileConfig.IMAGE_DIR_PATH + keyPrefix;
+        TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL+".jpg", keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_NORMAL);
+        TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN+".jpg", keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_WIN);
+        TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE+".jpg", keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_LOSE);
+        TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_WAIT+".jpg", keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_WAIT);
+        TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_ATTACK+".jpg", keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_ATTACK);
+        TextureManager.generateTexture(pathPrefix+FileConfig.CHARA_EXPRESSION_KEY_PINCH+".jpg", keyPrefix+FileConfig.CHARA_EXPRESSION_KEY_PINCH);
     }
 
     public static void setTexture(String name, Texture texture)
