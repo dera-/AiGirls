@@ -1,8 +1,5 @@
 package com.aigirls.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.BitmapFontManager;
@@ -10,12 +7,13 @@ import com.aigirls.model.ChoiceModel;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 
 public class BallStackView extends GameView {
     private final int wallWidth;
     private final int wallHeight;
     private final int interval;
-    private List<BallView> balls;
+    private Array<BallView> balls;
     private ChoiceModel choiceModel;
     private BitmapFont font;
 
@@ -25,7 +23,7 @@ public class BallStackView extends GameView {
         this.wallWidth = wallWidth;
         this.wallHeight = wallHeight;
         this.interval = width / GameConfig.LIMIT_STACKED_BALL_NUM;
-        balls = new ArrayList<BallView>();
+        balls = new Array<BallView>();
         for (int i=0; i<GameConfig.DEFAULT_STACKED_BALL_NUM; i++) {
             addBall(ballName);
         }
@@ -35,7 +33,7 @@ public class BallStackView extends GameView {
 
     public void addBall(String ballName)
     {
-        int nextIndex = balls.size();
+        int nextIndex = balls.size;
         if (nextIndex >= GameConfig.LIMIT_STACKED_BALL_NUM) {
             return;
         }
@@ -44,16 +42,16 @@ public class BallStackView extends GameView {
 
     public void removeBall()
     {
-        int lastIndex = balls.size()-1;
+        int lastIndex = balls.size-1;
         if (lastIndex < 0) {
             return;
         }
-        balls.remove(lastIndex);
+        balls.removeIndex(lastIndex);
     }
 
     public void displayBall(boolean displayFlag)
     {
-        int lastIndex = balls.size()-1;
+        int lastIndex = balls.size-1;
         if (lastIndex < 0) {
             return;
         }
@@ -95,7 +93,7 @@ public class BallStackView extends GameView {
         //能力値増減の表示
         batch.begin();
         font.setColor(1, 1, 1, 1);
-        double rate = GameConfig.STATUS_RATES[balls.size()];
+        double rate = GameConfig.STATUS_RATES[balls.size];
         String str = rate < 1 ? "減少" : "増加";
         int parsent = (int)Math.abs(rate*100 - 100);
         font.draw(batch, "能力値"+parsent+"%"+str, leftX, (int)(lowerY+1.55*(height+wallHeight)));
@@ -109,7 +107,7 @@ public class BallStackView extends GameView {
 
     public void startBallsAnimation(int ballNums, String ballName)
     {
-        int num = balls.size();
+        int num = balls.size;
         for (int i=1; i<=ballNums; i++) {
             BallView ball = balls.get(num-i);
             ball.setClearFlag(true);

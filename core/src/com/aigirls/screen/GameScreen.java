@@ -1,7 +1,6 @@
 package com.aigirls.screen;
 
-import java.awt.Point;
-
+import com.badlogic.gdx.math.Vector2;
 import com.aigirls.config.GameConfig;
 import com.aigirls.view.GameView;
 import com.badlogic.gdx.Gdx;
@@ -44,10 +43,10 @@ public abstract class GameScreen implements Screen {
         viewport.update(width, height);
     }
 
-    protected Point getTouchedPlace(int x, int y){
+    protected Vector2 getTouchedPlace(int x, int y){
         touchPos.set(x, y ,0);
         viewport.unproject(touchPos);
-        return new Point((int)Math.round(touchPos.x), (int)Math.round(touchPos.y));
+        return new Vector2((int)Math.round(touchPos.x), (int)Math.round(touchPos.y));
     }
 
     @Override

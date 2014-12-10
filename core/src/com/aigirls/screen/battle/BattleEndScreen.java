@@ -1,7 +1,6 @@
 package com.aigirls.screen.battle;
 
-import java.awt.Point;
-
+import com.badlogic.gdx.math.Vector2;
 import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.battle.CharacterModel;
 import com.aigirls.param.ScreenEnum;
@@ -62,8 +61,8 @@ public class BattleEndScreen extends GameScreen {
             return;
         }
         if (Gdx.input.justTouched()) {
-            Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
-            int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
+            Vector2 touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
+            int selected = getGameView().getChoicedPlace((int)touchedPlace.x, (int)touchedPlace.y);
             if (selected == BattleEndScreenView.INDEX_TITLE_BUTTOM) {
                 ScreenManager.changeScreen(ScreenEnum.GameAtReturnTitle);
             } else if (selected == BattleEndScreenView.INDEX_RETRY_BUTTOM && !players[BattleScreen.ALLY_INDEX].isAlive()) {

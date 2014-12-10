@@ -1,7 +1,5 @@
 package com.aigirls.view.battle;
 
-import java.awt.Point;
-
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.BitmapFontManager;
@@ -17,6 +15,7 @@ import com.aigirls.view.SelectView;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 public class MagicSelectView extends SelectView {
     private static int START_X = (int) Math.round(0.5 * GameConfig.GAME_WIDTH);
@@ -125,8 +124,8 @@ public class MagicSelectView extends SelectView {
 
     public int getMagicIndex()
     {
-        Point place = cards[selectedIndex].getCardPlace();
-        if (battleScreenView.getChoicedPlace(place.x, place.y) == ChoiceListModel.NOT_CHOICED) {
+        Vector2 place = cards[selectedIndex].getCardPlace();
+        if (battleScreenView.getChoicedPlace((int)place.x, (int)place.y) == ChoiceListModel.NOT_CHOICED) {
             battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player1);
             return ChoiceListModel.NOT_CHOICED;
         } else {

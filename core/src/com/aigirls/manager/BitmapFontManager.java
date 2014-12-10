@@ -1,12 +1,11 @@
 package com.aigirls.manager;
 
-import java.util.HashMap;
-
 import com.aigirls.config.FileConfig;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class BitmapFontManager {
-    private static HashMap<String,BitmapFont> fontMap = new HashMap<String,BitmapFont>();
+    private static ObjectMap<String,BitmapFont> fontMap = new ObjectMap<String,BitmapFont>();
 
     static {
         generateBitmapFont(FileConfig.GOTHIC_FONT_KEY);

@@ -3,9 +3,7 @@ package com.aigirls.io.file;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.badlogic.gdx.utils.Array;
 import com.aigirls.entity.BaseEntity;
 import com.aigirls.manager.FileManager;
 import com.badlogic.gdx.files.FileHandle;
@@ -28,7 +26,7 @@ public abstract class CsvFileAccessor {
     }
 
     public BaseEntity[] getRecords(String columnName, String columnValue) {
-        List<BaseEntity> list = new ArrayList<BaseEntity>();
+        Array<BaseEntity> list = new Array<BaseEntity>();
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(csvFileHandle.read(), "SJIS"));
@@ -48,11 +46,15 @@ public abstract class CsvFileAccessor {
         } finally {
             FileManager.closeReader(reader);
         }
-        return exchangeToArray(list);
+        BaseEntity[] records = new BaseEntity[list.size];
+        for (int i=0; i<records.length; i++) {
+            records[i] = list.get(i);
+        }
+        return records;
     }
 
     public BaseEntity[] getAllRecords() {
-        List<BaseEntity> list = new ArrayList<BaseEntity>();
+        Array<BaseEntity> list = new Array<BaseEntity>();
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(csvFileHandle.read(), "SJIS"));
@@ -65,7 +67,11 @@ public abstract class CsvFileAccessor {
         } finally {
             FileManager.closeReader(reader);
         }
-        return exchangeToArray(list);
+        BaseEntity[] records = new BaseEntity[list.size];
+        for (int i=0; i<records.length; i++) {
+            records[i] = list.get(i);
+        }
+        return records;
     }
 
     private int getColumnIndex(String[] columnNames, String targetName) {
@@ -75,10 +81,6 @@ public abstract class CsvFileAccessor {
             }
         }
         return NOT_FOUND_COLUMN;
-    }
-
-    private BaseEntity[] exchangeToArray(List<BaseEntity> list) {
-        return (BaseEntity[])list.toArray(new BaseEntity[list.size()]);
     }
 
     protected abstract BaseEntity getBaseEntity(String[] record);

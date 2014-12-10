@@ -1,8 +1,7 @@
 package com.aigirls.model.battle;
 
-import java.awt.Point;
-import java.util.List;
-
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.aigirls.config.GameConfig;
 import com.aigirls.model.MagicOutbreakModel;
 
@@ -12,7 +11,7 @@ public class ActiveMagicModel {
     private double ballAttackRate;
     private int recoverBall;
     private MagicOutbreakModel outbreak;
-    private List<BallInfoModel[]> targetBalls;
+    private Array<BallInfoModel[]> targetBalls;
 
 
     public ActiveMagicModel(
@@ -21,7 +20,7 @@ public class ActiveMagicModel {
         double ballAttackRate,
         int recoverBall,
         MagicOutbreakModel outbreak,
-        List<BallInfoModel[]> targetBalls)
+        Array<BallInfoModel[]> targetBalls)
     {
         this.name = name;
         this.attackRate = attackRate;
@@ -44,28 +43,28 @@ public class ActiveMagicModel {
     }
 
     public boolean canOutbreak() {
-        return targetBalls.size() > 0;
+        return targetBalls.size > 0;
     }
 
     public int getRecoverBall() {
         return recoverBall;
     }
 
-    public Point[] getConditionBallPlaces() {
+    public Vector2[] getConditionBallPlaces() {
         if (outbreak == null) {
-            return new Point[0];
+            return new Vector2[0];
         }
-        Point[] ballPlaces = outbreak.getConditionBallPlaces();
-        Point[] normalizedBallPlaces = new Point[ballPlaces.length];
+        Vector2[] ballPlaces = outbreak.getConditionBallPlaces();
+        Vector2[] normalizedBallPlaces = new Vector2[ballPlaces.length];
         int width = outbreak.getConditionWidth();
         for (int i=0; i<normalizedBallPlaces.length; i++) {
-            normalizedBallPlaces[i] = new Point(ballPlaces[i].x+(GameConfig.BOARD_WIDTH-width)/2, ballPlaces[i].y);
+            normalizedBallPlaces[i] = new Vector2(ballPlaces[i].x+(GameConfig.BOARD_WIDTH-width)/2, ballPlaces[i].y);
         }
         return normalizedBallPlaces;
     }
 
     public int getNumTargetBalls() {
-        return targetBalls.size();
+        return targetBalls.size;
     }
 
     public BallInfoModel[] getBallInfoModels(int index) {

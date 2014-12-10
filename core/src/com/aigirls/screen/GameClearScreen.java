@@ -1,11 +1,10 @@
 package com.aigirls.screen;
 
-import java.awt.Point;
-
 import com.aigirls.manager.ScreenManager;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.view.GameClearView;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 public class GameClearScreen extends GameScreen {
 
@@ -28,8 +27,8 @@ public class GameClearScreen extends GameScreen {
     protected void update(float delta) {
         getGameView().wavingAnimation(delta);
         if (Gdx.input.justTouched()) {
-            Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
-            int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
+            Vector2 touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
+            int selected = getGameView().getChoicedPlace((int)touchedPlace.x, (int)touchedPlace.y);
             if (selected == GameClearView.INDEX_TITLE_BUTTOM) {
                 ScreenManager.changeScreen(ScreenEnum.GameAtReturnTitle);
             }

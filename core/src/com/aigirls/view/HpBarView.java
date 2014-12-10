@@ -47,7 +47,6 @@ public class HpBarView extends GameView{
         double spaceRateX = 0.1;
         double spaceRateY = 0.18;
         //HPの値の描画
-        int currentHp = (int) Math.round(1.0 * maxHp * (targetPosition.x - leftX) / width);
         font.draw(batch, "HP：" + (currentHp-temporaryDamage) + "/" + maxHp, (int)(leftX+spaceRateX*width), (int)(lowerY + (1-spaceRateY) * height));
         batch.end();
     }

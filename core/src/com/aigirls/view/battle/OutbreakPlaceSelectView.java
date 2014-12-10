@@ -1,11 +1,7 @@
 package com.aigirls.view.battle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
-import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.manager.TextureManager;
 import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.ChoiceModel;
@@ -15,12 +11,11 @@ import com.aigirls.model.battle.ObstacleBallInfoModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.view.ButtomView;
-import com.aigirls.view.HpBarView;
 import com.aigirls.view.SelectView;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 
 public class OutbreakPlaceSelectView extends SelectView {
     private static final int LEFT_ARROW_X = (int) Math.round(0.01*GameConfig.GAME_WIDTH);
@@ -41,12 +36,11 @@ public class OutbreakPlaceSelectView extends SelectView {
     private BattleScreenView battleScreenView;
     private Sprite rightAllowSprite;
     private Sprite leftAllowSprite;
-    private BitmapFont font;
     private ButtomView decideButtomView;
     private ButtomView cancelButtomView;
 
     private ActiveMagicModel activeMagicModel = null;
-    private List<ObstacleBallInfoModel[]> obstaclesList = new ArrayList<ObstacleBallInfoModel[]>();
+    private Array<ObstacleBallInfoModel[]> obstaclesList = new Array<ObstacleBallInfoModel[]>();
     private int currentSelected = 0;
 
     public OutbreakPlaceSelectView (BattleScreenView battleScreenView) {
@@ -56,7 +50,6 @@ public class OutbreakPlaceSelectView extends SelectView {
         leftAllowSprite = new Sprite(TextureManager.getTexture(FileConfig.LEFT_ARROW_KEY));
         decideButtomView = new ButtomView(DECIDE_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "決定");
         cancelButtomView = new ButtomView(CANCEL_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "戻る");
-        font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
     }
 
     @Override
@@ -79,7 +72,7 @@ public class OutbreakPlaceSelectView extends SelectView {
         activeMagicModel = magic;
     }
 
-    public void setObstaclesList(List<ObstacleBallInfoModel[]> list)
+    public void setObstaclesList(Array<ObstacleBallInfoModel[]> list)
     {
         obstaclesList = list;
     }
@@ -140,7 +133,7 @@ public class OutbreakPlaceSelectView extends SelectView {
     {
         battleScreenView.initializeBall(PlayerEnum.Player1);
         activeMagicModel = null;
-        obstaclesList = new ArrayList<ObstacleBallInfoModel[]>();
+        obstaclesList = new Array<ObstacleBallInfoModel[]>();
         currentSelected = 0;
         setTemporaryDamage(0);
     }

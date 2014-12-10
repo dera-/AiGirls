@@ -11,9 +11,11 @@ import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.service.battle.AiThinkingService;
 import com.aigirls.view.battle.AiTurnScreenView;
 import com.aigirls.view.battle.BattleScreenView;
+import com.badlogic.gdx.Gdx;
 
 public class AiTurnScreen extends TurnStartScreen {
-    private AiThinkingService aiThinkingSevice;
+
+    private AiThinkingService thinkingService;
 
     public AiTurnScreen(
         BattleScreenView view,
@@ -27,8 +29,7 @@ public class AiTurnScreen extends TurnStartScreen {
 
     @Override
     public void show() {
-        super.show();
-        aiThinkingSevice = new AiThinkingService(defender, (EnemyCharacterModel)attacker, totalBallCount);
+        thinkingService = new AiThinkingService(defender, (EnemyCharacterModel) attacker, totalBallCount);
     }
 
     @Override
@@ -47,7 +48,7 @@ public class AiTurnScreen extends TurnStartScreen {
 
     @Override
     protected void action(float delta) {
-        EnemyActionModel action = aiThinkingSevice.getAiAction();
+        EnemyActionModel action = thinkingService.getAiAction();
         if (action != null) {
             aiActionEvent(action);
         }

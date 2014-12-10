@@ -11,8 +11,8 @@ public class StrengthSelectScreenView extends SelectView {
     private static final int ITEM_WIDTH = (int) Math.round(0.5*GameConfig.GAME_WIDTH);
     private static final int ITEM_HEIGHT = (int) Math.round(0.18*GameConfig.GAME_HEIGHT);
     private static final int ITEM_START_X = (int) Math.round(0.1*GameConfig.GAME_WIDTH);
-    private static final int ITEM_START_Y = (int) Math.round(0.03*GameConfig.GAME_HEIGHT);
-    private static final int ITEM_INTERVAL = (int) Math.round(0.02*GameConfig.GAME_HEIGHT);
+    private static final int ITEM_START_Y = (int) Math.round(0.15*GameConfig.GAME_HEIGHT);
+    private static final int ITEM_INTERVAL = (int) Math.round(0.1*GameConfig.GAME_HEIGHT);
     private static final int ITEM_NUMS = 3;
     private static final int WAVING_WIDTH = (int) Math.round(0.2*GameConfig.GAME_WIDTH);
     private static final int WAVING_HEIGHT = (int) Math.round(0.3*GameConfig.GAME_HEIGHT);

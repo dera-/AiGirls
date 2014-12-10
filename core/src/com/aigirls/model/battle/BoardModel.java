@@ -1,9 +1,7 @@
 package com.aigirls.model.battle;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.aigirls.config.GameConfig;
+import com.badlogic.gdx.utils.Array;
 
 public class BoardModel {
     public static final int CAN_NOT_SET_BALL = -1;
@@ -76,6 +74,9 @@ public class BoardModel {
 
     public int getDropPlace(int x)
     {
+        if (x < 0 || x >= GameConfig.BOARD_WIDTH) {
+            return CAN_NOT_SET_BALL;
+        }
         for(int y = 0; y < balls.length; y++){
             if (balls[y][x] == null) return y;
         }
@@ -121,28 +122,32 @@ public class BoardModel {
 
     public ObstacleBallInfoModel[] getObstacleBalls(int damage, BallInfoModel[] targets)
     {
-        List<ObstacleBallInfoModel> list = new ArrayList<ObstacleBallInfoModel>();
+        Array<ObstacleBallInfoModel> list = new Array<ObstacleBallInfoModel>();
         for (BallInfoModel target : targets) {
             list.addAll(getObstacleBallList(damage, target.x, target.y));
         }
-        for (int index = 0; index < list.size(); index++) {
+        for (int index = 0; index < list.size; index++) {
             ObstacleBallInfoModel target = list.get(index);
-            for (int i = index+1; i < list.size();) {
+            for (int i = index+1; i < list.size;) {
                 ObstacleBallInfoModel elem = list.get(i);
                 if (target.id == elem.id) {
                     target.addDamage(elem.getDamage());
-                    list.remove(i);
+                    list.removeIndex(i);
                 } else {
                     i++;
                 }
             }
         }
-        return (ObstacleBallInfoModel[])list.toArray(new ObstacleBallInfoModel[list.size()]);
+        ObstacleBallInfoModel[] obstacles = new ObstacleBallInfoModel[list.size];
+        for (int i=0; i<obstacles.length; i++) {
+            obstacles[i] = list.get(i);
+        }
+        return obstacles;
     }
 
-    private List<ObstacleBallInfoModel> getObstacleBallList(int damage, int x, int y)
+    private Array<ObstacleBallInfoModel> getObstacleBallList(int damage, int x, int y)
     {
-        List<ObstacleBallInfoModel> list = new ArrayList<ObstacleBallInfoModel>();
+        Array<ObstacleBallInfoModel> list = new Array<ObstacleBallInfoModel>();
         if (x+1 < GameConfig.BOARD_WIDTH && balls[y][x+1] instanceof ObstacleBallModel) {
             ObstacleBallModel obstacle = (ObstacleBallModel) balls[y][x+1];
             ObstacleBallInfoModel info = new ObstacleBallInfoModel(obstacle.id, x+1, y, obstacle.getCurrentHp(), damage);
@@ -188,7 +193,7 @@ public class BoardModel {
 
     public BallInfoModel[] getRemovedBallInfoModels()
     {
-        List<BallInfoModel> list = new ArrayList<BallInfoModel>();
+        Array<BallInfoModel> list = new Array<BallInfoModel>();
         for (int y=0; y<balls.length; y++) {
             for (int x=0; x<balls[y].length; x++) {
                 if (balls[y][x] instanceof ObstacleBallModel && ((ObstacleBallModel) balls[y][x]).isBroken()) {
@@ -197,12 +202,16 @@ public class BoardModel {
                 }
             }
         }
-        return (BallInfoModel[])list.toArray(new BallInfoModel[list.size()]);
+        BallInfoModel[] removedBalls = new BallInfoModel[list.size];
+        for (int i=0; i<removedBalls.length; i++) {
+            removedBalls[i] = list.get(i);
+        }
+        return removedBalls;
     }
 
     public BallInfoModel[] dropBalls()
     {
-        List<BallInfoModel> list = new ArrayList<BallInfoModel>();
+        Array<BallInfoModel> list = new Array<BallInfoModel>();
         for (int x=0; x<GameConfig.BOARD_WIDTH; x++) {
             int distance = 0;
             for (int y=0; y<GameConfig.BOARD_HEIGHT; y++) {
@@ -216,7 +225,11 @@ public class BoardModel {
                 }
             }
         }
-        return (BallInfoModel[])list.toArray(new BallInfoModel[list.size()]);
+        BallInfoModel[] droppedBalls = new BallInfoModel[list.size];
+        for (int i=0; i<droppedBalls.length; i++) {
+            droppedBalls[i] = list.get(i);
+        }
+        return droppedBalls;
     }
 
     public BallModel[][] getBalls()

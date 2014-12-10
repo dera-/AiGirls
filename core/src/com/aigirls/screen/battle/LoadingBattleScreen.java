@@ -8,7 +8,7 @@ import com.aigirls.screen.GameScreen;
 import com.aigirls.view.battle.LoadingBattleScreenView;
 
 public class LoadingBattleScreen extends GameScreen {
-    private static final float LOAD_START_TIME = 0.5f;
+    private static final float LOAD_START_TIME = 0.3f;
     private int enemyId;
     private EnemyType enemyType;
     private float time = 0;

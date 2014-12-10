@@ -1,19 +1,15 @@
 package com.aigirls.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.TextureManager;
 import com.aigirls.model.ChoiceListModel;
-import com.aigirls.model.battle.BallInfoModel;
-import com.aigirls.view.battle.OutbreakPlaceSelectView;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Array;
 
 public class BoardView extends SelectView {
     private final int interval;
@@ -22,7 +18,7 @@ public class BoardView extends SelectView {
     private Sprite leftWallSprite;
     private Sprite rightWallSprite;
     private Sprite bottomWallSprite;
-    private List<BallView> balls;
+    private Array<BallView> balls;
     private FilledView filledLineView = null;
     private Animation attackAnimation = null;
     private float animationTime = 0;
@@ -39,7 +35,7 @@ public class BoardView extends SelectView {
         this.bottomWallHeight = bottomWallHeight;
         initializeTextures();
         interval = (int)Math.round(1.0*width/GameConfig.BOARD_WIDTH);
-        balls = new ArrayList<BallView>();
+        balls = new Array<BallView>();
     }
 
     private Animation getAttackAnimation()
@@ -65,7 +61,7 @@ public class BoardView extends SelectView {
     {
         for (BallView ball: balls) {
             if (id == ball.getBallId()) {
-                balls.remove(ball);
+                balls.removeValue(ball, true);
                 return;
             }
         }

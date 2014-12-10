@@ -15,7 +15,8 @@ import com.aigirls.view.battle.BattleScreenView;
 
 public abstract class TurnStartScreen extends GameScreen
 {
-    public static final float TIME = 1f;
+    public static final float WAIT_TIME = 0.8f;
+    public static final float AI_WAIT_TIME = 1.1f;
 
     protected final int totalBallCount;
     protected CharacterModel attacker;
@@ -58,11 +59,11 @@ public abstract class TurnStartScreen extends GameScreen
         if (currentTime == 0){
             currentTime = 0.001f;
             return;
-        } else if (currentTime < TIME && TIME <= currentTime+delta) {
+        } else if (currentTime < WAIT_TIME && WAIT_TIME <= currentTime+delta) {
             endAnimation();
             currentTime += delta;
             return;
-        } else if (currentTime+delta < TIME) {
+        } else if (currentTime+delta < WAIT_TIME) {
             animation(delta);
             currentTime += delta;
             return;

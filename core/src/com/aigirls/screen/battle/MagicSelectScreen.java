@@ -1,7 +1,6 @@
 package com.aigirls.screen.battle;
 
-import java.awt.Point;
-
+import com.badlogic.gdx.math.Vector2;
 import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.battle.ActiveMagicModel;
@@ -47,11 +46,11 @@ public class MagicSelectScreen extends GameScreen {
     @Override
     protected void update(float delta) {
         if (Gdx.input.isTouched()) {
-            Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
+            Vector2 touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             if (getGameView().isSelectedMagicCard()) {
-                getGameView().moveMagicCard(touchedPlace.x, touchedPlace.y);
+                getGameView().moveMagicCard((int)touchedPlace.x, (int)touchedPlace.y);
             } else {
-                touchedEvent(touchedPlace.x, touchedPlace.y);
+                touchedEvent((int)touchedPlace.x, (int)touchedPlace.y);
             }
         } else if (getGameView().isSelectedMagicCard()) {
             int selected = getGameView().getMagicIndex();

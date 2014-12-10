@@ -1,7 +1,5 @@
 package com.aigirls.screen.battle;
 
-import java.awt.Point;
-
 import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.battle.BoardModel;
@@ -11,10 +9,11 @@ import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.view.battle.BattleScreenView;
 import com.aigirls.view.battle.PlayerTurnScreenView;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 public class PlayerTurnScreen extends TurnStartScreen {
 
-    private Point druggedPlace = null;
+    private Vector2 druggedPlace = null;
 
     public PlayerTurnScreen(
         BattleScreenView view,
@@ -47,11 +46,11 @@ public class PlayerTurnScreen extends TurnStartScreen {
     @Override
     protected void action(float delta) {
         if (Gdx.input.isTouched()) {
-            Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
+            Vector2 touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             if (druggedPlace != null) {
-                druggedEvent(touchedPlace.x, touchedPlace.y);
+                druggedEvent((int)touchedPlace.x, (int)touchedPlace.y);
             } else if (Gdx.input.justTouched()) {
-                touchedEvent(touchedPlace.x, touchedPlace.y);
+                touchedEvent((int)touchedPlace.x, (int)touchedPlace.y);
             }
         } else if (druggedPlace != null) {
             releasedEvent();
@@ -61,7 +60,7 @@ public class PlayerTurnScreen extends TurnStartScreen {
     private void druggedEvent(int x, int y)
     {
         getGameView().moveBall(x, y);
-        druggedPlace.move(x, y);
+        druggedPlace.set(x, y);
     }
 
     private void touchedEvent(int x, int y)
@@ -73,7 +72,7 @@ public class PlayerTurnScreen extends TurnStartScreen {
                     return;
                 }
                 getGameView().pushOnBallStack(x, y);
-                druggedPlace = new Point(x, y);
+                druggedPlace = new Vector2(x, y);
                 return;
             case PlayerTurnScreenView.INDEX_CANCEL_BUTTOM:
                 cancelPutBall();
@@ -90,14 +89,11 @@ public class PlayerTurnScreen extends TurnStartScreen {
 
     private void releasedEvent()
     {
-        int xPlace = getBattleScreenView().getChoicedPlace(druggedPlace.x, druggedPlace.y);
-        getGameView().releaseBall(xPlace);
-        druggedPlace = null;
-        if (xPlace == ChoiceListModel.NOT_CHOICED) {
-            return;
-        }
+        int xPlace = getBattleScreenView().getChoicedPlace((int)druggedPlace.x, (int)druggedPlace.y);
         int yPlace = attacker.getDropPlace(xPlace);
-        if (yPlace == BoardModel.CAN_NOT_SET_BALL) {
+        getGameView().releaseBall(xPlace, yPlace);
+        druggedPlace = null;
+        if (xPlace == ChoiceListModel.NOT_CHOICED || yPlace == BoardModel.CAN_NOT_SET_BALL) {
             return;
         }
         dropBallEvent(xPlace, yPlace);

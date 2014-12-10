@@ -1,9 +1,6 @@
 package com.aigirls.manager;
 
-import java.util.Stack;
-
 import com.aigirls.config.GameConfig;
-import com.aigirls.factory.BattleScreenFactory;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.param.battle.EnemyType;
 import com.aigirls.screen.GameClearScreen;
@@ -16,9 +13,10 @@ import com.aigirls.screen.battle.MagicOutbreakScreen;
 import com.aigirls.screen.battle.MagicSelectScreen;
 import com.aigirls.screen.battle.OutbreakPlaceSelectScreen;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.utils.Array;
 
 public class ScreenManager {
-    private static Stack<Screen> screenStack = new Stack<Screen>();
+    private static Array<Screen> screenStack = new Array<Screen>();
     private static BattleScreen battleScreen;
     private static int enemyNumber = 0;
 
@@ -26,25 +24,25 @@ public class ScreenManager {
     {
         switch (screenEnum) {
             case StartGame:
-                screenStack.push(GameStartScreen.getGameStartScreen());
+                screenStack.add(GameStartScreen.getGameStartScreen());
                 break;
             case StrengthSelect:
-                screenStack.push(StrengthSelectScreen.getStrengthSelect());
+                screenStack.add(StrengthSelectScreen.getStrengthSelect());
                 break;
             case LoadingBattle:
-                screenStack.push(new LoadingBattleScreen(enemyNumber, EnemyType.MONSTER));
+                screenStack.add(new LoadingBattleScreen(enemyNumber, EnemyType.MONSTER));
                 break;
             case StartBattle:
                 startBattle();
                 break;
             case GameAtMagicSelect:
-                screenStack.push(MagicSelectScreen.getMagicSelectScreen());
+                screenStack.add(MagicSelectScreen.getMagicSelectScreen());
                 break;
             case GameAtOutbreakSelect:
-                screenStack.push(OutbreakPlaceSelectScreen.getOutbreakPlaceSelectScreen());
+                screenStack.add(OutbreakPlaceSelectScreen.getOutbreakPlaceSelectScreen());
                 break;
             case GameAtMagicOutbreak:
-                screenStack.push(MagicOutbreakScreen.getMagicOutbreakScreen());
+                screenStack.add(MagicOutbreakScreen.getMagicOutbreakScreen());
                 break;
             case GameAtActionReset:
                 screenStack.pop();
@@ -55,27 +53,27 @@ public class ScreenManager {
                 if (screen instanceof BattleScreen) {
                     BattleScreen battleScreen = (BattleScreen) screen;
                     battleScreen.nextTurn();
-                    screenStack.push(battleScreen.getTurnStartScreen());
+                    screenStack.add(battleScreen.getTurnStartScreen());
                 }
                 break;
             case GameAtBattleEnd:
-                screenStack.push(BattleEndScreen.getBattleEndScreen());
+                screenStack.add(BattleEndScreen.getBattleEndScreen());
                 break;
             case GameAtRetry:
                 deleteCureentBattleScreen();
-                screenStack.push(new LoadingBattleScreen(enemyNumber, EnemyType.MONSTER));
+                screenStack.add(new LoadingBattleScreen(enemyNumber, EnemyType.MONSTER));
                 break;
             case GameAtReturnTitle:
                 deleteCureentBattleScreen();
-                screenStack.push(GameStartScreen.getGameStartScreen());
+                screenStack.add(GameStartScreen.getGameStartScreen());
                 break;
             case GameAtNext:
                 if (isGameClear()) {
-                    screenStack.push(new GameClearScreen(getEndingNumber()));
+                    screenStack.add(new GameClearScreen(getEndingNumber()));
                 } else {
                     deleteCureentBattleScreen();
                     setNumber(enemyNumber+1);
-                    screenStack.push(new LoadingBattleScreen(enemyNumber, EnemyType.MONSTER));
+                    screenStack.add(new LoadingBattleScreen(enemyNumber, EnemyType.MONSTER));
                 }
                 break;
             default:
@@ -106,13 +104,13 @@ public class ScreenManager {
 
     private static void startBattle()
     {
-        screenStack.push(battleScreen);
-        screenStack.push(battleScreen.getTurnStartScreen());
+        screenStack.add(battleScreen);
+        screenStack.add(battleScreen.getTurnStartScreen());
     }
 
     private static void deleteScreensUntilBattleScreen()
     {
-        while (screenStack.size() == 0 || !(screenStack.peek() instanceof BattleScreen)) {
+        while (screenStack.size == 0 || !(screenStack.peek() instanceof BattleScreen)) {
             screenStack.pop();
         }
     }

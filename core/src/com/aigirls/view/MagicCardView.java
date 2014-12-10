@@ -1,7 +1,5 @@
 package com.aigirls.view;
 
-import java.awt.Point;
-
 import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.BitmapFontManager;
@@ -11,6 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Vector2;
 
 public class MagicCardView extends GameView {
     private static final double CARD_SPACE_RATE = 0.8;
@@ -18,7 +17,7 @@ public class MagicCardView extends GameView {
     private ActiveMagicModel magicInfo;
     private BitmapFont font;
     private FilledView filledView;
-    private Point cardPlace;
+    private Vector2 cardPlace;
 
     public MagicCardView(int x, int y, int cardWidth, ActiveMagicModel magic)
     {
@@ -27,21 +26,21 @@ public class MagicCardView extends GameView {
         font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
         magicInfo = magic;
         filledView = new FilledView(leftX, lowerY, width, height, new Color(0, 0, 0, 0.8f));
-        cardPlace = new Point(x, y);
+        cardPlace = new Vector2(x, y);
     }
 
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer)
     {
-        int leftX = cardPlace.x;
-        int lowerY = cardPlace.y;
+        int leftX = (int)cardPlace.x;
+        int lowerY = (int)cardPlace.y;
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(1, 1, 1, 1);
         shapeRenderer.rect(leftX, lowerY, width, height);
         //ボールの描画
         int radius = ballSize/2;
         shapeRenderer.setColor(0.1f, 0.75f, 0.4f, 1);
-        Point[] ballPlaces = magicInfo.getConditionBallPlaces();
+        Vector2[] ballPlaces = magicInfo.getConditionBallPlaces();
         for (int i=0; i<ballPlaces.length; i++) {
             shapeRenderer.circle(leftX+radius+ballSize*ballPlaces[i].x, lowerY+radius+ballSize*ballPlaces[i].y, radius);
         }
@@ -90,15 +89,15 @@ public class MagicCardView extends GameView {
 
     public void setCardPlace(int x, int y)
     {
-        cardPlace.move(x, y);
+        cardPlace.set(x, y);
     }
 
     public void resetCardPlace()
     {
-        cardPlace.move(leftX, lowerY);
+        cardPlace.set(leftX, lowerY);
     }
 
-    public Point getCardPlace()
+    public Vector2 getCardPlace()
     {
         return cardPlace;
     }

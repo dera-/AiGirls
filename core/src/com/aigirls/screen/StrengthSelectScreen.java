@@ -1,6 +1,5 @@
 package com.aigirls.screen;
 
-import java.awt.Point;
 
 import com.aigirls.manager.PlayerIdManager;
 import com.aigirls.manager.ScreenManager;
@@ -8,6 +7,7 @@ import com.aigirls.model.ChoiceListModel;
 import com.aigirls.param.ScreenEnum;
 import com.aigirls.view.StrengthSelectScreenView;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 
 public class StrengthSelectScreen extends GameScreen {
     private static StrengthSelectScreen selectScreen = null;
@@ -41,8 +41,8 @@ public class StrengthSelectScreen extends GameScreen {
     protected void update(float delta) {
         getGameView().wavingAnimation(delta);
         if (Gdx.input.justTouched()) {
-            Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
-            int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
+            Vector2 touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
+            int selected = getGameView().getChoicedPlace((int)touchedPlace.x, (int)touchedPlace.y);
             if (selected != ChoiceListModel.NOT_CHOICED) {
                 setPlayerId(selected);
                 ScreenManager.setNumber(startNums[selected]);

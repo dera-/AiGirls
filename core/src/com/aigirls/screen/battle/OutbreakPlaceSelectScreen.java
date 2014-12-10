@@ -1,9 +1,5 @@
 package com.aigirls.screen.battle;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.model.battle.CharacterModel;
@@ -14,6 +10,8 @@ import com.aigirls.service.battle.DamageCalculateService;
 import com.aigirls.view.battle.BattleScreenView;
 import com.aigirls.view.battle.OutbreakPlaceSelectView;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class OutbreakPlaceSelectScreen extends GameScreen {
     private static OutbreakPlaceSelectScreen screen;
@@ -40,7 +38,7 @@ public class OutbreakPlaceSelectScreen extends GameScreen {
                 (int) Math.round(magic.getAttackRate() * players[BattleScreen.ALLY_INDEX].getAttack()),
                 players[BattleScreen.ENEMY_INDEX].getDefense());
         int damageToBall = (int) Math.round(magic.getBallAttackRate() * players[BattleScreen.ALLY_INDEX].getMagicAttack());
-        List<ObstacleBallInfoModel[]> obstaclesList = new ArrayList<ObstacleBallInfoModel[]>();
+        Array<ObstacleBallInfoModel[]> obstaclesList = new Array<ObstacleBallInfoModel[]>();
         //ダメージが与えられる邪魔玉を取得
         for (int i=0; i<magic.getNumTargetBalls(); i++) {
             obstaclesList.add(players[BattleScreen.ALLY_INDEX].getObstacleBallInfoModels(damageToBall, magic.getBallInfoModels(i)));
@@ -74,8 +72,8 @@ public class OutbreakPlaceSelectScreen extends GameScreen {
     @Override
     protected void update(float delta) {
         if (Gdx.input.justTouched()) {
-            Point touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
-            int selected = getGameView().getChoicedPlace(touchedPlace.x, touchedPlace.y);
+            Vector2 touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
+            int selected = getGameView().getChoicedPlace((int)touchedPlace.x, (int)touchedPlace.y);
             if (selected == OutbreakPlaceSelectView.DECIDE_BUTTOM_INDEX) {
                 MagicOutbreakScreen.getMagicOutbreakScreen().setOutbrokenMagic(
                     BattleScreen.ALLY_INDEX,

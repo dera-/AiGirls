@@ -1,11 +1,8 @@
 package com.aigirls.model.battle;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import com.aigirls.config.GameConfig;
 import com.aigirls.service.battle.DamageCalculateService;
+import com.badlogic.gdx.utils.Array;
 
 public class EnemyBrainModel {
     private static final int DEFAULT_DEPTH = 2;
@@ -65,9 +62,9 @@ public class EnemyBrainModel {
 
     public EnemyActionModel decideAction(CharacterModel ai, CharacterModel player)
     {
-        List<int[]> list = Arrays.asList(oneBalls);
-        Collections.shuffle(list);
-        tempPuts = (int[][])list.toArray(new int[0][0]);
+        Array<int[]> array = new Array<int[]>(oneBalls);
+        array.shuffle();
+        tempPuts = array.toArray(int[].class);
         return alphabeta(ai.getClone(), player.getClone(), depth, null);
     }
 
@@ -90,9 +87,7 @@ public class EnemyBrainModel {
         int ballNumToUse = attacker.getStackedBallNum() - BALL_STACK_MIN_NUM;
         int[] ballHeights = getBallHeights(attacker);
         for (int i=0; i<oneBalls.length ; i++) {
-            System.out.println("ボール個数："+oneBalls[i].length);
             if (ballNumToUse < oneBalls[i].length || !isPutBalls(oneBalls[i], ballHeights)) {
-                System.out.println("おーばー");
                 continue;
             }
             CharacterModel attackerClone = attacker.getClone();

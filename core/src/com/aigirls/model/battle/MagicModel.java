@@ -1,9 +1,7 @@
 package com.aigirls.model.battle;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.aigirls.config.GameConfig;
 import com.aigirls.entity.MagicEntity;
 import com.aigirls.io.file.OutbreakFileReader;
@@ -34,9 +32,9 @@ public class MagicModel {
      * @param balls
      * @return
      */
-    private List<BallInfoModel[]> getTargetBallsInfo(BallModel[][] balls)
+    private Array<BallInfoModel[]> getTargetBallsInfo(BallModel[][] balls)
     {
-        List<BallInfoModel[]> targets = new ArrayList<BallInfoModel[]>();
+        Array<BallInfoModel[]> targets = new Array<BallInfoModel[]>();
         for (int y=0; y<=GameConfig.BOARD_HEIGHT-outbreakModel.getConditionHeight(); y++) {
             for(int x=0; x<=GameConfig.BOARD_WIDTH-outbreakModel.getConditionWidth(); x++){
                 BallInfoModel[] target = getTargetBallInfo(balls, x, y);
@@ -50,11 +48,11 @@ public class MagicModel {
 
     private BallInfoModel[] getTargetBallInfo(BallModel[][] balls,int dx, int dy)
     {
-        Point[] conditionBallPlaces = outbreakModel.getConditionBallPlaces();
+        Vector2[] conditionBallPlaces = outbreakModel.getConditionBallPlaces();
         BallInfoModel[] target = new BallInfoModel[conditionBallPlaces.length];
         for (int i=0;i<target.length;i++) {
-            int y = conditionBallPlaces[i].y+dy;
-            int x = conditionBallPlaces[i].x+dx;
+            int y = (int)conditionBallPlaces[i].y + dy;
+            int x = (int)conditionBallPlaces[i].x + dx;
             if (y>=GameConfig.BOARD_HEIGHT
                 || x>=GameConfig.BOARD_WIDTH
                 || balls[y][x] == null

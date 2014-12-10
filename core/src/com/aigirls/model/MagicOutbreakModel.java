@@ -1,13 +1,13 @@
 package com.aigirls.model;
 
-import java.awt.Point;
+import com.badlogic.gdx.math.Vector2;
 
 public class MagicOutbreakModel {
     private int conditionWidth;
     private int conditionHeight;
-    private Point[] conditionBallPlaces;
+    private Vector2[] conditionBallPlaces;
 
-    public MagicOutbreakModel(int w, int h, Point[] conditions)
+    public MagicOutbreakModel(int w, int h, Vector2[] conditions)
     {
         conditionWidth = w;
         conditionHeight = h;
@@ -24,7 +24,7 @@ public class MagicOutbreakModel {
         return conditionHeight;
     }
 
-    public Point[] getConditionBallPlaces()
+    public Vector2[] getConditionBallPlaces()
     {
         return conditionBallPlaces;
     }

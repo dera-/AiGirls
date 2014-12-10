@@ -5,6 +5,7 @@ import com.aigirls.config.GameConfig;
 import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.model.ChoiceListModel;
 import com.aigirls.model.ChoiceModel;
+import com.aigirls.model.battle.BoardModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.view.BallView;
@@ -17,8 +18,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class PlayerTurnScreenView extends SelectView implements TurnStartView {
     private static final int DECIDE_BUTTOM_X = (int) Math.round(0.05*GameConfig.GAME_WIDTH);
-    private static final int CANCEL_BUTTOM_X = (int) Math.round(0.15*GameConfig.GAME_WIDTH);
-    private static final int FINISH_BUTTOM_X = (int) Math.round(0.25*GameConfig.GAME_WIDTH);
+    private static final int CANCEL_BUTTOM_X = (int) Math.round(0.20*GameConfig.GAME_WIDTH);
+    private static final int FINISH_BUTTOM_X = (int) Math.round(0.35*GameConfig.GAME_WIDTH);
     private static final int BUTTOM_Y = (int) Math.round(0.01*GameConfig.GAME_HEIGHT);
     private static final int BUTTOM_WIDTH = (int) Math.round(0.1*GameConfig.GAME_WIDTH);
     private static final int BUTTOM_HEIGHT = (int) Math.round(0.1*GameConfig.GAME_HEIGHT);
@@ -44,7 +45,7 @@ public class PlayerTurnScreenView extends SelectView implements TurnStartView {
         super(0, 0, GameConfig.GAME_WIDTH, GameConfig.GAME_HEIGHT, SELECT_ITEM_NUMS);
         this.battleScreenView = battleScreenView;
         decideButtomView = new ButtomView(DECIDE_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "攻撃");
-        cancelButtomView = new ButtomView(CANCEL_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "戻る");
+        cancelButtomView = new ButtomView(CANCEL_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "戻す");
         finishButtomView = new ButtomView(FINISH_BUTTOM_X, BUTTOM_Y, BUTTOM_WIDTH, BUTTOM_HEIGHT, "終了", new Color(0.8f, 0, 0, 1), new Color(1, 1, 1, 1));
         cancelButtomView.setCanPush(false);
         choiceList = getChoiceListModel();
@@ -97,12 +98,11 @@ public class PlayerTurnScreenView extends SelectView implements TurnStartView {
         battleScreenView.displayBallInStack(PlayerEnum.Player1, false);
     }
 
-    public void releaseBall(int xPlace)
+    public void releaseBall(int xPlace, int yPlace)
     {
         selectedBallView = null;
         battleScreenView.noFillBoard(PlayerEnum.Player1);
-        battleScreenView.noFillBoard(PlayerEnum.Player2);
-        if (xPlace == ChoiceListModel.NOT_CHOICED) {
+        if (xPlace == ChoiceListModel.NOT_CHOICED || yPlace == BoardModel.CAN_NOT_SET_BALL) {
             battleScreenView.displayBallInStack(PlayerEnum.Player1, true);
         }
     }
@@ -111,7 +111,6 @@ public class PlayerTurnScreenView extends SelectView implements TurnStartView {
     {
         selectedBallView.setPlace(x-SELECTED_BALL_SIZE/2, y-SELECTED_BALL_SIZE/2);
         battleScreenView.fillBoardOneLine(x, y, PlayerEnum.Player1);
-        battleScreenView.fillBoardOneLine(x, y, PlayerEnum.Player2);
     }
 
     public int getChoicedPlace(int x, int y)

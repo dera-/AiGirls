@@ -1,19 +1,15 @@
 package com.aigirls.manager;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import com.aigirls.config.FileConfig;
-import com.aigirls.entity.BaseEntity;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class TextureManager
 {
-    private static HashMap<String,Texture> textureMap = new HashMap<String,Texture>();
-    private static HashMap<String,TextureRegion[]> textureRegionMap = new HashMap<String,TextureRegion[]>();
+    private static ObjectMap<String,Texture> textureMap = new ObjectMap<String,Texture>();
+    private static ObjectMap<String,TextureRegion[]> textureRegionMap = new ObjectMap<String,TextureRegion[]>();
 
     static {
         generateTexture(FileConfig.BUTTOM_IMAGE_PATH, FileConfig.BUTTOM_KEY);
@@ -78,14 +74,14 @@ public class TextureManager
             return getTextureRegion(name);
         }
         Texture texture = new Texture(FileManager.getFileHandle(path));
-        List<TextureRegion> list = new ArrayList<TextureRegion>();
+        Array<TextureRegion> list = new Array<TextureRegion>();
         TextureRegion[][] regions = new TextureRegion(texture).split(w, h);
         for (int i=0; i<regions.length; i++) {
             for (int j=0; j<regions[i].length; j++) {
                 list.add(regions[i][j]);
             }
         }
-        TextureRegion[] region = (TextureRegion[])list.toArray(new TextureRegion[list.size()]);
+        TextureRegion[] region = list.toArray(TextureRegion.class);
         setTextureRegions(name, region);
         return region;
     }
