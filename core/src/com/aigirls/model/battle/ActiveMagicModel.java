@@ -72,7 +72,7 @@ public class ActiveMagicModel {
     }
 
     public double getStrength() {
-        return getStrength(1, 1, 0.6);
+        return getStrength(1.25, 0.8, 0.6);
     }
 
     public double getStrength(double attackWeight, double ballAttackWeight, double recoverWeight) {
