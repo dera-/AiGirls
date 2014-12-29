@@ -4,12 +4,12 @@ import com.aigirls.config.FileConfig;
 import com.aigirls.config.GameConfig;
 import com.aigirls.manager.BitmapFontManager;
 import com.aigirls.model.ChoiceListModel;
-import com.aigirls.model.ChoiceModel;
 import com.aigirls.model.battle.ActiveMagicModel;
 import com.aigirls.model.battle.ReturnCardModel;
 import com.aigirls.param.battle.PlayerEnum;
 import com.aigirls.screen.battle.BattleScreen;
 import com.aigirls.view.CharacterView;
+import com.aigirls.view.MagicCardListView;
 import com.aigirls.view.MagicCardView;
 import com.aigirls.view.SelectView;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -22,25 +22,22 @@ public class MagicSelectView extends SelectView {
     private static int START_Y = (int) Math.round(0.7 * GameConfig.GAME_HEIGHT);
     private static int HORAIZONTAL_INTERVAL = (int) Math.round(0.02 * GameConfig.GAME_WIDTH);
     private static int VERTICAL_INTERVAL = (int) Math.round(0.08 * GameConfig.GAME_HEIGHT);
-    private static int CARD_NUMS = 6;
-    private static int LINE_NUMS = 2;
-    private static int ONE_LINE_CARD_NUMS = (int) Math.round(1.0*CARD_NUMS/LINE_NUMS);
-    private static int CARD_WIDTH =
-            (int)Math.round(1.0 * ((GameConfig.GAME_WIDTH-START_X) - ((ONE_LINE_CARD_NUMS+1)*HORAIZONTAL_INTERVAL)) / ONE_LINE_CARD_NUMS);
-    private static final int NON_SELECTED = -1;
     private static ReturnCardModel returnCardModel = new ReturnCardModel();
 
-    private MagicCardView[] cards;
+    private MagicCardListView cardListView;
+    private MagicCardView seletedCard = null;
     private BattleScreenView battleScreenView;
     private BitmapFont font;
-
-    private int selectedIndex = NON_SELECTED;
 
     public MagicSelectView(BattleScreenView battleScreenView, ActiveMagicModel[] magics)
     {
         super(0, 0, GameConfig.GAME_WIDTH, GameConfig.GAME_HEIGHT, magics.length+1);
-        cards = generateMagicCardViews(magics);
-        choiceList = getChoiceListModel(cards);
+        ActiveMagicModel[] newMagics = new ActiveMagicModel[magics.length+1];
+        for (int i = 0; i< magics.length; i++) {
+            newMagics[i] = magics[i];
+        }
+        newMagics[magics.length] = returnCardModel;
+        cardListView = new MagicCardListView(START_X, START_Y, HORAIZONTAL_INTERVAL, VERTICAL_INTERVAL, newMagics);
         this.battleScreenView = battleScreenView;
         font = BitmapFontManager.getBitmapFont(FileConfig.NYANKO_FONT_KEY);
     }
@@ -48,49 +45,27 @@ public class MagicSelectView extends SelectView {
     @Override
     public void draw(SpriteBatch batch, ShapeRenderer shapeRenderer) {
         battleScreenView.draw(batch, shapeRenderer);
-        for (MagicCardView cardView : cards) {
-            cardView.draw(batch, shapeRenderer);
-        }
+        cardListView.draw(batch, shapeRenderer);
 
         //技情報の描画
-        if (selectedIndex != NON_SELECTED) {
+        if (seletedCard != null) {
             batch.begin();
             font.setColor(1f, 1f, 1f, 1f);
-            font.draw(batch, "効果1：相手へ"+cards[selectedIndex].getAttackPercent()+"%攻撃", START_X, (int) Math.round(0.24 * GameConfig.GAME_HEIGHT));
-            font.draw(batch, "効果2:邪魔玉へ"+cards[selectedIndex].getBallAttackPercent()+"%攻撃", START_X, (int) Math.round(0.16 * GameConfig.GAME_HEIGHT));
-            font.draw(batch, "効果3:"+cards[selectedIndex].getRecoverBall()+"個ボール補充", START_X, (int) Math.round(0.08 * GameConfig.GAME_HEIGHT));
+            font.draw(batch, seletedCard.displayUsableFlag(), START_X, (int) Math.round(0.32 * GameConfig.GAME_HEIGHT));
+            font.draw(batch, "効果1：相手へ"+seletedCard.getAttackPercent()+"%攻撃", START_X, (int) Math.round(0.24 * GameConfig.GAME_HEIGHT));
+            font.draw(batch, "効果2:邪魔玉へ"+seletedCard.getBallAttackPercent()+"%攻撃", START_X, (int) Math.round(0.16 * GameConfig.GAME_HEIGHT));
+            font.draw(batch, "効果3:"+seletedCard.getRecoverBall()+"個ボール補充", START_X, (int) Math.round(0.08 * GameConfig.GAME_HEIGHT));
             batch.end();
         }
     }
 
-    private MagicCardView[] generateMagicCardViews(ActiveMagicModel[] magics)
-    {
-        MagicCardView[] cardViews = new MagicCardView[magics.length+1];
-        int x = START_X;
-        int y = START_Y;
-        for (int i=0; i<magics.length; i++) {
-            cardViews[i] = new MagicCardView(x, y, CARD_WIDTH, magics[i]);
-            if ((i%ONE_LINE_CARD_NUMS) == (ONE_LINE_CARD_NUMS-1)) {
-                x = START_X;
-                y -= (CARD_WIDTH + VERTICAL_INTERVAL);
-            } else {
-                x += (CARD_WIDTH + HORAIZONTAL_INTERVAL);
-            }
-        }
-        cardViews[magics.length] = new MagicCardView(x, y, CARD_WIDTH, returnCardModel);
-        return cardViews;
-    }
-
-    private ChoiceListModel getChoiceListModel(MagicCardView[] cardViews) {
-        ChoiceModel[] choices = new ChoiceModel[cardViews.length];
-        for (int i=0; i<choices.length; i++) {
-            choices[i] = cardViews[i].getChoiceModel();
-        }
-        return new ChoiceListModel(choices);
-    }
-
     protected ChoiceListModel getChoiceListModel() {
         return null;
+    }
+
+    public int getChoicedPlace(int x, int y)
+    {
+        return cardListView.getChoicedPlace(x, y);
     }
 
     public void filledEnemyView() {
@@ -99,37 +74,37 @@ public class MagicSelectView extends SelectView {
 
     public boolean isSelectedMagicCard ()
     {
-        return selectedIndex != NON_SELECTED;
+        return seletedCard != null;
     }
 
     public void selectMagicCard(int index, int x, int y)
     {
-        selectedIndex = index;
-        cards[selectedIndex].setCardPlace(x, y);
+        seletedCard = cardListView.getMagicCardView(index);
+        seletedCard.setCardPlace(x, y);
         battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_WAIT, PlayerEnum.Player1);
     }
 
     public void moveMagicCard(int x, int y)
     {
-        cards[selectedIndex].setCardPlace(x, y);
+        seletedCard.setCardPlace(x, y);
         battleScreenView.fillBoard(x, y, PlayerEnum.Player1);
     }
 
     public void releaseMagicCard()
     {
-        cards[selectedIndex].resetCardPlace();
+        seletedCard.resetCardPlace();
         battleScreenView.noFillBoard(PlayerEnum.Player1);
-        selectedIndex = NON_SELECTED;
+        seletedCard = null;
     }
 
-    public int getMagicIndex()
+    public ActiveMagicModel getMagic()
     {
-        Vector2 place = cards[selectedIndex].getCardPlace();
+        Vector2 place = seletedCard.getCardPlace();
         if (battleScreenView.getChoicedPlace((int)place.x, (int)place.y) == ChoiceListModel.NOT_CHOICED) {
             battleScreenView.changeCharaExpression(CharacterView.EXPRESSION_NORMAL, PlayerEnum.Player1);
-            return ChoiceListModel.NOT_CHOICED;
+            return null;
         } else {
-            return selectedIndex;
+            return seletedCard.getMagicInfo();
         }
     }
 

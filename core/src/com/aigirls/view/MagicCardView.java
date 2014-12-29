@@ -67,6 +67,16 @@ public class MagicCardView extends GameView {
         }
     }
 
+    public String getMagicName()
+    {
+        return magicInfo.getName();
+    }
+
+    public String displayUsableFlag()
+    {
+        return magicInfo.canOutbreak() ? "使用可能!!" : "使用不可能...";
+    }
+
     public int getAttackPercent()
     {
         return (int) Math.round(100*magicInfo.getAttackRate());
@@ -90,16 +100,23 @@ public class MagicCardView extends GameView {
     public void setCardPlace(int x, int y)
     {
         cardPlace.set(x, y);
+        filledView.setPlace(x, y);
     }
 
     public void resetCardPlace()
     {
         cardPlace.set(leftX, lowerY);
+        filledView.setDefaultPlace();
     }
 
     public Vector2 getCardPlace()
     {
         return cardPlace;
+    }
+
+    public ActiveMagicModel getMagicInfo()
+    {
+        return magicInfo;
     }
 
 }

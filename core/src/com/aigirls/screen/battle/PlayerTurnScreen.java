@@ -12,7 +12,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
 public class PlayerTurnScreen extends TurnStartScreen {
-
     private Vector2 druggedPlace = null;
 
     public PlayerTurnScreen(
@@ -83,6 +82,13 @@ public class PlayerTurnScreen extends TurnStartScreen {
                 return;
             case PlayerTurnScreenView.INDEX_FINISH_BUTTOM:
                 ScreenManager.changeScreen(ScreenEnum.GameAtFinishTurn);
+                return;
+            case PlayerTurnScreenView.INDEX_ENEMY_SKILL_BUTTOM:
+                if (getGameView().canShowEnemySkill()) {
+                    getGameView().hideEnemySkill();
+                } else {
+                    getGameView().showEnemySkill(defender.getActiveMagicModels());
+                }
                 return;
         }
     }

@@ -1,5 +1,6 @@
 package com.aigirls.screen.battle;
 
+import com.aigirls.config.GameConfig;
 import com.aigirls.manager.ScreenManager;
 import com.aigirls.model.battle.BallModel;
 import com.aigirls.model.battle.BoardModel;
@@ -90,7 +91,7 @@ public abstract class TurnStartScreen extends GameScreen
         int defenserYPlace = defender.getDropPlace(xPlace);
         if (defenserYPlace == BoardModel.CAN_NOT_SET_BALL) {
             int damage = DamageCalculateService.getDamageValue(
-                    attacker.getAttack(),
+                    (int)Math.round(GameConfig.DIRECT_ATTACK_RATE*attacker.getAttack()),
                     defender.getDefense());
             defender.beHurt(damage);
             getBattleScreenView().moveHpBar(damage, defenderEnum);

@@ -44,7 +44,8 @@ public class MagicSelectScreen extends GameScreen {
     public void resume() {}
 
     @Override
-    protected void update(float delta) {
+    protected void update(float delta)
+    {
         if (Gdx.input.isTouched()) {
             Vector2 touchedPlace = getTouchedPlace(Gdx.input.getX(), Gdx.input.getY());
             if (getGameView().isSelectedMagicCard()) {
@@ -53,10 +54,10 @@ public class MagicSelectScreen extends GameScreen {
                 touchedEvent((int)touchedPlace.x, (int)touchedPlace.y);
             }
         } else if (getGameView().isSelectedMagicCard()) {
-            int selected = getGameView().getMagicIndex();
+            ActiveMagicModel selectedMagic = getGameView().getMagic();
             getGameView().releaseMagicCard();
-            if (selected != ChoiceListModel.NOT_CHOICED) {
-                OutbreakPlaceSelectScreen.getOutbreakPlaceSelectScreen().setActiveMagicModel(activeMagicModels[selected]);
+            if (selectedMagic != null && selectedMagic.canOutbreak()) {
+                OutbreakPlaceSelectScreen.getOutbreakPlaceSelectScreen().setActiveMagicModel(selectedMagic);
                 ScreenManager.changeScreen(ScreenEnum.GameAtOutbreakSelect);
             }
         }
@@ -69,7 +70,7 @@ public class MagicSelectScreen extends GameScreen {
             return;
         } else if (selected >= activeMagicModels.length) {
             ScreenManager.changeScreen(ScreenEnum.GameAtActionReset);
-        } else if (activeMagicModels[selected].canOutbreak()) {
+        } else {
             getGameView().selectMagicCard(selected, x, y);
         }
     }

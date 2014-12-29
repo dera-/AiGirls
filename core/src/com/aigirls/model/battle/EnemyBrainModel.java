@@ -7,14 +7,14 @@ import com.badlogic.gdx.utils.Array;
 public class EnemyBrainModel {
     private static final int DEFAULT_DEPTH = 2;
     private static final int WIN_SCORE = 10000;  //高めに設定しておく
-    private static int[] ballHeightPenaltyForAi = {0, 0, 0, 3, 8, 15, 60, 100};
-    private static int[] obstacleHeightPenaltyForAi = {-30, 5, 15, 50, 120, 300, 600, 1000};
-    private static int[] ballHeightPenaltyForPlayer = {0, 0, 0, 0, 2, 7, 15, 40};
-    private static int[] obstacleHeightPenaltyForPlayer = {0, 1, 2, 7, 20, 40, 100, 400};
+    private static int[] ballHeightPenaltyForAi = {0, 0, 0, 0, 0, 0, 15, 30};
+    private static int[] obstacleHeightPenaltyForAi = {-20, 0, 0, 0, 0, 30, 100, 300};
+    private static int[] ballHeightPenaltyForPlayer = {0, 0, 0, 0, 0, 0, 10, 20};
+    private static int[] obstacleHeightPenaltyForPlayer = {0, 0, 0, 0, 0, 0, 50, 200};
     private static int[] decreaseHpPenalty = {0, 60, 120, 300, 500, 1000};
     private static int[] decreaseHpPenaltyForPlayer = {0, 80, 170, 500, 1300, 2000};  //攻撃してほしいので高めに設定
     private static int[] ballStackScores = {-200, -100, 0, 0, 0, 0};//{-80, -30, 0, 15, 30, 60};
-    private static int[] FutureBeatScores = {1000, 800, 400, 150, 50};
+    private static int[] FutureBeatScores = {2000, 1500, 1200, 800, 500};
     private static final int MAGNIFICATION_FOR_ATTACK = 200;
     private static final int IMPPOSIBLE_BEAT = 1000;
     private static final int BALL_STACK_MIN_NUM = 1;
@@ -66,49 +66,6 @@ public class EnemyBrainModel {
         array.shuffle();
         tempPuts = array.toArray(int[].class);
         return alphabeta(ai.getClone(), player.getClone(), depth, null);
-    }
-
-    //minmax
-    private EnemyActionModel minMax(CharacterModel attacker, CharacterModel defender, int depth)
-    {
-        boolean first = (this.depth-depth)%2 == 0;
-        if (depth == 0) {
-            CharacterModel[] characters = getCharacterModels(attacker, defender, first);
-            return new EnemyActionModel(new int[0], null, new BallInfoModel[0], getScore(characters[0], characters[1], first));
-        }
-
-        int score = first ? -1*WIN_SCORE : WIN_SCORE;//minMax(defender, attacker, depth-1).score;
-        EnemyActionModel currentAction = new EnemyActionModel(new int[0], null, new BallInfoModel[0], score);
-
-        //スタックへのボール追加
-        if (depth != this.depth) {
-            attacker.addBallToStack(1);
-        }
-        int ballNumToUse = attacker.getStackedBallNum() - BALL_STACK_MIN_NUM;
-        int[] ballHeights = getBallHeights(attacker);
-        for (int i=0; i<oneBalls.length ; i++) {
-            if (ballNumToUse < oneBalls[i].length || !isPutBalls(oneBalls[i], ballHeights)) {
-                continue;
-            }
-            CharacterModel attackerClone = attacker.getClone();
-            CharacterModel defenderClone = defender.getClone();
-            simulatePutBall(attackerClone, defenderClone, oneBalls[i]);
-            //いろいろきついので一番強い技だけを出すようにする
-            currentAction = getBetterAction(first, oneBalls[i], null, new BallInfoModel[0], minMax(defenderClone, attackerClone, depth-1), currentAction,0);
-            ActiveMagicModel magicToUse = getBestMagic(attackerClone);
-            if (magicToUse == null) {
-                continue;
-            }
-            int length = magicToUse.getNumTargetBalls();
-            for (int index = 0 ; index < length; index++) {
-                CharacterModel attackerCloneClone = attackerClone.getClone();
-                CharacterModel defenderCloneClone = defenderClone.getClone();
-                BallInfoModel[] targetBalls = magicToUse.getBallInfoModels(index);
-                getScoreAfterAction(attackerCloneClone, defenderCloneClone, magicToUse, targetBalls);
-                currentAction = getBetterAction(first, oneBalls[i], magicToUse, targetBalls, minMax(defenderCloneClone, attackerCloneClone, depth-1), currentAction,0);
-            }
-        }
-        return currentAction;
     }
 
     private EnemyActionModel alphabeta(CharacterModel attacker, CharacterModel defender, int depth, Integer currentScoreObject)
@@ -260,7 +217,7 @@ public class EnemyBrainModel {
         }
         int scoreForAI = calculateBoardScoreForAi(ai) + calculateHpScoreForAi(ai) + calculateBallStackScore(ai); //+ calculateAttackScore(ai);
         int scoreForPlayer = -1*calculateBoardScoreForPlayer(player) - calculateHpScoreForPlayer(player) - calculateBallStackScore(player); //- calculateAttackScore(player);
-        int futureScore = 0;//calculateFutureScore(ai, player, first); //TODO 本当に使うかどうか速度と相談
+        int futureScore = calculateFutureScore(ai, player, first); //TODO 本当に使うかどうか速度と相談
         return scoreForAI + scoreForPlayer + futureScore;
     }
 
@@ -393,7 +350,9 @@ public class EnemyBrainModel {
             attacker.setBall(x, new BallModel(totalBallCount+(i+1)));
             int defenserYPlace = defender.getDropPlace(x);
             if (defenserYPlace == BoardModel.CAN_NOT_SET_BALL) {
-                int damage = DamageCalculateService.getDamageValue(attacker.getAttack(), defender.getDefense());
+                int damage = DamageCalculateService.getDamageValue(
+                    (int)Math.round(GameConfig.DIRECT_ATTACK_RATE*attacker.getAttack()),
+                    defender.getDefense());
                 defender.beHurt(damage);
             } else {
                 defender.setBall(x, new ObstacleBallModel(totalBallCount+(i+1), attacker.getMagicDefense()));
